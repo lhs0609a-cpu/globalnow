@@ -1,0 +1,131 @@
+{
+  "Header": {
+    "title": "GlobalNow",
+    "search": "Search news..."
+  },
+  "Categories": {
+    "general": "General",
+    "business": "Business",
+    "technology": "Technology",
+    "sports": "Sports",
+    "science": "Science",
+    "health": "Health",
+    "entertainment": "Entertainment"
+  },
+  "Countries": {
+    "kr": "South Korea",
+    "us": "United States",
+    "jp": "Japan",
+    "gb": "United Kingdom",
+    "fr": "France",
+    "de": "Germany"
+  },
+  "News": {
+    "searchResults": "Search results for: \"{query}\"",
+    "noArticles": "No news articles found",
+    "loadMore": "Load More",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "error": "Failed to load news"
+  },
+  "Article": {
+    "notFound": "Article not found",
+    "goHome": "Go to home",
+    "readOriginal": "Read original",
+    "relatedArticles": "Related Articles",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied!",
+    "publishedAt": "Published",
+    "source": "Source",
+    "author": "Author"
+  },
+  "Exchange": {
+    "title": "Exchange Rates",
+    "baseCurrency": "Base: USD",
+    "loading": "Loading rates...",
+    "error": "Failed to load rates",
+    "lastUpdated": "Last updated"
+  },
+  "Stocks": {
+    "title": "Market Indices",
+    "loading": "Loading indices...",
+    "error": "Failed to load indices",
+    "retry": "Retry"
+  },
+  "Crypto": {
+    "title": "Cryptocurrency",
+    "loading": "Loading crypto...",
+    "error": "Failed to load crypto data",
+    "retry": "Retry"
+  },
+  "FearGreed": {
+    "title": "Fear & Greed Index",
+    "loading": "Loading...",
+    "error": "Failed to load index",
+    "retry": "Retry",
+    "extremeFear": "Extreme Fear",
+    "fear": "Fear",
+    "neutral": "Neutral",
+    "greed": "Greed",
+    "extremeGreed": "Extreme Greed"
+  },
+  "Trends": {
+    "title": "Trending Now",
+    "loading": "Loading trends...",
+    "error": "Failed to load trends"
+  },
+  "Auth": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "profile": "Profile",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "loginTitle": "Login",
+    "signupTitle": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "savedArticles": "Saved Articles",
+    "noSavedArticles": "No saved articles",
+    "bookmark": "Bookmark",
+    "removeBookmark": "Remove bookmark",
+    "loginRequired": "Login required",
+    "invalidCredentials": "Invalid email or password",
+    "emailExists": "Email already in use",
+    "passwordMismatch": "Passwords do not match",
+    "signupSuccess": "Account created! Please log in."
+  },
+  "Language": {
+    "label": "Language",
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  },
+  "Time": {
+    "justNow": "just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "daysAgo": "{days}d ago"
+  },
+  "Accessibility": {
+    "clearSearch": "Clear search",
+    "addBookmark": "Add bookmark",
+    "removeBookmark": "Remove bookmark",
+    "selectCountry": "Select country",
+    "selectLanguage": "Select language",
+    "toggleDarkMode": "Toggle dark mode",
+    "deleteBookmark": "Delete bookmark"
+  },
+  "Newspapers": {
+    "title": "Major Newspapers",
+    "visit": "Visit",
+    "noHeadlines": "No recent headlines",
+    "error": "Failed to load newspaper data",
+    "retry": "Retry"
+  },
+  "Footer": {
+    "copyright": "GlobalNow © {year} · Powered by NewsAPI"
+  }
+}

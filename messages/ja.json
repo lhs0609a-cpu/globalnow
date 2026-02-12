@@ -1,0 +1,131 @@
+{
+  "Header": {
+    "title": "GlobalNow",
+    "search": "ニュースを検索..."
+  },
+  "Categories": {
+    "general": "総合",
+    "business": "ビジネス",
+    "technology": "テクノロジー",
+    "sports": "スポーツ",
+    "science": "科学",
+    "health": "健康",
+    "entertainment": "エンタメ"
+  },
+  "Countries": {
+    "kr": "韓国",
+    "us": "アメリカ",
+    "jp": "日本",
+    "gb": "イギリス",
+    "fr": "フランス",
+    "de": "ドイツ"
+  },
+  "News": {
+    "searchResults": "検索結果: 「{query}」",
+    "noArticles": "ニュース記事が見つかりません",
+    "loadMore": "もっと見る",
+    "loading": "読み込み中...",
+    "retry": "再試行",
+    "error": "ニュースの読み込みに失敗しました"
+  },
+  "Article": {
+    "notFound": "記事が見つかりません",
+    "goHome": "ホームに戻る",
+    "readOriginal": "元の記事を読む",
+    "relatedArticles": "関連記事",
+    "share": "共有",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！",
+    "publishedAt": "公開日",
+    "source": "ソース",
+    "author": "著者"
+  },
+  "Exchange": {
+    "title": "為替レート",
+    "baseCurrency": "基準: USD",
+    "loading": "為替レート読み込み中...",
+    "error": "為替レートを読み込めません",
+    "lastUpdated": "最終更新"
+  },
+  "Stocks": {
+    "title": "主要指数",
+    "loading": "指数を読み込み中...",
+    "error": "指数を読み込めません",
+    "retry": "再試行"
+  },
+  "Crypto": {
+    "title": "暗号資産",
+    "loading": "暗号資産を読み込み中...",
+    "error": "暗号資産データを読み込めません",
+    "retry": "再試行"
+  },
+  "FearGreed": {
+    "title": "恐怖＆貪欲指数",
+    "loading": "読み込み中...",
+    "error": "指数を読み込めません",
+    "retry": "再試行",
+    "extremeFear": "極度の恐怖",
+    "fear": "恐怖",
+    "neutral": "中立",
+    "greed": "貪欲",
+    "extremeGreed": "極度の貪欲"
+  },
+  "Trends": {
+    "title": "トレンド",
+    "loading": "トレンド読み込み中...",
+    "error": "トレンドを読み込めません"
+  },
+  "Auth": {
+    "login": "ログイン",
+    "signup": "新規登録",
+    "logout": "ログアウト",
+    "profile": "プロフィール",
+    "email": "メール",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "loginTitle": "ログイン",
+    "signupTitle": "新規登録",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "hasAccount": "すでにアカウントをお持ちですか？",
+    "savedArticles": "保存した記事",
+    "noSavedArticles": "保存した記事はありません",
+    "bookmark": "ブックマーク",
+    "removeBookmark": "ブックマーク解除",
+    "loginRequired": "ログインが必要です",
+    "invalidCredentials": "メールまたはパスワードが正しくありません",
+    "emailExists": "このメールは既に使用されています",
+    "passwordMismatch": "パスワードが一致しません",
+    "signupSuccess": "登録完了！ログインしてください。"
+  },
+  "Language": {
+    "label": "言語",
+    "ko": "한국어",
+    "en": "English",
+    "ja": "日本語"
+  },
+  "Time": {
+    "justNow": "たった今",
+    "minutesAgo": "{minutes}分前",
+    "hoursAgo": "{hours}時間前",
+    "daysAgo": "{days}日前"
+  },
+  "Accessibility": {
+    "clearSearch": "検索をクリア",
+    "addBookmark": "ブックマークに追加",
+    "removeBookmark": "ブックマークを解除",
+    "selectCountry": "国を選択",
+    "selectLanguage": "言語を選択",
+    "toggleDarkMode": "ダークモード切替",
+    "deleteBookmark": "ブックマークを削除"
+  },
+  "Newspapers": {
+    "title": "主要新聞社",
+    "visit": "訪問",
+    "noHeadlines": "最新ヘッドラインなし",
+    "error": "新聞社情報を読み込めません",
+    "retry": "再試行"
+  },
+  "Footer": {
+    "copyright": "GlobalNow © {year} · Powered by NewsAPI"
+  }
+}
