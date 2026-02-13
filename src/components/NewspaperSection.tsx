@@ -1,22 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import type { CountryCode, NewspaperWithHeadlines } from "@/types/news";
+import { COUNTRIES } from "@/data/countries";
 import { fetchNewspapers } from "@/lib/api";
 import NewspaperCard from "./NewspaperCard";
 
-const COUNTRY_TABS: { code: CountryCode; flag: string }[] = [
-  { code: "kr", flag: "🇰🇷" },
-  { code: "us", flag: "🇺🇸" },
-  { code: "jp", flag: "🇯🇵" },
-  { code: "gb", flag: "🇬🇧" },
-  { code: "fr", flag: "🇫🇷" },
-  { code: "de", flag: "🇩🇪" },
-];
+function getFlagEmoji(countryCode: string) {
+  return countryCode
+    .toUpperCase()
+    .split("")
+    .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
+    .join("");
+}
 
-export default function NewspaperSection() {
-  const [selectedCountry, setSelectedCountry] = useState<CountryCode>("kr");
+interface NewspaperSectionProps {
+  country?: CountryCode;
+}
+
+export default function NewspaperSection({ country }: NewspaperSectionProps) {
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(country || "kr");
   const [newspapers, setNewspapers] = useState<NewspaperWithHeadlines[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -24,6 +28,15 @@ export default function NewspaperSection() {
 
   const t = useTranslations("Newspapers");
   const tCountries = useTranslations("Countries");
+
+  // Sync with parent country prop
+  const prevCountry = useRef(country);
+  useEffect(() => {
+    if (country && country !== prevCountry.current) {
+      prevCountry.current = country;
+      setSelectedCountry(country);
+    }
+  }, [country]);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,19 +71,19 @@ export default function NewspaperSection() {
         </h2>
       </div>
 
-      {/* Country Tabs */}
-      <div className="mb-4 flex flex-wrap gap-2">
-        {COUNTRY_TABS.map(({ code, flag }) => (
+      {/* Country Tabs - horizontal scroll */}
+      <div className="scrollbar-hide mb-4 flex gap-2 overflow-x-auto pb-1">
+        {COUNTRIES.map(({ code, flag }) => (
           <button
             key={code}
-            onClick={() => setSelectedCountry(code)}
-            className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+            onClick={() => setSelectedCountry(code as CountryCode)}
+            className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
               selectedCountry === code
                 ? "bg-blue-600 text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600"
             }`}
           >
-            {flag} {tCountries(code)}
+            {getFlagEmoji(flag)} {tCountries(code)}
           </button>
         ))}
       </div>

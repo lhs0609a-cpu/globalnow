@@ -3,6 +3,13 @@
     "title": "GlobalNow",
     "search": "ニュースを検索..."
   },
+  "Nav": {
+    "home": "ホーム",
+    "perspectives": "多角的視点",
+    "timeline": "タイムライン",
+    "quiz": "ニュースクイズ",
+    "collections": "コレクション"
+  },
   "Categories": {
     "general": "総合",
     "business": "ビジネス",
@@ -18,7 +25,24 @@
     "jp": "日本",
     "gb": "イギリス",
     "fr": "フランス",
-    "de": "ドイツ"
+    "de": "ドイツ",
+    "cn": "中国",
+    "in": "インド",
+    "ae": "UAE",
+    "sa": "サウジアラビア",
+    "il": "イスラエル",
+    "au": "オーストラリア",
+    "ca": "カナダ",
+    "br": "ブラジル",
+    "ru": "ロシア"
+  },
+  "Regions": {
+    "east-asia": "東アジア",
+    "south-asia": "南アジア",
+    "middle-east": "中東",
+    "europe": "ヨーロッパ",
+    "americas": "アメリカ大陸",
+    "oceania": "オセアニア"
   },
   "News": {
     "searchResults": "検索結果: 「{query}」",
@@ -38,7 +62,11 @@
     "copied": "コピーしました！",
     "publishedAt": "公開日",
     "source": "ソース",
-    "author": "著者"
+    "author": "著者",
+    "aiSummary": "AI要約",
+    "translate": "翻訳",
+    "aiLoading": "AI処理中...",
+    "aiError": "AI処理に失敗しました"
   },
   "Exchange": {
     "title": "為替レート",
@@ -95,7 +123,8 @@
     "invalidCredentials": "メールまたはパスワードが正しくありません",
     "emailExists": "このメールは既に使用されています",
     "passwordMismatch": "パスワードが一致しません",
-    "signupSuccess": "登録完了！ログインしてください。"
+    "signupSuccess": "登録完了！ログインしてください。",
+    "guest": "ゲスト"
   },
   "Language": {
     "label": "言語",
@@ -124,6 +153,98 @@
     "noHeadlines": "最新ヘッドラインなし",
     "error": "新聞社情報を読み込めません",
     "retry": "再試行"
+  },
+  "Map": {
+    "title": "グローバルニュースマップ",
+    "articles": "記事",
+    "noData": "データなし",
+    "clickToFilter": "クリックしてニュースをフィルター",
+    "allCategories": "すべて",
+    "low": "少",
+    "medium": "中",
+    "high": "多"
+  },
+  "Perspectives": {
+    "title": "同じ出来事、異なる視点",
+    "description": "同じニュースを各国のメディアがどう報道しているか比較してみましょう",
+    "searchPlaceholder": "キーワードを入力 (例: 米中対立)",
+    "compare": "比較する",
+    "selectCountries": "比較する国を選択",
+    "noResults": "検索結果がありません",
+    "noArticlesForCountry": "この国の報道がありません",
+    "mediaReports": "メディア報道",
+    "searching": "検索中..."
+  },
+  "Timeline": {
+    "title": "ニュースタイムライン",
+    "description": "キーワードで検索して時系列でニュースを確認",
+    "searchPlaceholder": "キーワード入力 (例: AI、半導体)",
+    "search": "検索",
+    "searching": "検索中...",
+    "noResults": "検索結果がありません"
+  },
+  "Collections": {
+    "title": "ニュースコレクション",
+    "description": "気になる記事をフォルダごとに整理",
+    "newCollection": "新しいコレクション",
+    "newCollectionName": "コレクション名",
+    "descriptionPlaceholder": "説明（任意）",
+    "create": "作成",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "save": "保存",
+    "share": "共有",
+    "shareCopied": "共有リンクがクリップボードにコピーされました！",
+    "addTo": "コレクションに追加",
+    "remove": "削除",
+    "articles": "記事",
+    "noCollections": "コレクションがありません",
+    "emptyCollection": "このコレクションに記事がありません",
+    "notFound": "コレクションが見つかりません",
+    "backToCollections": "コレクション一覧へ"
+  },
+  "TrendChart": {
+    "title": "キーワードトレンド（7日間）",
+    "widgetTitle": "キーワードトレンド"
+  },
+  "Correlation": {
+    "title": "関連マーケットデータ",
+    "matchedKeyword": "マッチキーワード"
+  },
+  "Quiz": {
+    "title": "ニュースクイズ",
+    "description": "AI生成のクイズで世界のニュースIQをテスト",
+    "startQuiz": "クイズ開始",
+    "quizInfo": "AIが最新ニュースに基づいて5問を作成します",
+    "generating": "クイズを生成中...",
+    "notEnoughNews": "クイズを作成するためのニュースが不足しています",
+    "generateFailed": "クイズの生成に失敗しました。もう一度お試しください。",
+    "aiUnavailable": "AIサービスが現在利用できません。Gemini APIキーを確認してください。",
+    "resultTitle": "クイズ結果",
+    "excellent": "素晴らしい！ニュースに精通していますね！",
+    "good": "よくできました！もっとニュースを読んでみましょう。",
+    "keepTrying": "頑張りましょう！ニュースをもっと読めば上達します。",
+    "playAgain": "もう一度",
+    "streak": "連続記録",
+    "bestScore": "最高スコア",
+    "averageScore": "平均スコア"
+  },
+  "Alerts": {
+    "title": "ニュースアラート",
+    "markAllRead": "すべて既読",
+    "manageSubscriptions": "管理",
+    "showNotifications": "通知",
+    "noNotifications": "新しい通知はありません",
+    "addSubscription": "キーワード購読を追加",
+    "keywordPlaceholder": "キーワードを入力...",
+    "add": "追加",
+    "noSubscriptions": "購読がありません",
+    "permissionDenied": "ブラウザ通知の権限が拒否されました。設定で許可してください。"
+  },
+  "RSS": {
+    "source": "RSSフィード",
+    "fallbackNotice": "APIキーが未設定のため、RSSフィードからニュースを読み込んでいます"
   },
   "Footer": {
     "copyright": "GlobalNow © {year} · Powered by NewsAPI"

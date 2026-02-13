@@ -25,10 +25,12 @@ export default function CategoryFilter({
   const t = useTranslations("Categories");
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="tablist" aria-label="News categories">
       {CATEGORIES.map((cat) => (
         <button
           key={cat}
+          role="tab"
+          aria-selected={selected === cat}
           onClick={() => onChange(cat)}
           className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
             selected === cat

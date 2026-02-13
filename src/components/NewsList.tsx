@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import type { Article, Category, CountryCode } from "@/types/news";
-import { fetchNews } from "@/lib/api";
+import { fetchNews, setArticleCount, setArticleCountByCategory } from "@/lib/api";
+import { trackArticleKeywords } from "@/lib/trend-tracker";
 import NewsCard from "./NewsCard";
 import { SkeletonGrid } from "./Skeleton";
 
@@ -52,6 +53,13 @@ export default function NewsList({
           setArticles(filtered);
         }
         setTotalResults(data.totalResults);
+        // Track article count for world map
+        if (!searchQuery && country) {
+          setArticleCount(country, data.totalResults);
+          setArticleCountByCategory(country, category, data.totalResults);
+        }
+        // Track keywords for trend chart
+        trackArticleKeywords(filtered);
       } catch (err) {
         setError(err instanceof Error ? err.message : t("error"));
       } finally {

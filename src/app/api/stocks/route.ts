@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { applyRateLimit } from "@/lib/api-security";
 
 const SYMBOLS: Record<string, { name: string; short: string }> = {
   "^GSPC": { name: "S&P 500", short: "SPX" },
@@ -12,7 +13,10 @@ const SYMBOLS: Record<string, { name: string; short: string }> = {
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 let cache: { data: unknown; timestamp: number } | null = null;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const blocked = applyRateLimit(request, "cached");
+  if (blocked) return blocked;
+
   if (cache && Date.now() - cache.timestamp < CACHE_DURATION) {
     return NextResponse.json(cache.data);
   }

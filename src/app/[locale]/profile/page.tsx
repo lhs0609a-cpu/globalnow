@@ -2,19 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 
 export default function ProfilePage() {
   const { user, isAuthenticated, bookmarks, logout, deleteBookmark } = useAuth();
-  const router = useRouter();
   const t = useTranslations("Auth");
   const ta = useTranslations("Accessibility");
-
-  if (!isAuthenticated) {
-    router.push("/login");
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900">
@@ -26,15 +20,23 @@ export default function ProfilePage() {
               <span className="text-blue-600 dark:text-blue-400">Now</span>
             </h1>
           </Link>
-          <button
-            onClick={() => {
-              logout();
-              router.push("/");
-            }}
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-gray-600 dark:text-red-400 dark:hover:bg-red-900/20"
-          >
-            {t("logout")}
-          </button>
+          <div className="flex items-center gap-2">
+            {isAuthenticated ? (
+              <button
+                onClick={logout}
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-gray-600 dark:text-red-400 dark:hover:bg-red-900/20"
+              >
+                {t("logout")}
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50 dark:border-gray-600 dark:text-blue-400 dark:hover:bg-blue-900/20"
+              >
+                {t("login")}
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
@@ -42,14 +44,16 @@ export default function ProfilePage() {
         <div className="mb-8 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-              {user?.email.charAt(0).toUpperCase()}
+              {isAuthenticated
+                ? user?.email.charAt(0).toUpperCase()
+                : "G"}
             </div>
             <div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                {t("profile")}
+                {t("savedArticles")}
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {user?.email}
+                {isAuthenticated ? user?.email : t("guest")}
               </p>
             </div>
           </div>

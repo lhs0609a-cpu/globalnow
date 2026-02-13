@@ -27,7 +27,22 @@ export type Category =
   | "health"
   | "entertainment";
 
-export type CountryCode = "kr" | "us" | "jp" | "gb" | "fr" | "de";
+export type CountryCode =
+  | "kr"
+  | "us"
+  | "jp"
+  | "gb"
+  | "fr"
+  | "de"
+  | "cn"
+  | "in"
+  | "ae"
+  | "sa"
+  | "il"
+  | "au"
+  | "ca"
+  | "br"
+  | "ru";
 
 export interface NewsParams {
   category?: Category;
@@ -98,4 +113,87 @@ export interface NewspaperResponse {
   country: CountryCode;
   newspapers: NewspaperWithHeadlines[];
   cachedAt: string;
+}
+
+// --- RSS Feed ---
+export interface RSSFeedDef {
+  url: string;
+  name: string;
+  country: CountryCode;
+  category: Category;
+  language: string;
+}
+
+// --- Trend ---
+export interface TrendDataPoint {
+  date: string;
+  counts: Record<string, number>;
+}
+
+// --- Quiz ---
+export interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface QuizResult {
+  score: number;
+  total: number;
+  date: string;
+  questions: QuizQuestion[];
+  answers: number[];
+}
+
+// --- Alert ---
+export interface AlertSubscription {
+  id: string;
+  keyword: string;
+  country?: CountryCode;
+  enabled: boolean;
+  createdAt: string;
+}
+
+export interface AlertNotification {
+  id: string;
+  subscriptionId: string;
+  article: { title: string; url: string; source: string; publishedAt: string };
+  readAt: string | null;
+  createdAt: string;
+}
+
+// --- Collection ---
+export interface CollectionArticle {
+  title: string;
+  url: string;
+  source: string;
+  urlToImage: string | null;
+  savedAt: string;
+  description?: string | null;
+}
+
+export interface Collection {
+  id: string;
+  name: string;
+  description: string;
+  articles: CollectionArticle[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+// --- Stock Quote (for correlation) ---
+export interface StockQuote {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  currency: string;
+}
+
+export interface TickerMatch {
+  keyword: string;
+  symbol: string;
+  name: string;
 }

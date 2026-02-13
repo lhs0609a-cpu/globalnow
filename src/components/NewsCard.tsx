@@ -7,6 +7,7 @@ import type { Article } from "@/types/news";
 import { Link } from "@/i18n/navigation";
 import { cacheArticle, getArticleId } from "@/lib/article-cache";
 import BookmarkButton from "./BookmarkButton";
+import AddToCollectionButton from "./AddToCollectionButton";
 import { useEffect } from "react";
 
 interface NewsCardProps {
@@ -91,7 +92,8 @@ export default function NewsCard({ article }: NewsCardProps) {
           </div>
         </div>
       </Link>
-      <div className="absolute top-2 right-2 z-10">
+      <div className="absolute top-2 right-2 z-10 flex items-center gap-0.5 rounded-full bg-black/20 p-0.5 backdrop-blur-sm">
+        <AddToCollectionButton article={article} compact />
         <BookmarkButton article={article} />
       </div>
     </div>

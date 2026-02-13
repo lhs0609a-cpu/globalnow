@@ -5,6 +5,7 @@ import CryptoWidget from "./CryptoWidget";
 import ExchangeRateWidget from "./ExchangeRateWidget";
 import FearGreedWidget from "./FearGreedWidget";
 import TrendingTopics from "./TrendingTopics";
+import TrendChartWidget from "./TrendChartWidget";
 
 interface SidebarProps {
   onTrendClick: (keyword: string) => void;
@@ -17,6 +18,7 @@ export default function Sidebar({ onTrendClick }: SidebarProps) {
       <CryptoWidget />
       <ExchangeRateWidget />
       <FearGreedWidget />
+      <TrendChartWidget />
       <TrendingTopics onTopicClick={onTrendClick} />
     </aside>
   );

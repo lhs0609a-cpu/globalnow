@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { applyRateLimit } from "@/lib/api-security";
 
 const NEWS_API_BASE = "https://newsapi.org/v2";
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
@@ -6,13 +7,16 @@ const CATEGORIES = ["technology", "business", "science"];
 
 let cache: { data: unknown; timestamp: number } | null = null;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const blocked = applyRateLimit(request, "cached");
+  if (blocked) return blocked;
+
   const apiKey = process.env.NEWS_API_KEY;
 
   if (!apiKey || apiKey === "YOUR_API_KEY_HERE") {
     return NextResponse.json(
-      { error: "NEWS_API_KEY is not configured" },
-      { status: 500 }
+      { error: "News service is not available" },
+      { status: 503 }
     );
   }
 
@@ -21,12 +25,17 @@ export async function GET() {
   }
 
   try {
-    const requests = CATEGORIES.map((category) =>
-      fetch(
-        `${NEWS_API_BASE}/top-headlines?category=${category}&language=en&pageSize=10&apiKey=${apiKey}`,
-        { next: { revalidate: 600 } }
-      ).then((r) => r.json())
-    );
+    const requests = CATEGORIES.map((category) => {
+      const params = new URLSearchParams({
+        category,
+        language: "en",
+        pageSize: "10",
+      });
+      return fetch(`${NEWS_API_BASE}/top-headlines?${params.toString()}`, {
+        headers: { "X-Api-Key": apiKey },
+        next: { revalidate: 600 },
+      }).then((r) => r.json());
+    });
 
     const results = await Promise.all(requests);
 

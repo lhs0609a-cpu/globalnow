@@ -6,6 +6,9 @@ const USERS_KEY = "globalnow_users";
 const SESSION_KEY = "globalnow_session";
 const BOOKMARKS_KEY = "globalnow_bookmarks";
 
+// Anonymous key for users who haven't logged in
+export const ANONYMOUS_KEY = "__anonymous__";
+
 // Simple hash function (NOT cryptographically secure - MVP only)
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -64,6 +67,10 @@ export async function login(
   }
 
   sessionStorage.setItem(SESSION_KEY, JSON.stringify({ email }));
+
+  // Migrate anonymous bookmarks to user account
+  migrateAnonymousBookmarks(email);
+
   return { success: true };
 }
 
@@ -94,14 +101,36 @@ function saveBookmarksMap(map: Record<string, BookmarkedArticle[]>) {
   localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(map));
 }
 
-export function addBookmark(email: string, article: Article) {
+/**
+ * When a user logs in, move their anonymous bookmarks to their account.
+ */
+function migrateAnonymousBookmarks(email: string) {
   const map = getBookmarksMap();
+  const anonymousBookmarks = map[ANONYMOUS_KEY];
+  if (!anonymousBookmarks || anonymousBookmarks.length === 0) return;
+
   if (!map[email]) map[email] = [];
 
-  const articleId = getArticleId(article);
-  if (map[email].some((b) => b.articleId === articleId)) return;
+  // Merge without duplicates
+  for (const bookmark of anonymousBookmarks) {
+    if (!map[email].some((b) => b.articleId === bookmark.articleId)) {
+      map[email].push(bookmark);
+    }
+  }
 
-  map[email].push({
+  // Clear anonymous bookmarks after migration
+  delete map[ANONYMOUS_KEY];
+  saveBookmarksMap(map);
+}
+
+export function addBookmark(key: string, article: Article) {
+  const map = getBookmarksMap();
+  if (!map[key]) map[key] = [];
+
+  const articleId = getArticleId(article);
+  if (map[key].some((b) => b.articleId === articleId)) return;
+
+  map[key].push({
     articleId,
     title: article.title,
     description: article.description,
@@ -113,19 +142,19 @@ export function addBookmark(email: string, article: Article) {
   saveBookmarksMap(map);
 }
 
-export function removeBookmark(email: string, articleId: string) {
+export function removeBookmark(key: string, articleId: string) {
   const map = getBookmarksMap();
-  if (!map[email]) return;
-  map[email] = map[email].filter((b) => b.articleId !== articleId);
+  if (!map[key]) return;
+  map[key] = map[key].filter((b) => b.articleId !== articleId);
   saveBookmarksMap(map);
 }
 
-export function getBookmarks(email: string): BookmarkedArticle[] {
+export function getBookmarks(key: string): BookmarkedArticle[] {
   const map = getBookmarksMap();
-  return map[email] || [];
+  return map[key] || [];
 }
 
-export function isBookmarked(email: string, articleId: string): boolean {
-  const bookmarks = getBookmarks(email);
+export function isBookmarked(key: string, articleId: string): boolean {
+  const bookmarks = getBookmarks(key);
   return bookmarks.some((b) => b.articleId === articleId);
 }

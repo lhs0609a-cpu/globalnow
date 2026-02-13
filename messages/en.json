@@ -3,6 +3,13 @@
     "title": "GlobalNow",
     "search": "Search news..."
   },
+  "Nav": {
+    "home": "Home",
+    "perspectives": "Perspectives",
+    "timeline": "Timeline",
+    "quiz": "News Quiz",
+    "collections": "Collections"
+  },
   "Categories": {
     "general": "General",
     "business": "Business",
@@ -18,7 +25,24 @@
     "jp": "Japan",
     "gb": "United Kingdom",
     "fr": "France",
-    "de": "Germany"
+    "de": "Germany",
+    "cn": "China",
+    "in": "India",
+    "ae": "UAE",
+    "sa": "Saudi Arabia",
+    "il": "Israel",
+    "au": "Australia",
+    "ca": "Canada",
+    "br": "Brazil",
+    "ru": "Russia"
+  },
+  "Regions": {
+    "east-asia": "East Asia",
+    "south-asia": "South Asia",
+    "middle-east": "Middle East",
+    "europe": "Europe",
+    "americas": "Americas",
+    "oceania": "Oceania"
   },
   "News": {
     "searchResults": "Search results for: \"{query}\"",
@@ -38,7 +62,11 @@
     "copied": "Copied!",
     "publishedAt": "Published",
     "source": "Source",
-    "author": "Author"
+    "author": "Author",
+    "aiSummary": "AI Summary",
+    "translate": "Translate",
+    "aiLoading": "AI processing...",
+    "aiError": "AI processing failed"
   },
   "Exchange": {
     "title": "Exchange Rates",
@@ -95,7 +123,8 @@
     "invalidCredentials": "Invalid email or password",
     "emailExists": "Email already in use",
     "passwordMismatch": "Passwords do not match",
-    "signupSuccess": "Account created! Please log in."
+    "signupSuccess": "Account created! Please log in.",
+    "guest": "Guest"
   },
   "Language": {
     "label": "Language",
@@ -124,6 +153,98 @@
     "noHeadlines": "No recent headlines",
     "error": "Failed to load newspaper data",
     "retry": "Retry"
+  },
+  "Map": {
+    "title": "Global News Map",
+    "articles": "articles",
+    "noData": "No data",
+    "clickToFilter": "Click to filter news",
+    "allCategories": "All",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "Perspectives": {
+    "title": "Same Story, Different Views",
+    "description": "Compare how different countries cover the same news event",
+    "searchPlaceholder": "Enter a keyword (e.g., US-China tensions)",
+    "compare": "Compare",
+    "selectCountries": "Select countries to compare",
+    "noResults": "No results found",
+    "noArticlesForCountry": "No coverage from this country",
+    "mediaReports": "Media Coverage",
+    "searching": "Searching..."
+  },
+  "Timeline": {
+    "title": "News Timeline",
+    "description": "Search keywords to view news in chronological order",
+    "searchPlaceholder": "Enter keyword (e.g., AI, semiconductor)",
+    "search": "Search",
+    "searching": "Searching...",
+    "noResults": "No results found"
+  },
+  "Collections": {
+    "title": "News Collections",
+    "description": "Organize articles of interest into folders",
+    "newCollection": "New Collection",
+    "newCollectionName": "Collection name",
+    "descriptionPlaceholder": "Description (optional)",
+    "create": "Create",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "share": "Share",
+    "shareCopied": "Share link copied to clipboard!",
+    "addTo": "Add to collection",
+    "remove": "Remove",
+    "articles": "articles",
+    "noCollections": "No collections yet",
+    "emptyCollection": "No articles in this collection",
+    "notFound": "Collection not found",
+    "backToCollections": "Back to collections"
+  },
+  "TrendChart": {
+    "title": "Keyword Trends (7 days)",
+    "widgetTitle": "Keyword Trends"
+  },
+  "Correlation": {
+    "title": "Related Market Data",
+    "matchedKeyword": "Matched keyword"
+  },
+  "Quiz": {
+    "title": "News Quiz",
+    "description": "Test your global news IQ with AI-generated quiz questions",
+    "startQuiz": "Start Quiz",
+    "quizInfo": "AI generates 5 questions based on the latest news",
+    "generating": "Generating quiz...",
+    "notEnoughNews": "Not enough news to create a quiz",
+    "generateFailed": "Failed to generate quiz. Please try again.",
+    "aiUnavailable": "AI service is currently unavailable. Please check the Gemini API key.",
+    "resultTitle": "Quiz Results",
+    "excellent": "Excellent! You really know your news!",
+    "good": "Good job! Try reading more news.",
+    "keepTrying": "Keep trying! Read more news to improve.",
+    "playAgain": "Play Again",
+    "streak": "Streak",
+    "bestScore": "Best Score",
+    "averageScore": "Average"
+  },
+  "Alerts": {
+    "title": "News Alerts",
+    "markAllRead": "Mark all read",
+    "manageSubscriptions": "Manage",
+    "showNotifications": "Notifications",
+    "noNotifications": "No new notifications",
+    "addSubscription": "Add keyword subscription",
+    "keywordPlaceholder": "Enter keyword...",
+    "add": "Add",
+    "noSubscriptions": "No subscriptions yet",
+    "permissionDenied": "Browser notification permission denied. Please enable in settings."
+  },
+  "RSS": {
+    "source": "RSS Feed",
+    "fallbackNotice": "Loading news from RSS feeds (API key not configured)"
   },
   "Footer": {
     "copyright": "GlobalNow © {year} · Powered by NewsAPI"

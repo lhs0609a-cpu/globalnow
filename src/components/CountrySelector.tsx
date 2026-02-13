@@ -2,15 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import type { CountryCode } from "@/types/news";
-
-const COUNTRIES: { code: CountryCode; flag: string }[] = [
-  { code: "kr", flag: "KR" },
-  { code: "us", flag: "US" },
-  { code: "jp", flag: "JP" },
-  { code: "gb", flag: "GB" },
-  { code: "fr", flag: "FR" },
-  { code: "de", flag: "DE" },
-];
+import { COUNTRIES, REGIONS } from "@/data/countries";
+import type { Region } from "@/data/countries";
 
 function getFlagEmoji(countryCode: string) {
   return countryCode
@@ -30,6 +23,7 @@ export default function CountrySelector({
   onChange,
 }: CountrySelectorProps) {
   const t = useTranslations("Countries");
+  const tr = useTranslations("Regions");
   const ta = useTranslations("Accessibility");
 
   return (
@@ -39,11 +33,18 @@ export default function CountrySelector({
       aria-label={ta("selectCountry")}
       className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-blue-400 dark:focus:ring-blue-400"
     >
-      {COUNTRIES.map((c) => (
-        <option key={c.code} value={c.code}>
-          {getFlagEmoji(c.flag)} {t(c.code)}
-        </option>
-      ))}
+      {REGIONS.map((region: Region) => {
+        const countries = COUNTRIES.filter((c) => c.region === region);
+        return (
+          <optgroup key={region} label={tr(region)}>
+            {countries.map((c) => (
+              <option key={c.code} value={c.code}>
+                {getFlagEmoji(c.flag)} {t(c.code)}
+              </option>
+            ))}
+          </optgroup>
+        );
+      })}
     </select>
   );
 }

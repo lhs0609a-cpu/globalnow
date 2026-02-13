@@ -8,6 +8,7 @@ import type {
   FearGreedData,
   NewspaperResponse,
   CountryCode,
+  Article,
 } from "@/types/news";
 
 export async function fetchNews(
@@ -91,4 +92,112 @@ export async function fetchNewspapers(
   }
 
   return response.json();
+}
+
+// --- Phase 2: AI helpers ---
+
+export async function callAI(
+  action: "summarize" | "translate",
+  text: string,
+  targetLang: string
+): Promise<string> {
+  const response = await fetch("/api/ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+    body: JSON.stringify({ action, text, targetLang }),
+  });
+
+  if (!response.ok) {
+    throw new Error("AI request failed");
+  }
+
+  const data = await response.json();
+  return data.result;
+}
+
+// --- Phase 3: Article count store (client-side, in-memory) ---
+
+const articleCountStore: Record<string, number> = {};
+
+export function setArticleCount(country: string, count: number): void {
+  articleCountStore[country] = count;
+}
+
+export function getArticleCounts(): Record<string, number> {
+  return articleCountStore;
+}
+
+// Category-level article count store: "country_category" -> count
+const articleCountByCategoryStore: Record<string, Record<string, number>> = {};
+
+export function setArticleCountByCategory(
+  country: string,
+  category: string,
+  count: number
+): void {
+  if (!articleCountByCategoryStore[country]) {
+    articleCountByCategoryStore[country] = {};
+  }
+  articleCountByCategoryStore[country][category] = count;
+}
+
+export function getArticleCountsByCategory(): Record<string, Record<string, number>> {
+  return articleCountByCategoryStore;
+}
+
+// --- Stock Quote (for correlation) ---
+
+export async function fetchStockQuote(
+  symbol: string
+): Promise<import("@/types/news").StockQuote> {
+  const response = await fetch(
+    `/api/stock-quote?symbol=${encodeURIComponent(symbol)}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch stock quote");
+  }
+  return response.json();
+}
+
+// --- AI Quiz ---
+
+export async function callAIQuiz(
+  headlines: string[]
+): Promise<import("@/types/news").QuizQuestion[]> {
+  const response = await fetch("/api/ai", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+    },
+    body: JSON.stringify({
+      action: "quiz",
+      text: headlines.join("\n"),
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Quiz generation failed");
+  }
+
+  const data = await response.json();
+  return data.result;
+}
+
+// --- Phase 4: Perspectives ---
+
+export async function fetchPerspectives(keyword: string): Promise<Article[]> {
+  const response = await fetch(
+    `/api/perspectives?q=${encodeURIComponent(keyword)}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch perspectives");
+  }
+
+  const data = await response.json();
+  return data.articles;
 }

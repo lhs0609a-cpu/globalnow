@@ -3,6 +3,13 @@
     "title": "GlobalNow",
     "search": "뉴스 검색..."
   },
+  "Nav": {
+    "home": "홈",
+    "perspectives": "다른 시각",
+    "timeline": "타임라인",
+    "quiz": "뉴스 퀴즈",
+    "collections": "컬렉션"
+  },
   "Categories": {
     "general": "일반",
     "business": "비즈니스",
@@ -18,7 +25,24 @@
     "jp": "일본",
     "gb": "영국",
     "fr": "프랑스",
-    "de": "독일"
+    "de": "독일",
+    "cn": "중국",
+    "in": "인도",
+    "ae": "UAE",
+    "sa": "사우디",
+    "il": "이스라엘",
+    "au": "호주",
+    "ca": "캐나다",
+    "br": "브라질",
+    "ru": "러시아"
+  },
+  "Regions": {
+    "east-asia": "동아시아",
+    "south-asia": "남아시아",
+    "middle-east": "중동",
+    "europe": "유럽",
+    "americas": "아메리카",
+    "oceania": "오세아니아"
   },
   "News": {
     "searchResults": "검색 결과: \"{query}\"",
@@ -38,7 +62,11 @@
     "copied": "복사됨!",
     "publishedAt": "게시일",
     "source": "출처",
-    "author": "작성자"
+    "author": "작성자",
+    "aiSummary": "AI 요약",
+    "translate": "번역",
+    "aiLoading": "AI 처리 중...",
+    "aiError": "AI 처리에 실패했습니다"
   },
   "Exchange": {
     "title": "환율",
@@ -95,7 +123,8 @@
     "invalidCredentials": "이메일 또는 비밀번호가 올바르지 않습니다",
     "emailExists": "이미 사용 중인 이메일입니다",
     "passwordMismatch": "비밀번호가 일치하지 않습니다",
-    "signupSuccess": "회원가입 완료! 로그인해주세요."
+    "signupSuccess": "회원가입 완료! 로그인해주세요.",
+    "guest": "게스트"
   },
   "Language": {
     "label": "언어",
@@ -124,6 +153,98 @@
     "noHeadlines": "최신 헤드라인 없음",
     "error": "신문사 정보를 불러올 수 없습니다",
     "retry": "다시 시도"
+  },
+  "Map": {
+    "title": "글로벌 뉴스 맵",
+    "articles": "기사",
+    "noData": "데이터 없음",
+    "clickToFilter": "클릭하여 뉴스 필터",
+    "allCategories": "전체",
+    "low": "적음",
+    "medium": "보통",
+    "high": "많음"
+  },
+  "Perspectives": {
+    "title": "같은 사건, 다른 시각",
+    "description": "같은 뉴스를 각국 미디어는 어떻게 보도하는지 비교해보세요",
+    "searchPlaceholder": "키워드를 입력하세요 (예: 미중 갈등)",
+    "compare": "비교하기",
+    "selectCountries": "비교할 국가 선택",
+    "noResults": "검색 결과가 없습니다",
+    "noArticlesForCountry": "해당 국가의 보도가 없습니다",
+    "mediaReports": "미디어 보도",
+    "searching": "검색 중..."
+  },
+  "Timeline": {
+    "title": "뉴스 타임라인",
+    "description": "키워드를 검색하여 시간순으로 뉴스를 확인하세요",
+    "searchPlaceholder": "키워드 입력 (예: AI, 반도체)",
+    "search": "검색",
+    "searching": "검색 중...",
+    "noResults": "검색 결과가 없습니다"
+  },
+  "Collections": {
+    "title": "뉴스 컬렉션",
+    "description": "관심 있는 기사를 폴더별로 정리하세요",
+    "newCollection": "새 컬렉션",
+    "newCollectionName": "컬렉션 이름",
+    "descriptionPlaceholder": "설명 (선택사항)",
+    "create": "만들기",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "편집",
+    "save": "저장",
+    "share": "공유",
+    "shareCopied": "공유 링크가 클립보드에 복사되었습니다!",
+    "addTo": "컬렉션에 추가",
+    "remove": "제거",
+    "articles": "기사",
+    "noCollections": "컬렉션이 없습니다",
+    "emptyCollection": "이 컬렉션에 기사가 없습니다",
+    "notFound": "컬렉션을 찾을 수 없습니다",
+    "backToCollections": "컬렉션 목록으로"
+  },
+  "TrendChart": {
+    "title": "키워드 트렌드 (7일)",
+    "widgetTitle": "키워드 트렌드"
+  },
+  "Correlation": {
+    "title": "관련 시장 데이터",
+    "matchedKeyword": "매칭 키워드"
+  },
+  "Quiz": {
+    "title": "뉴스 퀴즈",
+    "description": "최신 뉴스 기반 퀴즈로 세계 뉴스 IQ를 테스트하세요",
+    "startQuiz": "퀴즈 시작",
+    "quizInfo": "AI가 최신 뉴스를 기반으로 5문제를 생성합니다",
+    "generating": "퀴즈를 생성하고 있습니다...",
+    "notEnoughNews": "퀴즈를 만들기 위한 뉴스가 충분하지 않습니다",
+    "generateFailed": "퀴즈 생성에 실패했습니다. 다시 시도해주세요.",
+    "aiUnavailable": "AI 서비스가 현재 사용 불가합니다. Gemini API 키를 확인해주세요.",
+    "resultTitle": "퀴즈 결과",
+    "excellent": "훌륭합니다! 뉴스를 잘 알고 계시네요!",
+    "good": "좋습니다! 조금 더 뉴스를 읽어보세요.",
+    "keepTrying": "계속 도전하세요! 뉴스를 더 읽어보면 좋아질 거예요.",
+    "playAgain": "다시 도전",
+    "streak": "연속 기록",
+    "bestScore": "최고 점수",
+    "averageScore": "평균 점수"
+  },
+  "Alerts": {
+    "title": "뉴스 알림",
+    "markAllRead": "모두 읽음",
+    "manageSubscriptions": "구독 관리",
+    "showNotifications": "알림 보기",
+    "noNotifications": "새로운 알림이 없습니다",
+    "addSubscription": "키워드 구독 추가",
+    "keywordPlaceholder": "키워드 입력...",
+    "add": "추가",
+    "noSubscriptions": "구독한 키워드가 없습니다",
+    "permissionDenied": "브라우저 알림 권한이 거부되었습니다. 설정에서 허용해주세요."
+  },
+  "RSS": {
+    "source": "RSS 피드",
+    "fallbackNotice": "API 키 미설정으로 RSS 피드에서 뉴스를 불러옵니다"
   },
   "Footer": {
     "copyright": "GlobalNow © {year} · Powered by NewsAPI"

@@ -18,6 +18,7 @@ import {
   removeBookmark,
   getBookmarks,
   isBookmarked as checkBookmarked,
+  ANONYMOUS_KEY,
 } from "@/lib/auth";
 import { getArticleId } from "@/lib/article-cache";
 import type { BookmarkedArticle } from "@/types/auth";
@@ -48,25 +49,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [bookmarks, setBookmarks] = useState<BookmarkedArticle[]>([]);
   const [mounted, setMounted] = useState(false);
 
+  // The storage key: user email if logged in, anonymous key otherwise
+  const storageKey = user?.email || ANONYMOUS_KEY;
+
   useEffect(() => {
     setMounted(true);
     const session = getSession();
     if (session) {
       setUser(session);
       setBookmarks(getBookmarks(session.email));
+    } else {
+      // Load anonymous bookmarks
+      setBookmarks(getBookmarks(ANONYMOUS_KEY));
     }
   }, []);
 
   const refreshBookmarks = useCallback(() => {
-    if (user) {
-      setBookmarks(getBookmarks(user.email));
-    }
-  }, [user]);
+    setBookmarks(getBookmarks(storageKey));
+  }, [storageKey]);
 
   const handleLogin = async (email: string, password: string) => {
     const result = await authLogin(email, password);
     if (result.success) {
       setUser({ email });
+      // After login, bookmarks are migrated from anonymous → email
       setBookmarks(getBookmarks(email));
     }
     return result;
@@ -79,29 +85,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const handleLogout = () => {
     authLogout();
     setUser(null);
-    setBookmarks([]);
+    // Back to anonymous bookmarks
+    setBookmarks(getBookmarks(ANONYMOUS_KEY));
   };
 
   const toggleBookmark = (article: Article) => {
-    if (!user) return;
     const articleId = getArticleId(article);
-    if (checkBookmarked(user.email, articleId)) {
-      removeBookmark(user.email, articleId);
+    if (checkBookmarked(storageKey, articleId)) {
+      removeBookmark(storageKey, articleId);
     } else {
-      addBookmark(user.email, article);
+      addBookmark(storageKey, article);
     }
     refreshBookmarks();
   };
 
   const deleteBookmarkById = (articleId: string) => {
-    if (!user) return;
-    removeBookmark(user.email, articleId);
+    removeBookmark(storageKey, articleId);
     refreshBookmarks();
   };
 
   const checkIsBookmarked = (article: Article) => {
-    if (!user) return false;
-    return checkBookmarked(user.email, getArticleId(article));
+    return checkBookmarked(storageKey, getArticleId(article));
   };
 
   if (!mounted) {
@@ -113,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           login: handleLogin,
           signup: handleSignup,
           logout: handleLogout,
-          toggleBookmark,
+          toggleBookmark: () => {},
           isBookmarked: () => false,
           bookmarks: [],
           refreshBookmarks: () => {},

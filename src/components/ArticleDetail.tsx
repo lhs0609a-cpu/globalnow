@@ -10,6 +10,10 @@ import { Link } from "@/i18n/navigation";
 import ShareButtons from "./ShareButtons";
 import RelatedArticles from "./RelatedArticles";
 import BookmarkButton from "./BookmarkButton";
+import AISummaryButton from "./AISummaryButton";
+import AITranslateButton from "./AITranslateButton";
+import AddToCollectionButton from "./AddToCollectionButton";
+import CorrelationSection from "./CorrelationSection";
 
 interface ArticleDetailProps {
   articleId: string;
@@ -173,9 +177,16 @@ export default function ArticleDetail({ articleId }: ArticleDetailProps) {
           </span>
         </div>
 
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
           <ShareButtons title={article.title} url={article.url} />
           <BookmarkButton article={article} />
+          <AISummaryButton
+            text={`${article.title}. ${article.description || ""} ${article.content || ""}`}
+          />
+          <AITranslateButton
+            text={`${article.title}. ${article.description || ""}`}
+          />
+          <AddToCollectionButton article={article} />
         </div>
 
         {article.urlToImage && !imgError && (
@@ -228,6 +239,10 @@ export default function ArticleDetail({ articleId }: ArticleDetailProps) {
           </svg>
         </a>
       </article>
+
+      <CorrelationSection
+        text={`${article.title} ${article.description || ""}`}
+      />
 
       <hr className="my-10 border-gray-200 dark:border-gray-700" />
 

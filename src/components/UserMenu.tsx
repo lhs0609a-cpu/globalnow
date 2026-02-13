@@ -30,17 +30,6 @@ export default function UserMenu() {
     };
   }, [close]);
 
-  if (!isAuthenticated) {
-    return (
-      <Link
-        href="/login"
-        className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-      >
-        {t("login")}
-      </Link>
-    );
-  }
-
   return (
     <div ref={menuRef} className="relative">
       <button
@@ -63,9 +52,11 @@ export default function UserMenu() {
             d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
           />
         </svg>
-        <span className="hidden sm:inline max-w-[100px] truncate">
-          {user?.email}
-        </span>
+        {isAuthenticated && (
+          <span className="hidden sm:inline max-w-[100px] truncate">
+            {user?.email}
+          </span>
+        )}
       </button>
       {open && (
         <div
@@ -78,18 +69,29 @@ export default function UserMenu() {
             onClick={close}
             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
           >
-            {t("profile")}
+            {t("savedArticles")}
           </Link>
-          <button
-            role="menuitem"
-            onClick={() => {
-              logout();
-              close();
-            }}
-            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
-          >
-            {t("logout")}
-          </button>
+          {isAuthenticated ? (
+            <button
+              role="menuitem"
+              onClick={() => {
+                logout();
+                close();
+              }}
+              className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-700"
+            >
+              {t("logout")}
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              role="menuitem"
+              onClick={close}
+              className="block px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 dark:text-blue-400 dark:hover:bg-gray-700"
+            >
+              {t("login")}
+            </Link>
+          )}
         </div>
       )}
     </div>

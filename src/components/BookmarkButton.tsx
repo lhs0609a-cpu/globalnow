@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import type { Article } from "@/types/news";
 
 interface BookmarkButtonProps {
@@ -9,20 +10,26 @@ interface BookmarkButtonProps {
 }
 
 export default function BookmarkButton({ article }: BookmarkButtonProps) {
-  const { isAuthenticated, isBookmarked, toggleBookmark } = useAuth();
+  const { isBookmarked, toggleBookmark } = useAuth();
+  const { showToast } = useToast();
   const t = useTranslations("Accessibility");
-
-  if (!isAuthenticated) return null;
 
   const bookmarked = isBookmarked(article);
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    toggleBookmark(article);
+    showToast(
+      bookmarked ? t("removeBookmark") : t("addBookmark"),
+      "success"
+    );
+  };
+
   return (
     <button
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleBookmark(article);
-      }}
+      onClick={handleClick}
       className={`rounded-full p-1.5 transition-colors ${
         bookmarked
           ? "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400"
