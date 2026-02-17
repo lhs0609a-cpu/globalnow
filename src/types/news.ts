@@ -1,199 +1,87 @@
-export interface Article {
-  source: {
-    id: string | null;
-    name: string;
-  };
-  author: string | null;
-  title: string;
-  description: string | null;
+export type NewsCategory = 'international' | 'economy' | 'tech' | 'politics' | 'risk' | 'culture';
+
+export type NewsSource = {
+  id: string;
+  name: string;
+  nameKo: string;
+  country: string;
+  countryFlag: string;
   url: string;
-  urlToImage: string | null;
+  rssUrl?: string;
+  category: NewsCategory;
+  reliability: number; // 1-5
+  logo?: string;
+};
+
+export type NewsItem = {
+  id: string;
+  title: string;
+  titleKo?: string;
+  summary?: string;
+  summaryKo?: string;
+  content?: string;
+  url: string;
+  imageUrl?: string;
+  source: NewsSource;
+  sourceId: string;
+  category: NewsCategory;
+  country: string;
   publishedAt: string;
-  content: string | null;
-}
+  collectedAt: string;
+  sentiment?: number; // -1 to 1
+  tags?: string[];
+  soWhat?: SoWhatAnalysis;
+  viewCount?: number;
+  bookmarkCount?: number;
+};
 
-export interface NewsResponse {
-  status: string;
-  totalResults: number;
-  articles: Article[];
-}
+export type SoWhatAnalysis = {
+  id: string;
+  newsId: string;
+  keyPoint: string;
+  background: string;
+  outlook: string;
+  actionItem: string;
+  generatedAt: string;
+};
 
-export type Category =
-  | "general"
-  | "business"
-  | "technology"
-  | "sports"
-  | "science"
-  | "health"
-  | "entertainment";
-
-export type CountryCode =
-  | "kr"
-  | "us"
-  | "jp"
-  | "gb"
-  | "fr"
-  | "de"
-  | "cn"
-  | "in"
-  | "ae"
-  | "sa"
-  | "il"
-  | "au"
-  | "ca"
-  | "br"
-  | "ru";
-
-export interface NewsParams {
-  category?: Category;
-  country?: CountryCode;
-  q?: string;
+export type NewsFeedParams = {
+  category?: NewsCategory | string;
+  country?: string;
+  source?: string;
   page?: number;
-  pageSize?: number;
-}
+  limit?: number;
+  sortBy?: 'latest' | 'popular' | 'trending';
+  search?: string;
+};
 
-export interface ExchangeRates {
-  base: string;
-  date: string;
-  rates: Record<string, number>;
-}
-
-export interface ExchangeRateChange {
-  currency: string;
-  rate: number;
-  previousRate: number;
-  change: number;
-  changePercent: number;
-}
-
-export interface TrendingTopic {
-  keyword: string;
-  count: number;
-  category: string;
-}
-
-export interface StockIndex {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number;
-  changePercent: number;
-}
-
-export interface CryptoPrice {
+export type TrendingItem = {
   id: string;
-  name: string;
-  symbol: string;
-  price: number;
-  changePercent: number;
-}
-
-export interface FearGreedData {
-  value: number;
-  classification: string;
-  timestamp: string;
-}
-
-export interface NewspaperHeadline {
   title: string;
+  titleKo?: string;
   url: string;
-  publishedAt: string;
-}
-
-export interface NewspaperWithHeadlines {
-  id: string;
-  name: string;
-  nameEn: string;
-  url: string;
-  domain: string;
-  headlines: NewspaperHeadline[];
-}
-
-export interface NewspaperResponse {
-  country: CountryCode;
-  newspapers: NewspaperWithHeadlines[];
-  cachedAt: string;
-}
-
-// --- RSS Feed ---
-export interface RSSFeedDef {
-  url: string;
-  name: string;
-  country: CountryCode;
-  category: Category;
-  language: string;
-}
-
-// --- Trend ---
-export interface TrendDataPoint {
-  date: string;
-  counts: Record<string, number>;
-}
-
-// --- Quiz ---
-export interface QuizQuestion {
-  question: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-}
-
-export interface QuizResult {
+  source: 'hackernews' | 'producthunt' | 'reddit' | 'github';
   score: number;
-  total: number;
+  commentCount?: number;
+  subreddit?: string;
+  publishedAt: string;
+};
+
+export type MorningBrief = {
+  id: string;
   date: string;
-  questions: QuizQuestion[];
-  answers: number[];
-}
+  items: MorningBriefItem[];
+  summary: string;
+  generatedAt: string;
+};
 
-// --- Alert ---
-export interface AlertSubscription {
-  id: string;
-  keyword: string;
-  country?: CountryCode;
-  enabled: boolean;
-  createdAt: string;
-}
-
-export interface AlertNotification {
-  id: string;
-  subscriptionId: string;
-  article: { title: string; url: string; source: string; publishedAt: string };
-  readAt: string | null;
-  createdAt: string;
-}
-
-// --- Collection ---
-export interface CollectionArticle {
+export type MorningBriefItem = {
+  rank: number;
+  newsId: string;
   title: string;
-  url: string;
+  titleKo: string;
+  summaryKo: string;
+  category: NewsCategory;
   source: string;
-  urlToImage: string | null;
-  savedAt: string;
-  description?: string | null;
-}
-
-export interface Collection {
-  id: string;
-  name: string;
-  description: string;
-  articles: CollectionArticle[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-// --- Stock Quote (for correlation) ---
-export interface StockQuote {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number;
-  changePercent: number;
-  currency: string;
-}
-
-export interface TickerMatch {
-  keyword: string;
-  symbol: string;
-  name: string;
-}
+  impact: 'high' | 'medium' | 'low';
+};

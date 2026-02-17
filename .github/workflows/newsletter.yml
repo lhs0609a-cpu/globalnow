@@ -1,0 +1,14 @@
+name: Send Newsletter
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 07:00 KST (22:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send newsletter
+        run: |
+          curl -X POST "${{ secrets.APP_URL }}/api/cron/send-newsletter" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

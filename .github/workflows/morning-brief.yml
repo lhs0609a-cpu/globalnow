@@ -1,0 +1,14 @@
+name: Generate Morning Brief
+on:
+  schedule:
+    - cron: '30 21 * * *'  # 06:30 KST (21:30 UTC)
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate morning brief
+        run: |
+          curl -X POST "${{ secrets.APP_URL }}/api/cron/generate-brief" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

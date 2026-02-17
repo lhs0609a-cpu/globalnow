@@ -1,7 +1,4 @@
 import type { NextConfig } from "next";
-import createNextIntlPlugin from "next-intl/plugin";
-
-const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
@@ -21,7 +18,7 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' https: data:",
       "font-src 'self'",
-      "connect-src 'self' https://newsapi.org https://generativelanguage.googleapis.com https://api.frankfurter.dev https://api.alternative.me https://query1.finance.yahoo.com https://api.coingecko.com",
+      "connect-src 'self' https://newsapi.org https://generativelanguage.googleapis.com https://api.frankfurter.dev https://api.alternative.me https://query1.finance.yahoo.com https://api.coingecko.com https://cdn.jsdelivr.net",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -51,4 +48,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;

@@ -1,0 +1,17 @@
+export const SUBREDDITS = [
+  { name: 'worldnews', category: 'international', label: '세계 뉴스' },
+  { name: 'geopolitics', category: 'international', label: '지정학' },
+  { name: 'economics', category: 'economy', label: '경제학' },
+  { name: 'investing', category: 'economy', label: '투자' },
+  { name: 'wallstreetbets', category: 'economy', label: 'WSB' },
+  { name: 'technology', category: 'tech', label: '기술' },
+  { name: 'programming', category: 'tech', label: '프로그래밍' },
+  { name: 'artificial', category: 'tech', label: 'AI' },
+  { name: 'MachineLearning', category: 'tech', label: '머신러닝' },
+  { name: 'startups', category: 'tech', label: '스타트업' },
+  { name: 'politics', category: 'politics', label: '정치' },
+  { name: 'science', category: 'tech', label: '과학' },
+  { name: 'Futurology', category: 'tech', label: '미래학' },
+  { name: 'CryptoCurrency', category: 'economy', label: '암호화폐' },
+  { name: 'dataisbeautiful', category: 'tech', label: '데이터 시각화' },
+];

@@ -1,0 +1,14 @@
+name: Collect Humor
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect humor content
+        run: |
+          curl -X POST "${{ secrets.APP_URL }}/api/cron/collect-humor" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

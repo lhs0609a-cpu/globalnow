@@ -1,0 +1,22 @@
+name: Collect Trending
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+  workflow_dispatch:
+
+jobs:
+  collect-hn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect Hacker News
+        run: |
+          curl -X POST "${{ secrets.APP_URL }}/api/cron/collect-hn" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+
+  collect-reddit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect Reddit
+        run: |
+          curl -X POST "${{ secrets.APP_URL }}/api/cron/collect-reddit" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
