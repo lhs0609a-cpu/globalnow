@@ -5,8 +5,8 @@ import { NewsItem } from '@/types/news';
 import { formatRelativeTime } from '@/lib/utils/date';
 
 const countries = [
-  { code: 'US', flag: '🇬🇸', name: '미국' },
-  { code: 'UK', flag: '🇬🇷', name: '영국' },
+  { code: 'US', flag: '🇺🇸', name: '미국' },
+  { code: 'UK', flag: '🇬🇧', name: '영국' },
   { code: 'JP', flag: '🇯🇵', name: '일본' },
   { code: 'DE', flag: '🇩🇪', name: '독일' },
   { code: 'CN', flag: '🇨🇳', name: '중국' },

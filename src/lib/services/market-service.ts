@@ -1,33 +1,63 @@
-import { isDemoMode } from '@/lib/demo/is-demo-mode';
 import { getMockMarketData } from '@/lib/demo/mock-market';
 import { cacheGetOrSet } from '@/lib/redis/cache';
-import { MarketData } from '@/types/market';
+import { MarketData, CryptoData } from '@/types/market';
+
+/** Fetch live crypto data from CoinGecko (public API, no auth needed) */
+async function fetchLiveCrypto(): Promise<CryptoData[]> {
+  try {
+    const res = await fetch(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,ripple,cardano&sparkline=true&price_change_percentage=24h',
+      {
+        headers: { 'User-Agent': 'GLOBALNOW/1.0' },
+        next: { revalidate: 120 },
+      }
+    );
+
+    if (!res.ok) return [];
+
+    const data = await res.json();
+    if (!Array.isArray(data)) return [];
+
+    const nameKoMap: Record<string, string> = {
+      bitcoin: '비트코인',
+      ethereum: '이더리움',
+      solana: '솔라나',
+      ripple: '리플',
+      cardano: '카르다노',
+    };
+
+    return data.map((coin: Record<string, unknown>) => ({
+      id: coin.id as string,
+      symbol: ((coin.symbol as string) || '').toUpperCase(),
+      name: coin.name as string,
+      nameKo: nameKoMap[(coin.id as string)] || (coin.name as string),
+      price: coin.current_price as number,
+      change24h: coin.price_change_percentage_24h as number,
+      marketCap: coin.market_cap as number,
+      volume24h: coin.total_volume as number,
+      sparkline: (coin.sparkline_in_7d as { price: number[] })?.price?.slice(-7),
+      updatedAt: new Date().toISOString(),
+    }));
+  } catch (error) {
+    console.error('CoinGecko fetch failed:', error);
+    return [];
+  }
+}
 
 export async function getMarketData(): Promise<MarketData> {
-  if (isDemoMode()) {
-    return getMockMarketData();
-  }
-
   return cacheGetOrSet(
     'market:all',
     async () => {
-      const { createServiceRoleClient } = await import('@/lib/supabase/server');
-      const supabase = await createServiceRoleClient();
-      if (!supabase) return getMockMarketData();
-
-      const [indicesRes, cryptoRes, forexRes, fearGreedRes] = await Promise.all([
-        supabase.from('market_data').select('*').eq('type', 'index').order('symbol'),
-        supabase.from('market_data').select('*').eq('type', 'crypto').order('market_cap', { ascending: false }).limit(10),
-        supabase.from('market_data').select('*').eq('type', 'forex').order('pair'),
-        supabase.from('market_data').select('*').eq('type', 'fear_greed').single(),
-      ]);
-
       const mockData = getMockMarketData();
+
+      // Try live crypto data from CoinGecko
+      const liveCrypto = await fetchLiveCrypto();
+
       return {
-        indices: (indicesRes.data || mockData.indices) as unknown as MarketData['indices'],
-        crypto: (cryptoRes.data || mockData.crypto) as unknown as MarketData['crypto'],
-        forex: (forexRes.data || mockData.forex) as unknown as MarketData['forex'],
-        fearGreed: (fearGreedRes.data || mockData.fearGreed) as unknown as MarketData['fearGreed'],
+        indices: mockData.indices, // Yahoo Finance needs auth, keep mock
+        crypto: liveCrypto.length > 0 ? liveCrypto : mockData.crypto,
+        forex: mockData.forex, // Forex APIs need auth, keep mock
+        fearGreed: mockData.fearGreed,
         updatedAt: new Date().toISOString(),
       };
     },

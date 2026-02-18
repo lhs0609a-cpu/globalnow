@@ -3,6 +3,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { Footer } from '@/components/layout/Footer';
 import { DashboardContent } from '@/components/dashboard/DashboardContent';
+import { WorldNewsMap } from '@/components/dashboard/WorldNewsMap';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -21,7 +22,7 @@ export default function HomePage() {
             전세계 주요 언론의 뉴스를 한눈에
           </p>
           <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-            28개 글로벌 미디어의 뉴스, 트렌드, 시장 데이터를 AI가 분석하여 한국어로 제공합니다.
+            40개+ 글로벌 미디어의 뉴스, 트렌드, 시장 데이터를 AI가 분석하여 한국어로 제공합니다.
             CEO를 위한 글로벌 뉴스 대시보드.
           </p>
           <div className="flex items-center justify-center gap-4 mb-12">
@@ -57,6 +58,13 @@ export default function HomePage() {
               <p className="text-slate-400 text-sm">매일 아침 오늘 꼭 알아야 할 글로벌 뉴스 5가지를 요약</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* World News Map */}
+      <section className="bg-slate-900">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <WorldNewsMap />
         </div>
       </section>
 

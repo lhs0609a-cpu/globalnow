@@ -37,4 +37,34 @@ export const NEWS_SOURCES: NewsSource[] = [
   { id: 'variety', name: 'Variety', nameKo: '버라이어티', country: 'US', countryFlag: '🇺🇸', url: 'https://variety.com', rssUrl: 'https://variety.com/feed/', category: 'culture', reliability: 4 },
   { id: 'hollywoodreporter', name: 'The Hollywood Reporter', nameKo: '할리우드 리포터', country: 'US', countryFlag: '🇺🇸', url: 'https://www.hollywoodreporter.com', rssUrl: 'https://www.hollywoodreporter.com/feed/', category: 'culture', reliability: 4 },
   { id: 'rollingstone', name: 'Rolling Stone', nameKo: '롤링스톤', country: 'US', countryFlag: '🇺🇸', url: 'https://www.rollingstone.com', rssUrl: 'https://www.rollingstone.com/feed/', category: 'culture', reliability: 3 },
+  // Korea
+  { id: 'yonhap', name: 'Yonhap News', nameKo: '연합뉴스', country: 'KR', countryFlag: '🇰🇷', url: 'https://en.yna.co.kr', rssUrl: 'https://en.yna.co.kr/RSS/news.xml', category: 'international', reliability: 5 },
+  { id: 'koreaherald', name: 'The Korea Herald', nameKo: '코리아헤럴드', country: 'KR', countryFlag: '🇰🇷', url: 'https://www.koreaherald.com', rssUrl: 'https://www.koreaherald.com/common/rss_xml.php?ct=102', category: 'international', reliability: 4 },
+  // India
+  { id: 'timesofindia', name: 'Times of India', nameKo: '타임스 오브 인디아', country: 'IN', countryFlag: '🇮🇳', url: 'https://timesofindia.indiatimes.com', rssUrl: 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms', category: 'international', reliability: 4 },
+  { id: 'hindustantimes', name: 'Hindustan Times', nameKo: '힌두스탄 타임스', country: 'IN', countryFlag: '🇮🇳', url: 'https://www.hindustantimes.com', rssUrl: 'https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml', category: 'international', reliability: 4 },
+  // Brazil
+  { id: 'folha', name: 'Folha de S.Paulo', nameKo: '폴랴 지 상파울루', country: 'BR', countryFlag: '🇧🇷', url: 'https://www1.folha.uol.com.br/internacional/en/', rssUrl: 'https://feeds.folha.uol.com.br/internacional/en/rss091.xml', category: 'international', reliability: 4 },
+  // Australia
+  { id: 'abcau', name: 'ABC News Australia', nameKo: 'ABC 뉴스 호주', country: 'AU', countryFlag: '🇦🇺', url: 'https://www.abc.net.au/news', rssUrl: 'https://www.abc.net.au/news/feed/2942460/rss.xml', category: 'international', reliability: 5 },
+  { id: 'smh', name: 'Sydney Morning Herald', nameKo: '시드니 모닝 헤럴드', country: 'AU', countryFlag: '🇦🇺', url: 'https://www.smh.com.au', rssUrl: 'https://www.smh.com.au/rss/feed.xml', category: 'international', reliability: 4 },
+  // China (English)
+  { id: 'cgtn', name: 'CGTN', nameKo: 'CGTN', country: 'CN', countryFlag: '🇨🇳', url: 'https://www.cgtn.com', rssUrl: 'https://www.cgtn.com/subscribe/rss/section/world.xml', category: 'international', reliability: 3 },
+  { id: 'xinhua', name: 'Xinhua', nameKo: '신화통신', country: 'CN', countryFlag: '🇨🇳', url: 'https://english.news.cn', rssUrl: 'https://english.news.cn/rss/latest.xml', category: 'international', reliability: 3 },
+  // Canada
+  { id: 'cbc', name: 'CBC News', nameKo: 'CBC 뉴스', country: 'CA', countryFlag: '🇨🇦', url: 'https://www.cbc.ca/news', rssUrl: 'https://www.cbc.ca/webfeed/rss/rss-topstories', category: 'international', reliability: 5 },
+  { id: 'globeandmail', name: 'The Globe and Mail', nameKo: '글로브 앤 메일', country: 'CA', countryFlag: '🇨🇦', url: 'https://www.theglobeandmail.com', rssUrl: 'https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/world/', category: 'international', reliability: 4 },
+  // Russia
+  { id: 'rt', name: 'RT', nameKo: 'RT', country: 'RU', countryFlag: '🇷🇺', url: 'https://www.rt.com', rssUrl: 'https://www.rt.com/rss/news/', category: 'international', reliability: 2 },
+  // Israel
+  { id: 'jpost', name: 'Jerusalem Post', nameKo: '예루살렘 포스트', country: 'IL', countryFlag: '🇮🇱', url: 'https://www.jpost.com', rssUrl: 'https://www.jpost.com/rss/rssfeedsfrontpage.aspx', category: 'international', reliability: 4 },
+  { id: 'haaretz', name: 'Haaretz', nameKo: '하아레츠', country: 'IL', countryFlag: '🇮🇱', url: 'https://www.haaretz.com', rssUrl: 'https://www.haaretz.com/cmlink/1.628752', category: 'international', reliability: 4 },
+  // Saudi Arabia
+  { id: 'arabnews', name: 'Arab News', nameKo: '아랍 뉴스', country: 'SA', countryFlag: '🇸🇦', url: 'https://www.arabnews.com', rssUrl: 'https://www.arabnews.com/rss.xml', category: 'international', reliability: 3 },
+  // Taiwan
+  { id: 'taipeitimes', name: 'Taipei Times', nameKo: '타이베이 타임스', country: 'TW', countryFlag: '🇹🇼', url: 'https://www.taipeitimes.com', rssUrl: 'https://www.taipeitimes.com/xml/index.rss', category: 'international', reliability: 4 },
+  // Italy
+  { id: 'ansa', name: 'ANSA', nameKo: 'ANSA 통신', country: 'IT', countryFlag: '🇮🇹', url: 'https://www.ansa.it/english/', rssUrl: 'https://www.ansa.it/sito/ansait_rss.xml', category: 'international', reliability: 4 },
+  // Spain
+  { id: 'elpais', name: 'El País', nameKo: '엘 파이스', country: 'ES', countryFlag: '🇪🇸', url: 'https://english.elpais.com', rssUrl: 'https://feeds.elpais.com/mrss-s/pages/ep/site/english.elpais.com/portada', category: 'international', reliability: 4 },
 ];
