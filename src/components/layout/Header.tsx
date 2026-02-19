@@ -91,16 +91,6 @@ export function Header() {
             </svg>
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
           </button>
-
-          {/* Profile / Demo badge */}
-          <div className="flex items-center gap-2">
-            <span className="hidden md:inline-block px-2 py-1 bg-amber-500/10 text-amber-400 text-xs rounded-full border border-amber-500/20">
-              데모 모드
-            </span>
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-medium">D</span>
-            </div>
-          </div>
         </div>
       </div>
     </header>

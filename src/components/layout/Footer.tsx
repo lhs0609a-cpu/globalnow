@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export function Footer() {
   return (
     <footer className="border-t border-slate-700/50 bg-slate-900">
@@ -15,8 +17,14 @@ export function Footer() {
             모든 뉴스 콘텐츠는 각 발행사에 귀속됩니다. GLOBALNOW는 정보 제공 목적으로 집계 및 번역합니다.
           </p>
           <div className="flex items-center gap-4 text-xs text-slate-500">
+            <Link
+              href="/auth/login"
+              className="text-slate-500 hover:text-blue-400 transition-colors"
+            >
+              로그인
+            </Link>
+            <span className="text-slate-700">|</span>
             <span>GLOBALNOW v1.0</span>
-            <span>v1.0.0</span>
           </div>
         </div>
       </div>
