@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -10,8 +9,6 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
-    // CSP: allow self, inline styles (Tailwind), images from any HTTPS,
-    // connect to our API domains, fonts from self
     const cspDirectives = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline'",

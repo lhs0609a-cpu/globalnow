@@ -22,14 +22,16 @@ export function useNews(initialParams?: NewsFeedParams) {
       if (p.search) searchParams.set('search', p.search);
 
       const res = await fetch(`/api/news?${searchParams.toString()}`);
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data = await res.json();
+      const newItems = Array.isArray(data.items) ? data.items : [];
 
       if (append) {
-        setItems(prev => [...prev, ...data.items]);
+        setItems(prev => [...prev, ...newItems]);
       } else {
-        setItems(data.items);
+        setItems(newItems);
       }
-      setTotal(data.total);
+      setTotal(data.total || 0);
     } catch (error) {
       console.error('Failed to fetch news:', error);
     } finally {
@@ -65,8 +67,9 @@ export function useTrending() {
     async function fetchTrending() {
       try {
         const res = await fetch('/api/trends');
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setItems(data);
+        setItems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch trending:', error);
       } finally {

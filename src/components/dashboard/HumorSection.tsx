@@ -20,8 +20,9 @@ export function HumorSection() {
     async function fetchHumor() {
       try {
         const res = await fetch('/api/humor/trending');
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setItems(data);
+        setItems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch humor:', error);
       } finally {

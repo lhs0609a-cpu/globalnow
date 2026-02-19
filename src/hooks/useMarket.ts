@@ -11,8 +11,11 @@ export function useMarket() {
     async function fetchMarket() {
       try {
         const res = await fetch('/api/market');
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
         const marketData = await res.json();
-        setData(marketData);
+        if (marketData && Array.isArray(marketData.indices)) {
+          setData(marketData);
+        }
       } catch (error) {
         console.error('Failed to fetch market data:', error);
       } finally {

@@ -23,8 +23,9 @@ export function TrendingBar() {
     async function fetchTrending() {
       try {
         const res = await fetch('/api/trends');
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setItems(data);
+        setItems(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch trending:', error);
       } finally {

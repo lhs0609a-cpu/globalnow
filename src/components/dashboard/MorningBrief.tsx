@@ -27,8 +27,11 @@ export function MorningBrief() {
     async function fetchBrief() {
       try {
         const res = await fetch('/api/brief/today');
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setBrief(data);
+        if (data && Array.isArray(data.items)) {
+          setBrief(data);
+        }
       } catch (error) {
         console.error('Failed to fetch brief:', error);
       } finally {

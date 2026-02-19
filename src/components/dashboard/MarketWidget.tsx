@@ -7,7 +7,7 @@ import { formatPrice, formatPercent } from '@/lib/utils/format';
 export function MarketWidget() {
   const { data, isLoading } = useMarket();
 
-  if (isLoading || !data) return <MarketSkeleton />;
+  if (isLoading || !data || !Array.isArray(data.indices)) return <MarketSkeleton />;
 
   return (
     <div className="space-y-4">
@@ -92,7 +92,7 @@ export function MarketWidget() {
                 stroke="url(#fearGreedGradient)"
                 strokeWidth="8"
                 strokeLinecap="round"
-                strokeDasharray={`${(data.fearGreed.value / 100) * 157} 157`}
+                strokeDasharray={`${((data.fearGreed?.value || 0) / 100) * 157} 157`}
               />
               <defs>
                 <linearGradient id="fearGreedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -103,8 +103,8 @@ export function MarketWidget() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-end">
-              <span className="text-white text-xl font-bold">{data.fearGreed.value}</span>
-              <span className="text-slate-400 text-xs">{data.fearGreed.labelKo}</span>
+              <span className="text-white text-xl font-bold">{data.fearGreed?.value ?? '-'}</span>
+              <span className="text-slate-400 text-xs">{data.fearGreed?.labelKo ?? ''}</span>
             </div>
           </div>
         </div>
