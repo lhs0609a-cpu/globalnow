@@ -29,8 +29,8 @@ export async function getNewsFeed(params?: NewsFeedParams): Promise<{ items: New
   if (liveItems && liveItems.length > 0) {
     let filtered = [...liveItems];
 
-    // Sort by published date (most recent first)
-    filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    // Sort by published date (most recent first), treating invalid dates as 0
+    filtered.sort((a, b) => (new Date(b.publishedAt).getTime() || 0) - (new Date(a.publishedAt).getTime() || 0));
 
     if (params?.category && params.category !== 'all') {
       filtered = filtered.filter(n => n.category === params.category);
@@ -149,7 +149,7 @@ export async function getNewsByCountry(country: string, limit = 5): Promise<News
         const { collectRSSByCountryAsNewsItems } = await import('@/lib/collectors/rss-collector');
         const items = await collectRSSByCountryAsNewsItems(country, limit);
         if (items.length > 0) {
-          items.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+          items.sort((a, b) => (new Date(b.publishedAt).getTime() || 0) - (new Date(a.publishedAt).getTime() || 0));
           return items.slice(0, limit);
         }
       } catch (error) {
