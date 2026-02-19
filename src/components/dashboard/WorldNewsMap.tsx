@@ -1,47 +1,60 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { useCountryNews } from '@/hooks/useCountryNews';
 import { formatRelativeTime } from '@/lib/utils/date';
+
+const WorldMapChart = dynamic(() => import('./WorldMapChart'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
+      <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  ),
+});
 
 type CountryInfo = {
   code: string;
   name: string;
   nameKo: string;
   flag: string;
-  // Position on SVG map (approximate center of each country in percentage)
-  x: number;
-  y: number;
 };
 
 const COUNTRIES: CountryInfo[] = [
-  { code: 'US', name: 'United States', nameKo: '미국', flag: '🇺🇸', x: 20, y: 40 },
-  { code: 'CA', name: 'Canada', nameKo: '캐나다', flag: '🇨🇦', x: 20, y: 28 },
-  { code: 'BR', name: 'Brazil', nameKo: '브라질', flag: '🇧🇷', x: 30, y: 65 },
-  { code: 'UK', name: 'United Kingdom', nameKo: '영국', flag: '🇬🇧', x: 47, y: 30 },
-  { code: 'FR', name: 'France', nameKo: '프랑스', flag: '🇫🇷', x: 48, y: 36 },
-  { code: 'DE', name: 'Germany', nameKo: '독일', flag: '🇩🇪', x: 50, y: 32 },
-  { code: 'IT', name: 'Italy', nameKo: '이탈리아', flag: '🇮🇹', x: 51, y: 38 },
-  { code: 'ES', name: 'Spain', nameKo: '스페인', flag: '🇪🇸', x: 46, y: 39 },
-  { code: 'RU', name: 'Russia', nameKo: '러시아', flag: '🇷🇺', x: 65, y: 25 },
-  { code: 'IL', name: 'Israel', nameKo: '이스라엘', flag: '🇮🇱', x: 56, y: 42 },
-  { code: 'SA', name: 'Saudi Arabia', nameKo: '사우디아라비아', flag: '🇸🇦', x: 58, y: 46 },
-  { code: 'QA', name: 'Qatar', nameKo: '카타르', flag: '🇶🇦', x: 59, y: 45 },
-  { code: 'IN', name: 'India', nameKo: '인도', flag: '🇮🇳', x: 68, y: 47 },
-  { code: 'CN', name: 'China', nameKo: '중국', flag: '🇨🇳', x: 75, y: 38 },
-  { code: 'KR', name: 'South Korea', nameKo: '한국', flag: '🇰🇷', x: 80, y: 38 },
-  { code: 'JP', name: 'Japan', nameKo: '일본', flag: '🇯🇵', x: 83, y: 38 },
-  { code: 'TW', name: 'Taiwan', nameKo: '대만', flag: '🇹🇼', x: 79, y: 44 },
-  { code: 'HK', name: 'Hong Kong', nameKo: '홍콩', flag: '🇭🇰', x: 77, y: 44 },
-  { code: 'SG', name: 'Singapore', nameKo: '싱가포르', flag: '🇸🇬', x: 75, y: 56 },
-  { code: 'AU', name: 'Australia', nameKo: '호주', flag: '🇦🇺', x: 82, y: 68 },
+  { code: 'US', name: 'United States', nameKo: '미국', flag: '🇺🇸' },
+  { code: 'CA', name: 'Canada', nameKo: '캐나다', flag: '🇨🇦' },
+  { code: 'BR', name: 'Brazil', nameKo: '브라질', flag: '🇧🇷' },
+  { code: 'UK', name: 'United Kingdom', nameKo: '영국', flag: '🇬🇧' },
+  { code: 'FR', name: 'France', nameKo: '프랑스', flag: '🇫🇷' },
+  { code: 'DE', name: 'Germany', nameKo: '독일', flag: '🇩🇪' },
+  { code: 'IT', name: 'Italy', nameKo: '이탈리아', flag: '🇮🇹' },
+  { code: 'ES', name: 'Spain', nameKo: '스페인', flag: '🇪🇸' },
+  { code: 'RU', name: 'Russia', nameKo: '러시아', flag: '🇷🇺' },
+  { code: 'IL', name: 'Israel', nameKo: '이스라엘', flag: '🇮🇱' },
+  { code: 'SA', name: 'Saudi Arabia', nameKo: '사우디아라비아', flag: '🇸🇦' },
+  { code: 'QA', name: 'Qatar', nameKo: '카타르', flag: '🇶🇦' },
+  { code: 'IN', name: 'India', nameKo: '인도', flag: '🇮🇳' },
+  { code: 'CN', name: 'China', nameKo: '중국', flag: '🇨🇳' },
+  { code: 'KR', name: 'South Korea', nameKo: '한국', flag: '🇰🇷' },
+  { code: 'JP', name: 'Japan', nameKo: '일본', flag: '🇯🇵' },
+  { code: 'TW', name: 'Taiwan', nameKo: '대만', flag: '🇹🇼' },
+  { code: 'HK', name: 'Hong Kong', nameKo: '홍콩', flag: '🇭🇰' },
+  { code: 'SG', name: 'Singapore', nameKo: '싱가포르', flag: '🇸🇬' },
+  { code: 'AU', name: 'Australia', nameKo: '호주', flag: '🇦🇺' },
 ];
+
+const CODE_TO_COUNTRY = new Map(COUNTRIES.map(c => [c.code, c]));
 
 export function WorldNewsMap() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const { items: news, isLoading, error } = useCountryNews(selectedCountry);
 
-  const selectedInfo = COUNTRIES.find(c => c.code === selectedCountry);
+  const selectedInfo = selectedCountry ? CODE_TO_COUNTRY.get(selectedCountry) : null;
+
+  const handleSelectCountry = useCallback((code: string | null) => {
+    setSelectedCountry(code);
+  }, []);
 
   return (
     <section className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
@@ -57,81 +70,11 @@ export function WorldNewsMap() {
 
       <div className="flex flex-col lg:flex-row">
         {/* Map Area */}
-        <div className="flex-1 p-4 min-h-[300px] lg:min-h-[400px] relative">
-          {/* SVG World Map Background */}
-          <div className="relative w-full h-full" style={{ minHeight: 300 }}>
-            {/* Simple world outline using SVG */}
-            <svg
-              viewBox="0 0 100 80"
-              className="w-full h-full absolute inset-0"
-              preserveAspectRatio="xMidYMid meet"
-            >
-              {/* Ocean background */}
-              <rect width="100" height="80" fill="transparent" />
-
-              {/* Simplified continent outlines */}
-              {/* North America */}
-              <path d="M5,18 L10,12 L22,10 L30,14 L32,22 L28,32 L22,38 L18,45 L14,48 L10,42 L8,35 L5,28 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-              {/* South America */}
-              <path d="M22,50 L28,48 L33,52 L35,58 L34,65 L30,72 L26,76 L22,72 L20,65 L19,58 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-              {/* Europe */}
-              <path d="M43,18 L48,16 L55,18 L56,22 L54,28 L50,32 L48,38 L44,40 L42,36 L40,30 L42,24 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-              {/* Africa */}
-              <path d="M44,42 L50,40 L56,42 L60,48 L58,56 L55,64 L50,70 L46,68 L42,62 L40,54 L42,48 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-              {/* Asia */}
-              <path d="M56,16 L65,12 L78,14 L85,18 L88,24 L86,32 L82,38 L78,42 L72,48 L66,50 L60,46 L56,40 L54,32 L55,24 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-              {/* Australia */}
-              <path d="M74,58 L82,56 L88,60 L90,66 L86,72 L80,74 L74,70 L72,64 Z" fill="rgb(51,65,85)" stroke="rgb(71,85,105)" strokeWidth="0.3" opacity="0.6" />
-
-              {/* Connection lines from selected country */}
-              {selectedCountry && selectedInfo && (
-                <line
-                  x1={selectedInfo.x}
-                  y1={selectedInfo.y}
-                  x2={selectedInfo.x}
-                  y2={selectedInfo.y}
-                  stroke="rgb(59,130,246)"
-                  strokeWidth="0"
-                  opacity="0"
-                />
-              )}
-            </svg>
-
-            {/* Country markers */}
-            {COUNTRIES.map(country => (
-              <button
-                key={country.code}
-                onClick={() => setSelectedCountry(
-                  selectedCountry === country.code ? null : country.code
-                )}
-                className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-200 z-10 group
-                  ${selectedCountry === country.code
-                    ? 'scale-125'
-                    : 'hover:scale-110'
-                  }`}
-                style={{ left: `${country.x}%`, top: `${country.y}%` }}
-                title={`${country.flag} ${country.nameKo}`}
-              >
-                {/* Pulse ring for selected */}
-                {selectedCountry === country.code && (
-                  <span className="absolute inset-0 rounded-full bg-blue-500/30 animate-ping" style={{ width: 32, height: 32, left: -8, top: -8 }} />
-                )}
-                <span
-                  className={`relative flex items-center justify-center w-8 h-8 rounded-full text-sm cursor-pointer
-                    ${selectedCountry === country.code
-                      ? 'bg-blue-500 ring-2 ring-blue-400 shadow-lg shadow-blue-500/30'
-                      : 'bg-slate-700 hover:bg-slate-600 ring-1 ring-slate-600'
-                    }`}
-                >
-                  {country.flag}
-                </span>
-                {/* Tooltip */}
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-0.5 bg-slate-900 text-white text-[10px] rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  {country.nameKo}
-                </span>
-              </button>
-            ))}
-          </div>
+        <div className="flex-1 p-2 lg:p-4">
+          <WorldMapChart
+            selectedCountry={selectedCountry}
+            onSelectCountry={handleSelectCountry}
+          />
         </div>
 
         {/* News Panel */}
