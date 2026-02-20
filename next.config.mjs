@@ -15,7 +15,7 @@ const nextConfig = {
       "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
       "img-src 'self' https: data:",
       "font-src 'self' https://cdn.jsdelivr.net",
-      "connect-src 'self' https://newsapi.org https://generativelanguage.googleapis.com https://api.frankfurter.dev https://api.alternative.me https://query1.finance.yahoo.com https://api.coingecko.com https://cdn.jsdelivr.net",
+      "connect-src 'self' https://newsapi.org https://generativelanguage.googleapis.com https://api.frankfurter.dev https://api.alternative.me https://query1.finance.yahoo.com https://api.coingecko.com https://cdn.jsdelivr.net https://api.mymemory.translated.net",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

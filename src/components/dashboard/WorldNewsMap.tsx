@@ -140,7 +140,7 @@ export function WorldNewsMap() {
                         {item.title}
                       </p>
                       <div className="flex items-center justify-between text-[10px] text-slate-500">
-                        <span>{item.source?.nameKo || item.sourceId}</span>
+                        <span>{item.source?.countryFlag} {item.source?.nameKo || item.sourceId}</span>
                         <span>{formatRelativeTime(item.publishedAt)}</span>
                       </div>
                     </a>

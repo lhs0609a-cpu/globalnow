@@ -58,12 +58,29 @@ async function translateViaGemini(text: string): Promise<string | null> {
   }
 }
 
-/** Translate text to Korean with fallback chain: Google → Groq → Gemini → original */
+/** Translate via MyMemory free API (no API key needed) */
+async function translateViaMyMemory(text: string): Promise<string | null> {
+  try {
+    const encoded = encodeURIComponent(text.slice(0, 500));
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encoded}&langpair=en|ko`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    const data = await res.json();
+    const translated = data.responseData?.translatedText;
+    if (translated && translated !== text && data.responseStatus === 200) {
+      return translated;
+    }
+    return null;
+  } catch (error) {
+    console.error('MyMemory translation error:', error);
+    return null;
+  }
+}
+
+/** Translate text to Korean with fallback chain: Google → Groq → Gemini → MyMemory → original */
 export async function translateToKorean(text: string): Promise<string> {
   if (!text) return text;
-
-  // If no translation services available at all, skip caching
-  if (!hasTranslation() && !hasGroq() && !hasGemini()) return text;
 
   return cacheGetOrSet(
     `translate:${Buffer.from(text.slice(0, 100)).toString('base64')}`,
@@ -80,6 +97,10 @@ export async function translateToKorean(text: string): Promise<string> {
       const geminiResult = await translateViaGemini(text);
       if (geminiResult) return geminiResult;
 
+      // Fallback to MyMemory (free, no API key)
+      const myMemoryResult = await translateViaMyMemory(text);
+      if (myMemoryResult) return myMemoryResult;
+
       // All failed - return original
       return text;
     },
@@ -90,7 +111,6 @@ export async function translateToKorean(text: string): Promise<string> {
 /** Batch translate multiple texts to Korean */
 export async function translateBatch(texts: string[]): Promise<string[]> {
   if (!texts.length) return [];
-  if (!hasTranslation() && !hasGroq() && !hasGemini()) return texts;
 
   // Try Google batch translation (supports multiple queries)
   if (hasTranslation()) {
