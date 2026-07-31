@@ -1,4 +1,13 @@
-export type NewsCategory = 'international' | 'economy' | 'tech' | 'politics' | 'risk' | 'culture';
+export type NewsCategory =
+  | 'international'
+  | 'economy'
+  | 'tech'
+  | 'politics'
+  | 'risk'
+  | 'culture'
+  | 'science'
+  | 'health'
+  | 'sports';
 
 export type NewsSource = {
   id: string;
@@ -55,15 +64,21 @@ export type NewsFeedParams = {
   search?: string;
 };
 
+export type TrendingSource =
+  | 'hackernews' | 'producthunt' | 'reddit' | 'github'
+  | 'v2ex' | 'zhihu' | '36kr' | 'qiita' | 'hatena'
+  | 'geeknews' | 'disquiet' | 'lobsters' | 'tabnews' | 'devto';
+
 export type TrendingItem = {
   id: string;
   title: string;
   titleKo?: string;
   url: string;
-  source: 'hackernews' | 'producthunt' | 'reddit' | 'github';
+  source: TrendingSource;
   score: number;
   commentCount?: number;
   subreddit?: string;
+  region?: string;
   publishedAt: string;
 };
 

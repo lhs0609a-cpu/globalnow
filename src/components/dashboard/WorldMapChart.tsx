@@ -6,6 +6,7 @@ import {
   Geographies,
   Geography,
   Marker,
+  ZoomableGroup,
 } from 'react-simple-maps';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -26,12 +27,36 @@ const MARKER_COUNTRIES: { code: string; coordinates: [number, number]; label: st
   { code: 'QA', coordinates: [51.18, 25.35], label: 'QA' },
 ];
 
+// Labels for major supported countries (excluding MARKER_COUNTRIES which already have labels)
+const COUNTRY_LABELS: { code: string; coordinates: [number, number]; label: string }[] = [
+  { code: 'US', coordinates: [-98, 39], label: 'US' },
+  { code: 'CA', coordinates: [-106, 56], label: 'CA' },
+  { code: 'BR', coordinates: [-51, -10], label: 'BR' },
+  { code: 'UK', coordinates: [-2, 54], label: 'UK' },
+  { code: 'FR', coordinates: [2, 47], label: 'FR' },
+  { code: 'DE', coordinates: [10, 51], label: 'DE' },
+  { code: 'IT', coordinates: [12, 43], label: 'IT' },
+  { code: 'ES', coordinates: [-4, 40], label: 'ES' },
+  { code: 'RU', coordinates: [100, 60], label: 'RU' },
+  { code: 'IL', coordinates: [35, 31], label: 'IL' },
+  { code: 'SA', coordinates: [45, 24], label: 'SA' },
+  { code: 'IN', coordinates: [78, 22], label: 'IN' },
+  { code: 'CN', coordinates: [104, 35], label: 'CN' },
+  { code: 'KR', coordinates: [127, 36], label: 'KR' },
+  { code: 'JP', coordinates: [138, 36], label: 'JP' },
+  { code: 'TW', coordinates: [121, 24], label: 'TW' },
+  { code: 'AU', coordinates: [134, -25], label: 'AU' },
+];
+
 type Props = {
   selectedCountry: string | null;
   onSelectCountry: (code: string | null) => void;
+  center: [number, number];
+  zoom: number;
+  onMoveEnd: (position: { coordinates: [number, number]; zoom: number }) => void;
 };
 
-function WorldMapChartInner({ selectedCountry, onSelectCountry }: Props) {
+function WorldMapChartInner({ selectedCountry, onSelectCountry, center, zoom, onMoveEnd }: Props) {
   return (
     <ComposableMap
       projection="geoNaturalEarth1"
@@ -40,89 +65,129 @@ function WorldMapChartInner({ selectedCountry, onSelectCountry }: Props) {
       height={420}
       style={{ width: '100%', height: 'auto' }}
     >
-      <Geographies geography={GEO_URL}>
-        {({ geographies }) =>
-          geographies.map((geo) => {
-            const code = NUMERIC_TO_CODE[geo.id];
-            const isSupported = !!code;
-            const isSelected = code === selectedCountry;
+      <ZoomableGroup
+        center={center}
+        zoom={zoom}
+        minZoom={1}
+        maxZoom={6}
+        onMoveEnd={onMoveEnd}
+      >
+        <Geographies geography={GEO_URL}>
+          {({ geographies }) =>
+            geographies.map((geo) => {
+              const code = NUMERIC_TO_CODE[geo.id];
+              const isSupported = !!code;
+              const isSelected = code === selectedCountry;
 
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                onClick={() => {
-                  if (isSupported) {
-                    onSelectCountry(isSelected ? null : code);
-                  }
-                }}
-                style={{
-                  default: {
-                    fill: isSelected
-                      ? '#3b82f6'
-                      : isSupported
-                      ? '#334155'
-                      : '#1e293b',
-                    stroke: '#0f172a',
-                    strokeWidth: 0.5,
-                    outline: 'none',
-                    cursor: isSupported ? 'pointer' : 'default',
-                  },
-                  hover: {
-                    fill: isSupported
-                      ? isSelected
-                        ? '#60a5fa'
-                        : '#475569'
-                      : '#1e293b',
-                    stroke: isSupported ? '#475569' : '#0f172a',
-                    strokeWidth: isSupported ? 0.75 : 0.5,
-                    outline: 'none',
-                    cursor: isSupported ? 'pointer' : 'default',
-                  },
-                  pressed: {
-                    fill: isSelected ? '#2563eb' : '#334155',
-                    stroke: '#0f172a',
-                    strokeWidth: 0.5,
-                    outline: 'none',
-                  },
-                }}
-              />
-            );
-          })
-        }
-      </Geographies>
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  onClick={() => {
+                    if (isSupported) {
+                      onSelectCountry(isSelected ? null : code);
+                    }
+                  }}
+                  style={{
+                    default: {
+                      fill: isSelected
+                        ? '#3b82f6'
+                        : isSupported
+                        ? '#475569'
+                        : '#1e293b',
+                      stroke: '#0f172a',
+                      strokeWidth: 0.5,
+                      outline: 'none',
+                      cursor: isSupported ? 'pointer' : 'default',
+                    },
+                    hover: {
+                      fill: isSupported
+                        ? isSelected
+                          ? '#60a5fa'
+                          : '#64748b'
+                        : '#1e293b',
+                      stroke: isSupported ? '#94a3b8' : '#0f172a',
+                      strokeWidth: isSupported ? 1 : 0.5,
+                      outline: 'none',
+                      cursor: isSupported ? 'pointer' : 'default',
+                    },
+                    pressed: {
+                      fill: isSelected ? '#2563eb' : '#475569',
+                      stroke: '#0f172a',
+                      strokeWidth: 0.5,
+                      outline: 'none',
+                    },
+                  }}
+                />
+              );
+            })
+          }
+        </Geographies>
 
-      {/* Clickable markers for small countries */}
-      {MARKER_COUNTRIES.map((marker) => {
-        const isSelected = selectedCountry === marker.code;
-        return (
-          <Marker
-            key={marker.code}
-            coordinates={marker.coordinates}
-            onClick={() => onSelectCountry(isSelected ? null : marker.code)}
-          >
-            <circle
-              r={5}
-              fill={isSelected ? '#3b82f6' : '#475569'}
-              stroke={isSelected ? '#60a5fa' : '#64748b'}
-              strokeWidth={1.5}
-              style={{ cursor: 'pointer' }}
-            />
-            <text
-              textAnchor="middle"
-              y={-10}
-              style={{
-                fontSize: '9px',
-                fill: '#94a3b8',
-                fontWeight: 600,
-                pointerEvents: 'none',
-              }}
+        {/* Labels for major supported countries */}
+        {COUNTRY_LABELS.map((marker) => {
+          const isSelected = selectedCountry === marker.code;
+          return (
+            <Marker
+              key={`label-${marker.code}`}
+              coordinates={marker.coordinates}
+              onClick={() => onSelectCountry(isSelected ? null : marker.code)}
             >
-              {marker.label}
-            </text>
-          </Marker>
-        );
-      })}
+              <circle
+                r={3}
+                fill={isSelected ? '#3b82f6' : '#475569'}
+                stroke={isSelected ? '#60a5fa' : '#64748b'}
+                strokeWidth={1}
+                style={{ cursor: 'pointer' }}
+              />
+              <text
+                textAnchor="middle"
+                y={-7}
+                style={{
+                  fontSize: '8px',
+                  fill: isSelected ? '#60a5fa' : '#94a3b8',
+                  fontWeight: isSelected ? 700 : 500,
+                  pointerEvents: 'none',
+                }}
+              >
+                {marker.label}
+              </text>
+            </Marker>
+          );
+        })}
+
+        {/* Clickable markers for small countries */}
+        {MARKER_COUNTRIES.map((marker) => {
+          const isSelected = selectedCountry === marker.code;
+          return (
+            <Marker
+              key={marker.code}
+              coordinates={marker.coordinates}
+              onClick={() => onSelectCountry(isSelected ? null : marker.code)}
+            >
+              <circle
+                r={5}
+                fill={isSelected ? '#3b82f6' : '#475569'}
+                stroke={isSelected ? '#60a5fa' : '#64748b'}
+                strokeWidth={1.5}
+                style={{ cursor: 'pointer' }}
+              />
+              <text
+                textAnchor="middle"
+                y={-10}
+                style={{
+                  fontSize: '9px',
+                  fill: '#94a3b8',
+                  fontWeight: 600,
+                  pointerEvents: 'none',
+                }}
+              >
+                {marker.label}
+              </text>
+            </Marker>
+          );
+        })}
+      </ZoomableGroup>
     </ComposableMap>
   );
 }

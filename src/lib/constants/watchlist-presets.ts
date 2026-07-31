@@ -1,4 +1,5 @@
 import { WatchlistItem } from '@/types/watchdog';
+import { STOCK_NAME_MAP } from './stock-database';
 
 export type PresetGroup = {
   label: string;
@@ -34,8 +35,12 @@ export const WATCHLIST_PRESETS: PresetGroup[] = [
   },
 ];
 
-/** Flat lookup: ticker -> company name/nameKo for matching */
-export const TICKER_NAME_MAP: Record<string, { name: string; nameKo: string }> = {};
+/** Flat lookup: ticker -> company name/nameKo for matching.
+ *  Merges presets + full stock database for comprehensive coverage. */
+export const TICKER_NAME_MAP: Record<string, { name: string; nameKo: string }> = {
+  ...STOCK_NAME_MAP,
+};
+// Overlay preset data (in case names differ slightly)
 for (const group of WATCHLIST_PRESETS) {
   for (const item of group.items) {
     TICKER_NAME_MAP[item.ticker] = { name: item.name, nameKo: item.nameKo };

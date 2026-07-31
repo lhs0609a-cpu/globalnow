@@ -10,6 +10,8 @@ const navItems = [
   { href: '/brief', label: '모닝 브리프', icon: '☀️' },
   { href: '/watchdog', label: '포트폴리오 워치독', icon: '🐕' },
   { href: '/reports', label: '산업 리포트', icon: '📋' },
+  { href: '/sources', label: '미디어 랭킹', icon: '🏆' },
+  { href: '/events', label: '전시회/컨퍼런스', icon: '📅' },
   { href: '/compare', label: '관점 대결', icon: '⚔️' },
   { href: '/sentiment', label: '센티먼트 맵', icon: '🗺️' },
   { href: '/signals', label: '인사이더 시그널', icon: '🔔' },

@@ -169,9 +169,9 @@ export async function getNewsByCountry(country: string, limit = 5): Promise<News
   );
 }
 
-export async function getTrending(source?: string): Promise<TrendingItem[]> {
+export async function getTrending(source?: string, region?: string): Promise<TrendingItem[]> {
   return cacheGetOrSet(
-    `trending:${source || 'all'}`,
+    `trending:${source || 'all'}:${region || 'all'}`,
     async () => {
       const results: TrendingItem[] = [];
 
@@ -188,6 +188,7 @@ export async function getTrending(source?: string): Promise<TrendingItem[]> {
               source: 'hackernews' as const,
               score: s.score,
               commentCount: s.descendants || 0,
+              region: 'US',
               publishedAt: new Date(s.time * 1000).toISOString(),
             }));
             results.push(...hnItems);
@@ -197,20 +198,56 @@ export async function getTrending(source?: string): Promise<TrendingItem[]> {
         }
       }
 
-      // If we got HN data and only wanted HN, return it
-      if (source === 'hackernews' && results.length > 0) return results;
+      // Try community collectors for new sources
+      const newSources = ['v2ex', 'zhihu', '36kr', 'qiita', 'hatena', 'geeknews', 'disquiet', 'lobsters', 'tabnews', 'devto'];
+      const shouldCollectCommunities = !source || newSources.includes(source);
 
-      // For other sources or if HN failed, merge with mock data
-      const mockItems = getMockTrending(source);
+      if (shouldCollectCommunities) {
+        try {
+          const { collectAllCommunities } = await import('@/lib/collectors/community-collector');
+          const communityItems = await collectAllCommunities();
+          if (communityItems.length > 0) {
+            if (source) {
+              results.push(...communityItems.filter(c => c.source === source));
+            } else {
+              results.push(...communityItems);
+            }
+          }
+        } catch (error) {
+          console.error('Community collection failed:', error);
+        }
+      }
+
+      // If we have live data for the requested source, return it
+      if (source && results.length > 0) {
+        if (region && region !== 'all') {
+          return results.filter(r => r.region === region);
+        }
+        return results;
+      }
+
+      // Merge with mock data for sources we don't have live data for
+      const mockItems = getMockTrending(source, region);
+      const { getMockCommunityTrending } = await import('@/lib/demo/mock-communities');
+      const mockCommunity = getMockCommunityTrending(source, region);
 
       if (results.length > 0) {
-        // We have live HN data - add mock data for other sources
-        const otherMocks = mockItems.filter(m => m.source !== 'hackernews');
-        return [...results, ...otherMocks];
+        // We have some live data — add mock for missing sources
+        const liveSources = new Set(results.map(r => r.source));
+        const otherMocks = [...mockItems, ...mockCommunity].filter(m => !liveSources.has(m.source));
+        const combined = [...results, ...otherMocks];
+        if (region && region !== 'all') {
+          return combined.filter(r => r.region === region);
+        }
+        return combined;
       }
 
       // Complete fallback to mock
-      return mockItems;
+      const allMock = [...mockItems, ...mockCommunity];
+      if (region && region !== 'all') {
+        return allMock.filter(r => r.region === region);
+      }
+      return allMock;
     },
     120
   );

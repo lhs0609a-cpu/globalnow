@@ -55,47 +55,138 @@ const MOCK_LEADERBOARD: LeaderboardEntry[] = [
   { rank: 5, userId: 'user-5', nickname: '데이터분석가', correctPredictions: 30, totalPredictions: 42, accuracy: 71.4, score: 3000, streak: 7 },
 ];
 
-export async function getPredictions(): Promise<Prediction[]> {
-  if (isDemoMode()) return MOCK_PREDICTIONS;
+/** Manifold Markets API response type */
+type ManifoldMarket = {
+  id: string;
+  question: string;
+  probability: number;
+  volume: number;
+  closeTime: number;
+  createdTime: number;
+  totalLiquidity: number;
+  url: string;
+};
 
+/** Category mapping for Manifold Markets questions */
+function categorizeQuestion(question: string): string {
+  const q = question.toLowerCase();
+  if (q.includes('ai') || q.includes('gpt') || q.includes('tech') || q.includes('software') || q.includes('crypto') || q.includes('bitcoin')) return 'tech';
+  if (q.includes('fed') || q.includes('rate') || q.includes('economy') || q.includes('gdp') || q.includes('inflation') || q.includes('stock') || q.includes('market')) return 'economy';
+  if (q.includes('election') || q.includes('president') || q.includes('congress') || q.includes('vote') || q.includes('trump') || q.includes('biden')) return 'politics';
+  if (q.includes('war') || q.includes('china') || q.includes('russia') || q.includes('ukraine') || q.includes('nato')) return 'international';
+  return 'general';
+}
+
+/** Fetch predictions from Manifold Markets API (free, no key required) */
+async function fetchManifoldMarkets(): Promise<Prediction[]> {
+  try {
+    const res = await fetch('https://api.manifold.markets/v0/markets?limit=20&sort=last-bet-time', {
+      headers: { 'User-Agent': 'GLOBALNOW/1.0' },
+    });
+
+    if (!res.ok) return [];
+
+    const data = await res.json() as ManifoldMarket[];
+    if (!Array.isArray(data)) return [];
+
+    // Filter to binary markets with reasonable activity
+    const binaryMarkets = data.filter(m =>
+      m.probability !== undefined &&
+      m.volume > 100 &&
+      m.closeTime > Date.now()
+    );
+
+    return binaryMarkets.slice(0, 10).map(m => {
+      const probability = Math.round(m.probability * 100);
+      const yesVotes = Math.round(probability * (m.volume / 100));
+      const noVotes = Math.round((100 - probability) * (m.volume / 100));
+
+      return {
+        id: `manifold-${m.id}`,
+        question: m.question,
+        questionKo: m.question, // Could be translated with an AI service
+        description: `Manifold Markets - ${Math.round(m.probability * 100)}% probability`,
+        optionA: 'Yes',
+        optionAKo: '예',
+        optionB: 'No',
+        optionBKo: '아니오',
+        votesA: yesVotes,
+        votesB: noVotes,
+        deadline: new Date(m.closeTime).toISOString(),
+        category: categorizeQuestion(m.question),
+        createdAt: new Date(m.createdTime).toISOString(),
+      };
+    });
+  } catch (error) {
+    console.error('Manifold Markets fetch failed:', error);
+    return [];
+  }
+}
+
+export async function getPredictions(): Promise<Prediction[]> {
   return cacheGetOrSet(
     'predictions:active',
     async () => {
-      const { createServiceRoleClient } = await import('@/lib/supabase/server');
-      const supabase = await createServiceRoleClient();
-      if (!supabase) return MOCK_PREDICTIONS;
+      // Try Manifold Markets first (free, no key needed)
+      const manifoldPredictions = await fetchManifoldMarkets();
+      if (manifoldPredictions.length > 0) {
+        console.log(`[Predictions] Fetched ${manifoldPredictions.length} from Manifold Markets`);
+        return manifoldPredictions;
+      }
 
-      const { data, error } = await supabase
-        .from('predictions')
-        .select('*')
-        .is('resolved_at', null)
-        .order('created_at', { ascending: false });
+      // Try Supabase (only if not demo mode)
+      if (!isDemoMode()) {
+        try {
+          const { createServiceRoleClient } = await import('@/lib/supabase/server');
+          const supabase = await createServiceRoleClient();
+          if (supabase) {
+            const { data, error } = await supabase
+              .from('predictions')
+              .select('*')
+              .is('resolved_at', null)
+              .order('created_at', { ascending: false });
 
-      if (error) return MOCK_PREDICTIONS;
-      return (data || []) as unknown as Prediction[];
+            if (!error && data && data.length > 0) {
+              return data as unknown as Prediction[];
+            }
+          }
+        } catch {
+          // Supabase not available
+        }
+      }
+
+      return MOCK_PREDICTIONS;
     },
     60
   );
 }
 
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
-  if (isDemoMode()) return MOCK_LEADERBOARD;
-
   return cacheGetOrSet(
     'leaderboard',
     async () => {
-      const { createServiceRoleClient } = await import('@/lib/supabase/server');
-      const supabase = await createServiceRoleClient();
-      if (!supabase) return MOCK_LEADERBOARD;
+      // Try Supabase if available
+      if (!isDemoMode()) {
+        try {
+          const { createServiceRoleClient } = await import('@/lib/supabase/server');
+          const supabase = await createServiceRoleClient();
+          if (supabase) {
+            const { data, error } = await supabase
+              .from('leaderboard')
+              .select('*')
+              .order('score', { ascending: false })
+              .limit(20);
 
-      const { data, error } = await supabase
-        .from('leaderboard')
-        .select('*')
-        .order('score', { ascending: false })
-        .limit(20);
+            if (!error && data && data.length > 0) {
+              return data as unknown as LeaderboardEntry[];
+            }
+          }
+        } catch {
+          // Supabase not available
+        }
+      }
 
-      if (error) return MOCK_LEADERBOARD;
-      return (data || []) as unknown as LeaderboardEntry[];
+      return MOCK_LEADERBOARD;
     },
     300
   );

@@ -203,15 +203,15 @@ export const MOCK_NEWS: NewsItem[] = [
   },
 ];
 export const MOCK_TRENDING: TrendingItem[] = [
-  { id: 'hn-1', title: 'Show HN: I built a real-time collaborative code editor', titleKo: 'Show HN: 실시간 협업 코드 에디터를 만들었습니다', url: 'https://news.ycombinator.com', source: 'hackernews', score: 542, commentCount: 187, publishedAt: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
-  { id: 'hn-2', title: 'The hidden cost of cloud computing', titleKo: '클라우드 컴퓨팅의 숨겨진 비용', url: 'https://news.ycombinator.com', source: 'hackernews', score: 389, commentCount: 234, publishedAt: new Date(Date.now() - 1000 * 60 * 90).toISOString() },
-  { id: 'hn-3', title: 'Why SQLite is the most used database engine', titleKo: 'SQLite가 가장 많이 사용되는 데이터베이스 엔진인 이유', url: 'https://news.ycombinator.com', source: 'hackernews', score: 298, commentCount: 156, publishedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString() },
-  { id: 'ph-1', title: 'AI Meeting Assistant 2.0', titleKo: 'AI 미팅 어시스턴트 2.0', url: 'https://www.producthunt.com', source: 'producthunt', score: 1245, commentCount: 89, publishedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString() },
-  { id: 'ph-2', title: 'DesignOps - Automate your design workflow', titleKo: 'DesignOps - 디자인 워크플로우 자동화', url: 'https://www.producthunt.com', source: 'producthunt', score: 987, commentCount: 67, publishedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString() },
-  { id: 'rd-1', title: 'Tesla announces new battery technology breakthrough', titleKo: '테슬라, 새로운 배터리 기술 돌파구 발표', url: 'https://www.reddit.com/r/technology', source: 'reddit', score: 15600, commentCount: 2340, subreddit: 'technology', publishedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString() },
-  { id: 'rd-2', title: 'The job market in tech is finally recovering', titleKo: '테크 취업 시장이 드디어 회복되고 있다', url: 'https://www.reddit.com/r/programming', source: 'reddit', score: 8900, commentCount: 1567, subreddit: 'programming', publishedAt: new Date(Date.now() - 1000 * 60 * 75).toISOString() },
-  { id: 'gh-1', title: 'microsoft/TypeScript - v6.0 Release', titleKo: 'microsoft/TypeScript - v6.0 릴리스', url: 'https://github.com/microsoft/TypeScript', source: 'github', score: 4500, publishedAt: new Date(Date.now() - 1000 * 60 * 150).toISOString() },
-  { id: 'gh-2', title: 'vercel/next.js - App Router Performance Improvements', titleKo: 'vercel/next.js - App Router 성능 개선', url: 'https://github.com/vercel/next.js', source: 'github', score: 3200, publishedAt: new Date(Date.now() - 1000 * 60 * 200).toISOString() },
+  { id: 'hn-1', title: 'Show HN: I built a real-time collaborative code editor', titleKo: 'Show HN: 실시간 협업 코드 에디터를 만들었습니다', url: 'https://news.ycombinator.com', source: 'hackernews', score: 542, commentCount: 187, region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
+  { id: 'hn-2', title: 'The hidden cost of cloud computing', titleKo: '클라우드 컴퓨팅의 숨겨진 비용', url: 'https://news.ycombinator.com', source: 'hackernews', score: 389, commentCount: 234, region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 90).toISOString() },
+  { id: 'hn-3', title: 'Why SQLite is the most used database engine', titleKo: 'SQLite가 가장 많이 사용되는 데이터베이스 엔진인 이유', url: 'https://news.ycombinator.com', source: 'hackernews', score: 298, commentCount: 156, region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString() },
+  { id: 'ph-1', title: 'AI Meeting Assistant 2.0', titleKo: 'AI 미팅 어시스턴트 2.0', url: 'https://www.producthunt.com', source: 'producthunt', score: 1245, commentCount: 89, region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 60).toISOString() },
+  { id: 'ph-2', title: 'DesignOps - Automate your design workflow', titleKo: 'DesignOps - 디자인 워크플로우 자동화', url: 'https://www.producthunt.com', source: 'producthunt', score: 987, commentCount: 67, region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString() },
+  { id: 'rd-1', title: 'Tesla announces new battery technology breakthrough', titleKo: '테슬라, 새로운 배터리 기술 돌파구 발표', url: 'https://www.reddit.com/r/technology', source: 'reddit', score: 15600, commentCount: 2340, subreddit: 'technology', region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString() },
+  { id: 'rd-2', title: 'The job market in tech is finally recovering', titleKo: '테크 취업 시장이 드디어 회복되고 있다', url: 'https://www.reddit.com/r/programming', source: 'reddit', score: 8900, commentCount: 1567, subreddit: 'programming', region: 'US', publishedAt: new Date(Date.now() - 1000 * 60 * 75).toISOString() },
+  { id: 'gh-1', title: 'microsoft/TypeScript - v6.0 Release', titleKo: 'microsoft/TypeScript - v6.0 릴리스', url: 'https://github.com/microsoft/TypeScript', source: 'github', score: 4500, region: 'GLOBAL', publishedAt: new Date(Date.now() - 1000 * 60 * 150).toISOString() },
+  { id: 'gh-2', title: 'vercel/next.js - App Router Performance Improvements', titleKo: 'vercel/next.js - App Router 성능 개선', url: 'https://github.com/vercel/next.js', source: 'github', score: 3200, region: 'GLOBAL', publishedAt: new Date(Date.now() - 1000 * 60 * 200).toISOString() },
 ];
 export function getMockNews(params?: { category?: string; page?: number; limit?: number }): NewsItem[] {
   let filtered = [...MOCK_NEWS];
@@ -224,9 +224,9 @@ export function getMockNews(params?: { category?: string; page?: number; limit?:
   return filtered.slice(start, start + limit);
 }
 
-export function getMockTrending(source?: string): TrendingItem[] {
-  if (source) {
-    return MOCK_TRENDING.filter(t => t.source === source);
-  }
-  return MOCK_TRENDING;
+export function getMockTrending(source?: string, region?: string): TrendingItem[] {
+  let items = [...MOCK_TRENDING];
+  if (source) items = items.filter(t => t.source === source);
+  if (region && region !== 'all') items = items.filter(t => t.region === region);
+  return items;
 }

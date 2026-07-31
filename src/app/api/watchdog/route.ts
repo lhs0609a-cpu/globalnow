@@ -12,9 +12,16 @@ export async function GET(request: NextRequest) {
 
     const tickers = tickersParam
       .split(',')
-      .map(t => t.trim())
-      .filter(Boolean)
+      .map(t => t.trim().toUpperCase())  // Normalize to uppercase
+      .filter(t => /^[A-Z]{1,5}$/.test(t))  // Only valid ticker format (1-5 uppercase letters)
       .slice(0, 20); // max 20 tickers
+
+    if (tickers.length === 0) {
+      return NextResponse.json(
+        { error: '유효한 티커 형식이 아닙니다 (1-5자 영문 대문자)' },
+        { status: 400 }
+      );
+    }
 
     const page = Math.max(1, Math.min(100, Number(searchParams.get('page')) || 1));
     const limit = Math.max(1, Math.min(50, Number(searchParams.get('limit')) || 20));

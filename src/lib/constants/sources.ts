@@ -67,4 +67,66 @@ export const NEWS_SOURCES: NewsSource[] = [
   { id: 'ansa', name: 'ANSA', nameKo: 'ANSA 통신', country: 'IT', countryFlag: '🇮🇹', url: 'https://www.ansa.it/english/', rssUrl: 'https://www.ansa.it/sito/ansait_rss.xml', category: 'international', reliability: 4 },
   // Spain
   { id: 'elpais', name: 'El País', nameKo: '엘 파이스', country: 'ES', countryFlag: '🇪🇸', url: 'https://english.elpais.com', rssUrl: 'https://feeds.elpais.com/mrss-s/pages/ep/site/english.elpais.com/portada', category: 'international', reliability: 4 },
+
+  // ── US broadcast networks ──
+  { id: 'cnn', name: 'CNN', nameKo: 'CNN', country: 'US', countryFlag: '🇺🇸', url: 'https://www.cnn.com', rssUrl: 'http://rss.cnn.com/rss/edition.rss', category: 'international', reliability: 4 },
+  { id: 'nbcnews', name: 'NBC News', nameKo: 'NBC 뉴스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.nbcnews.com', rssUrl: 'https://feeds.nbcnews.com/nbcnews/public/news', category: 'international', reliability: 4 },
+  { id: 'foxnews', name: 'Fox News', nameKo: '폭스뉴스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.foxnews.com', rssUrl: 'https://moxie.foxnews.com/google-publisher/latest.xml', category: 'politics', reliability: 3 },
+  { id: 'abcnews', name: 'ABC News', nameKo: 'ABC 뉴스', country: 'US', countryFlag: '🇺🇸', url: 'https://abcnews.go.com', rssUrl: 'https://feeds.abcnews.com/abcnews/topstories', category: 'international', reliability: 4 },
+  { id: 'cbsnews', name: 'CBS News', nameKo: 'CBS 뉴스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.cbsnews.com', rssUrl: 'https://www.cbsnews.com/latest/rss/main', category: 'international', reliability: 4 },
+  { id: 'pbs', name: 'PBS NewsHour', nameKo: 'PBS 뉴스아워', country: 'US', countryFlag: '🇺🇸', url: 'https://www.pbs.org/newshour/', rssUrl: 'https://www.pbs.org/newshour/feeds/rss/headlines', category: 'international', reliability: 5 },
+  { id: 'npr', name: 'NPR', nameKo: 'NPR', country: 'US', countryFlag: '🇺🇸', url: 'https://www.npr.org', rssUrl: 'https://feeds.npr.org/1001/rss.xml', category: 'international', reliability: 5 },
+
+  // ── US weeklies / long-form ──
+  { id: 'time', name: 'TIME', nameKo: '타임', country: 'US', countryFlag: '🇺🇸', url: 'https://time.com', rssUrl: 'https://time.com/feed/', category: 'international', reliability: 4 },
+  { id: 'newsweek', name: 'Newsweek', nameKo: '뉴스위크', country: 'US', countryFlag: '🇺🇸', url: 'https://www.newsweek.com', rssUrl: 'https://www.newsweek.com/rss', category: 'international', reliability: 3 },
+  { id: 'atlantic', name: 'The Atlantic', nameKo: '디 애틀랜틱', country: 'US', countryFlag: '🇺🇸', url: 'https://www.theatlantic.com', rssUrl: 'https://www.theatlantic.com/feed/all/', category: 'culture', reliability: 4 },
+  { id: 'newyorker', name: 'The New Yorker', nameKo: '뉴요커', country: 'US', countryFlag: '🇺🇸', url: 'https://www.newyorker.com', rssUrl: 'https://www.newyorker.com/feed/everything', category: 'culture', reliability: 4 },
+
+  // ── US politics ──
+  { id: 'thehill', name: 'The Hill', nameKo: '더 힐', country: 'US', countryFlag: '🇺🇸', url: 'https://thehill.com', rssUrl: 'https://thehill.com/news/feed/', category: 'politics', reliability: 4 },
+  { id: 'axios', name: 'Axios', nameKo: '악시오스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.axios.com', rssUrl: 'https://api.axios.com/feed/', category: 'politics', reliability: 4 },
+  { id: 'vox', name: 'Vox', nameKo: '복스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.vox.com', rssUrl: 'https://www.vox.com/rss/index.xml', category: 'politics', reliability: 3 },
+  { id: 'intercept', name: 'The Intercept', nameKo: '디 인터셉트', country: 'US', countryFlag: '🇺🇸', url: 'https://theintercept.com', rssUrl: 'https://theintercept.com/feed/?rss', category: 'risk', reliability: 4 },
+  { id: 'propublica', name: 'ProPublica', nameKo: '프로퍼블리카', country: 'US', countryFlag: '🇺🇸', url: 'https://www.propublica.org', rssUrl: 'https://www.propublica.org/feeds/propublica/main', category: 'politics', reliability: 5 },
+  { id: 'nytimes-opinion', name: 'NYT Opinion', nameKo: '뉴욕타임스 사설', country: 'US', countryFlag: '🇺🇸', url: 'https://www.nytimes.com/section/opinion', rssUrl: 'https://rss.nytimes.com/services/xml/rss/nyt/Opinion.xml', category: 'politics', reliability: 4 },
+  { id: 'guardian-opinion', name: 'Guardian Opinion', nameKo: '가디언 사설', country: 'UK', countryFlag: '🇬🇧', url: 'https://www.theguardian.com/uk/commentisfree', rssUrl: 'https://www.theguardian.com/uk/commentisfree/rss', category: 'politics', reliability: 4 },
+
+  // ── Markets ──
+  { id: 'marketwatch', name: 'MarketWatch', nameKo: '마켓워치', country: 'US', countryFlag: '🇺🇸', url: 'https://www.marketwatch.com', rssUrl: 'https://feeds.content.dowjones.io/public/rss/mw_topstories', category: 'economy', reliability: 4 },
+  { id: 'coindesk', name: 'CoinDesk', nameKo: '코인데스크', country: 'US', countryFlag: '🇺🇸', url: 'https://www.coindesk.com', rssUrl: 'https://www.coindesk.com/arc/outboundfeeds/rss/', category: 'economy', reliability: 3 },
+  { id: 'cointelegraph', name: 'Cointelegraph', nameKo: '코인텔레그래프', country: 'US', countryFlag: '🇺🇸', url: 'https://cointelegraph.com', rssUrl: 'https://cointelegraph.com/rss', category: 'economy', reliability: 3 },
+
+  // ── Tech ──
+  { id: 'cnet', name: 'CNET', nameKo: '씨넷', country: 'US', countryFlag: '🇺🇸', url: 'https://www.cnet.com', rssUrl: 'https://www.cnet.com/rss/news/', category: 'tech', reliability: 3 },
+  { id: 'engadget', name: 'Engadget', nameKo: '엔가젯', country: 'US', countryFlag: '🇺🇸', url: 'https://www.engadget.com', rssUrl: 'https://www.engadget.com/rss.xml', category: 'tech', reliability: 3 },
+  { id: 'gizmodo', name: 'Gizmodo', nameKo: '기즈모도', country: 'US', countryFlag: '🇺🇸', url: 'https://gizmodo.com', rssUrl: 'https://gizmodo.com/feed', category: 'tech', reliability: 3 },
+  { id: 'zdnet', name: 'ZDNET', nameKo: 'ZDNet', country: 'US', countryFlag: '🇺🇸', url: 'https://www.zdnet.com', rssUrl: 'https://www.zdnet.com/news/rss.xml', category: 'tech', reliability: 4 },
+  { id: 'venturebeat', name: 'VentureBeat', nameKo: '벤처비트', country: 'US', countryFlag: '🇺🇸', url: 'https://venturebeat.com', rssUrl: 'https://venturebeat.com/feed/', category: 'tech', reliability: 3 },
+  { id: 'restofworld', name: 'Rest of World', nameKo: '레스트 오브 월드', country: 'US', countryFlag: '🇺🇸', url: 'https://restofworld.org', rssUrl: 'https://restofworld.org/feed/latest', category: 'tech', reliability: 4 },
+  { id: 'electrek', name: 'Electrek', nameKo: '일렉트렉', country: 'US', countryFlag: '🇺🇸', url: 'https://electrek.co', rssUrl: 'https://electrek.co/feed/', category: 'tech', reliability: 3 },
+
+  // ── Science ──
+  { id: 'nature', name: 'Nature', nameKo: '네이처', country: 'UK', countryFlag: '🇬🇧', url: 'https://www.nature.com', rssUrl: 'https://www.nature.com/nature.rss', category: 'science', reliability: 5 },
+  { id: 'physorg', name: 'Phys.org', nameKo: '피즈닷오알지', country: 'UK', countryFlag: '🇬🇧', url: 'https://phys.org', rssUrl: 'https://phys.org/rss-feed/', category: 'science', reliability: 4 },
+  { id: 'sciencenews', name: 'Science News', nameKo: '사이언스 뉴스', country: 'US', countryFlag: '🇺🇸', url: 'https://www.sciencenews.org', rssUrl: 'https://www.sciencenews.org/feed', category: 'science', reliability: 5 },
+  { id: 'sciencedaily', name: 'ScienceDaily', nameKo: '사이언스데일리', country: 'US', countryFlag: '🇺🇸', url: 'https://www.sciencedaily.com', rssUrl: 'https://www.sciencedaily.com/rss/all.xml', category: 'science', reliability: 4 },
+  { id: 'quanta', name: 'Quanta Magazine', nameKo: '콴타 매거진', country: 'US', countryFlag: '🇺🇸', url: 'https://www.quantamagazine.org', rssUrl: 'https://api.quantamagazine.org/feed/', category: 'science', reliability: 5 },
+
+  // ── Health ──
+  { id: 'medicalxpress', name: 'Medical Xpress', nameKo: '메디컬익스프레스', country: 'UK', countryFlag: '🇬🇧', url: 'https://medicalxpress.com', rssUrl: 'https://medicalxpress.com/rss-feed/', category: 'health', reliability: 4 },
+
+  // ── Sports ──
+  { id: 'espn', name: 'ESPN', nameKo: 'ESPN', country: 'US', countryFlag: '🇺🇸', url: 'https://www.espn.com', rssUrl: 'https://www.espn.com/espn/rss/news', category: 'sports', reliability: 4 },
+  { id: 'bbcsport', name: 'BBC Sport', nameKo: 'BBC 스포츠', country: 'UK', countryFlag: '🇬🇧', url: 'https://www.bbc.com/sport', rssUrl: 'https://feeds.bbci.co.uk/sport/rss.xml', category: 'sports', reliability: 5 },
+
+  // ── Entertainment ──
+  { id: 'tmz', name: 'TMZ', nameKo: 'TMZ', country: 'US', countryFlag: '🇺🇸', url: 'https://www.tmz.com', rssUrl: 'https://www.tmz.com/rss.xml', category: 'culture', reliability: 2 },
+  { id: 'deadline', name: 'Deadline', nameKo: '데드라인', country: 'US', countryFlag: '🇺🇸', url: 'https://deadline.com', rssUrl: 'https://deadline.com/feed/', category: 'culture', reliability: 4 },
+
+  // ── Europe ──
+  { id: 'skynews', name: 'Sky News', nameKo: '스카이뉴스', country: 'UK', countryFlag: '🇬🇧', url: 'https://news.sky.com', rssUrl: 'https://feeds.skynews.com/feeds/rss/world.xml', category: 'international', reliability: 4 },
+  { id: 'independent', name: 'The Independent', nameKo: '인디펜던트', country: 'UK', countryFlag: '🇬🇧', url: 'https://www.independent.co.uk', rssUrl: 'https://www.independent.co.uk/news/world/rss', category: 'international', reliability: 4 },
+  { id: 'euronews', name: 'Euronews', nameKo: '유로뉴스', country: 'FR', countryFlag: '🇫🇷', url: 'https://www.euronews.com', rssUrl: 'https://www.euronews.com/rss', category: 'international', reliability: 4 },
+  { id: 'spiegel', name: 'Der Spiegel', nameKo: '슈피겔', country: 'DE', countryFlag: '🇩🇪', url: 'https://www.spiegel.de', rssUrl: 'https://www.spiegel.de/schlagzeilen/index.rss', category: 'international', reliability: 4 },
 ];

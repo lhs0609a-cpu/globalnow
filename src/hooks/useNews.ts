@@ -69,7 +69,7 @@ export function useTrending() {
         const res = await fetch('/api/trends');
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         const data = await res.json();
-        setItems(Array.isArray(data) ? data : []);
+        setItems(Array.isArray(data) ? data : (data.items || []));
       } catch (error) {
         console.error('Failed to fetch trending:', error);
       } finally {
