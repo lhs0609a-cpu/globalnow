@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isDemoMode, hasResend } from '@/lib/demo/is-demo-mode';
+import { isAuthorizedJobRequest } from '@/lib/auth/verify-job-request';
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isAuthorizedJobRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

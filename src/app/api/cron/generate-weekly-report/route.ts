@@ -5,10 +5,10 @@ import { PROMPTS } from '@/lib/ai/prompts';
 import { generateWithGroq } from '@/lib/ai/groq';
 import { generateWithGemini } from '@/lib/ai/gemini';
 import { IndustryId, WeeklyReportContent } from '@/types/report';
+import { isAuthorizedJobRequest } from '@/lib/auth/verify-job-request';
 
 export async function POST(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isAuthorizedJobRequest(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

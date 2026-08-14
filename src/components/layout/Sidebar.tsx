@@ -4,25 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-
-const navItems = [
-  { href: '/', label: '대시보드', icon: '📊' },
-  { href: '/brief', label: '모닝 브리프', icon: '☀️' },
-  { href: '/watchdog', label: '포트폴리오 워치독', icon: '🐕' },
-  { href: '/reports', label: '산업 리포트', icon: '📋' },
-  { href: '/sources', label: '미디어 랭킹', icon: '🏆' },
-  { href: '/events', label: '전시회/컨퍼런스', icon: '📅' },
-  { href: '/compare', label: '관점 대결', icon: '⚔️' },
-  { href: '/sentiment', label: '센티먼트 맵', icon: '🗺️' },
-  { href: '/signals', label: '인사이더 시그널', icon: '🔔' },
-  { href: '/fun', label: '유머', icon: '😄' },
-  { href: '/predict', label: '뉴스 배틀', icon: '🎯' },
-];
-
-const bottomItems = [
-  { href: '/profile', label: '마이페이지', icon: '👤' },
-  { href: '/settings', label: '설정', icon: '⚙️' },
-];
+import { ACCOUNT_ITEMS, NAV_ITEMS } from '@/lib/constants/navigation';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -43,11 +25,12 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:flex lg:flex-col w-64 bg-slate-900 border-r border-slate-700/50 h-[calc(100vh-4rem)] sticky top-16">
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(item => (
+      <nav aria-label="주요 메뉴" className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {NAV_ITEMS.map(item => (
           <Link
             key={item.href}
             href={item.href}
+            aria-current={pathname === item.href ? 'page' : undefined}
             className={clsx(
               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
               pathname === item.href
@@ -62,10 +45,11 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 py-4 border-t border-slate-700/50 space-y-1">
-        {bottomItems.map(item => (
+        {ACCOUNT_ITEMS.map(item => (
           <Link
             key={item.href}
             href={item.href}
+            aria-current={pathname === item.href ? 'page' : undefined}
             className={clsx(
               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
               pathname === item.href
