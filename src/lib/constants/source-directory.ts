@@ -13,6 +13,8 @@ import {
 } from '@/types/directory';
 import { KR_DIRECTORY_SITES } from '@/lib/constants/source-directory-kr';
 import { WORLD_DIRECTORY_SITES } from '@/lib/constants/source-directory-world';
+import { WORLD_EXTRA_SITES } from '@/lib/constants/source-directory-world-extra';
+import { HUMOR_DIRECTORY_SITES } from '@/lib/constants/source-directory-humor';
 
 export type { DirectoryGroup, DirectoryGroupId, DirectoryScope, DirectorySite, MediaLean };
 
@@ -165,6 +167,8 @@ export const DIRECTORY_GROUPS: DirectoryGroup[] = [
   { id: 'kr-tax', label: '세무·조세', labelEn: 'Korean Tax', icon: '🧾', description: '세정 뉴스와 신고 실무', scope: 'kr' },
   { id: 'kr-media', label: '언론 비평', labelEn: 'Media Watch', icon: '📢', description: '언론을 감시하는 매체', scope: 'kr' },
   { id: 'kr-agri', label: '농업·수산', labelEn: 'Korean Agriculture', icon: '🌾', description: '농정 뉴스와 농산물 시세', scope: 'kr' },
+  { id: 'kr-humor', label: '유머·짤', labelEn: 'Korean Humor', icon: '😂', description: '국내 밈이 처음 만들어지는 유머 게시판', scope: 'kr' },
+  { id: 'kr-webtoon', label: '웹툰', labelEn: 'Korean Webtoons', icon: '📱', description: '국내 웹툰 플랫폼', scope: 'kr' },
   { id: 'korea-en', label: '한국 영자매체', labelEn: 'Korea in English', icon: '🇰🇷', description: '한국 뉴스를 영어로 전하는 매체', scope: 'kr' },
 
   // ─────────── 해외 — 주제별 (이용량 많은 순) ───────────
@@ -176,6 +180,11 @@ export const DIRECTORY_GROUPS: DirectoryGroup[] = [
   { id: 'tech', label: '테크', labelEn: 'Technology', icon: '💻', description: 'IT·스타트업·제품 리뷰', scope: 'global' },
   { id: 'sports', label: '스포츠', labelEn: 'Sports', icon: '⚽', description: '미국·유럽 스포츠 매체', scope: 'global' },
   { id: 'entertainment', label: '연예·엔터', labelEn: 'Entertainment', icon: '🎬', description: '할리우드와 셀럽 뉴스', scope: 'global' },
+  { id: 'meme', label: '밈', labelEn: 'Memes', icon: '🃏', description: '전세계 밈이 모이고 만들어지는 플랫폼', scope: 'global' },
+  { id: 'humor', label: '유머 사이트', labelEn: 'Humor', icon: '😂', description: '나라별로 사람들이 실제로 웃으러 가는 곳', scope: 'global' },
+  { id: 'satire', label: '풍자 뉴스', labelEn: 'Satire', icon: '🗞', description: '어니언식 가짜 뉴스로 진짜를 비트는 매체', scope: 'global' },
+  { id: 'gif', label: 'GIF·움짤', labelEn: 'GIFs', icon: '🎞', description: '움짤 검색과 편집', scope: 'global' },
+  { id: 'comic', label: '웹코믹', labelEn: 'Webcomics', icon: '✏️', description: '오래 연재된 영어권 웹코믹', scope: 'global' },
   { id: 'politics', label: '정치·시사', labelEn: 'Politics', icon: '🏛️', description: '워싱턴 정가와 정책 전문 매체', scope: 'global' },
   { id: 'science', label: '과학', labelEn: 'Science', icon: '🔬', description: '학술지와 과학 저널리즘', scope: 'global' },
   { id: 'ai', label: 'AI', labelEn: 'AI', icon: '🤖', description: 'AI 연구 발표와 산업 동향', scope: 'global' },
@@ -479,11 +488,13 @@ const GLOBAL_DIRECTORY_SITES: DirectorySite[] = [
 
 ];
 
-/** 국내 + 해외(주제별) + 해외(국가별) 전체 */
+/** 국내 + 해외(주제별) + 해외(국가별) + 트래픽 보강 + 유머·밈 전체 */
 export const DIRECTORY_SITES: DirectorySite[] = [
   ...KR_DIRECTORY_SITES,
   ...GLOBAL_DIRECTORY_SITES,
   ...WORLD_DIRECTORY_SITES,
+  ...WORLD_EXTRA_SITES,
+  ...HUMOR_DIRECTORY_SITES,
 ];
 
 /**

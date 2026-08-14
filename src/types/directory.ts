@@ -26,6 +26,12 @@ export type DirectoryGroupId =
   | 'entertainment'
   | 'learning'
   | 'portal'
+  // ── 해외 유머·밈 ──
+  | 'meme'
+  | 'humor'
+  | 'satire'
+  | 'comic'
+  | 'gif'
   // ── 해외 국가별 ──
   | 'uk'
   | 'europe-west'
@@ -74,7 +80,9 @@ export type DirectoryGroupId =
   | 'kr-agri'
   | 'kr-nk'
   | 'kr-culture'
-  | 'kr-community';
+  | 'kr-community'
+  | 'kr-humor'
+  | 'kr-webtoon';
 
 export type DirectoryGroup = {
   id: DirectoryGroupId;
@@ -94,7 +102,9 @@ export type DirectorySite = {
   group: DirectoryGroupId;
   /**
    * 그룹 내 인지도 순위 (1 = 가장 널리 쓰이는 사이트).
-   * 측정된 트래픽 수치가 아니라 편집 기준의 상대 순위다.
+   *
+   * 대부분은 편집 기준의 상대 순위지만, Similarweb 트래픽 랭킹으로 검증해
+   * 나중에 끼워 넣은 항목은 소수를 쓴다. 3.5는 3과 4 사이에 놓인다는 뜻이다.
    */
   rank: number;
   /** 생략하면 소속 그룹의 scope를 따른다 */
