@@ -4,6 +4,7 @@ import { MobileNav } from '@/components/layout/MobileNav';
 import { Footer } from '@/components/layout/Footer';
 import { DashboardContent } from '@/components/dashboard/DashboardContent';
 import { WorldNewsMap } from '@/components/dashboard/WorldNewsMap';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 export default function HomePage() {
   return (
@@ -14,7 +15,15 @@ export default function HomePage() {
         <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6 overflow-x-hidden">
           <div className="max-w-6xl mx-auto space-y-6">
             {/* World News Map */}
-            <WorldNewsMap />
+            <ErrorBoundary
+              fallback={
+                <div className="bg-slate-800 rounded-xl p-4 text-center">
+                  <p className="text-slate-400 text-sm">세계 뉴스 맵을 불러오지 못했습니다</p>
+                </div>
+              }
+            >
+              <WorldNewsMap />
+            </ErrorBoundary>
 
             {/* Dashboard Content */}
             <DashboardContent />

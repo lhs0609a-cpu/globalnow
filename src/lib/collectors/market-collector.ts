@@ -157,8 +157,11 @@ export async function collectIndexData(): Promise<MarketIndex[]> {
 
   const fetchPromises = symbols.map(async ({ symbol, yahoo, name, nameKo }) => {
     try {
+      // 5d window: this endpoint has no `previousClose`, and `chartPreviousClose`
+      // is the close *before* the window — with a 2d range that yields a two-session
+      // delta. Derive the prior close from the daily close series instead.
       const res = await fetch(
-        `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahoo)}?range=2d&interval=1d`,
+        `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(yahoo)}?range=5d&interval=1d`,
         {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -171,18 +174,59 @@ export async function collectIndexData(): Promise<MarketIndex[]> {
       const data = await res.json() as {
         chart: {
           result: Array<{
-            meta: { regularMarketPrice: number; previousClose: number };
+            meta: {
+              regularMarketPrice?: number;
+              chartPreviousClose?: number;
+              regularMarketTime?: number;
+              gmtoffset?: number;
+            };
+            timestamp?: number[];
+            indicators?: { quote?: Array<{ close?: (number | null)[] }> };
           }>;
         };
       };
 
-      const meta = data.chart?.result?.[0]?.meta;
+      const result = data.chart?.result?.[0];
+      const meta = result?.meta;
       if (!meta) return null;
 
-      const value = meta.regularMarketPrice;
-      const prevClose = meta.previousClose;
-      const change = value - prevClose;
-      const changePercent = prevClose !== 0 ? (change / prevClose) * 100 : 0;
+      const rawCloses = result.indicators?.quote?.[0]?.close ?? [];
+      const bars = (result.timestamp ?? [])
+        .map((t, i) => ({ t, c: rawCloses[i] }))
+        .filter((b): b is { t: number; c: number } =>
+          Number.isFinite(b.t) && Number.isFinite(b.c)
+        );
+
+      const lastBar = bars.length > 0 ? bars[bars.length - 1] : undefined;
+      const value = Number.isFinite(meta.regularMarketPrice)
+        ? (meta.regularMarketPrice as number)
+        : lastBar?.c;
+      if (value === undefined) return null;
+
+      // The prior close is the last daily bar from a session before the current
+      // one. Comparing prices instead would fail on float rounding, and
+      // `chartPreviousClose` sits before the whole window — only use it as a
+      // last resort.
+      const gmtoffset = Number.isFinite(meta.gmtoffset) ? meta.gmtoffset! : 0;
+      const dayOf = (epochSec: number) => Math.floor((epochSec + gmtoffset) / 86400);
+      const currentDay = Number.isFinite(meta.regularMarketTime)
+        ? dayOf(meta.regularMarketTime!)
+        : lastBar && dayOf(lastBar.t);
+
+      const priorBars = currentDay === undefined
+        ? bars.slice(0, -1)
+        : bars.filter(b => dayOf(b.t) < currentDay);
+      const candidate = priorBars.length > 0
+        ? priorBars[priorBars.length - 1].c
+        : meta.chartPreviousClose;
+
+      const prevClose =
+        typeof candidate === 'number' && Number.isFinite(candidate) && candidate !== 0
+          ? candidate
+          : null;
+
+      const change = prevClose !== null ? value - prevClose : 0;
+      const changePercent = prevClose !== null ? (change / prevClose) * 100 : 0;
 
       return {
         symbol,

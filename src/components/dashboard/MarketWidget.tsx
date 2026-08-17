@@ -40,7 +40,7 @@ export function MarketWidget() {
           <span>🪙</span> 암호화폐
         </h3>
         <div className="space-y-2">
-          {data.crypto.map(coin => (
+          {(data.crypto ?? []).map(coin => (
             <div key={coin.id} className="flex items-center justify-between">
               <div>
                 <span className="text-white text-sm">{coin.nameKo}</span>
@@ -63,7 +63,7 @@ export function MarketWidget() {
           <span>💱</span> 환율
         </h3>
         <div className="space-y-2">
-          {data.forex.map(fx => (
+          {(data.forex ?? []).map(fx => (
             <div key={fx.pair} className="flex items-center justify-between">
               <span className="text-white text-sm">{fx.nameKo}</span>
               <div className="text-right">
