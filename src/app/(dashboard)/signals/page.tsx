@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { formatRelativeTime } from '@/lib/utils/date';
 import { formatNumber } from '@/lib/utils/format';
+import { PageHeader } from '@/components/layout/AppShell';
+import { Button, FilterChip } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
 
 type Signal = {
   id: string;
@@ -34,13 +37,6 @@ const typeLabels: Record<string, string> = {
   sec_filing: 'SEC 공시',
   patent: '특허',
   executive_move: '임원 이동',
-};
-
-const typeIcons: Record<string, string> = {
-  insider_trade: '💰',
-  sec_filing: '📄',
-  patent: '🔬',
-  executive_move: '👔',
 };
 
 const significanceLabels: Record<string, string> = {
@@ -106,84 +102,72 @@ export default function SignalsPage() {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">인사이더 시그널</h1>
-          <p className="text-slate-400 text-sm mt-1">내부자 거래, SEC 공시, 특허, 임원 이동 추적</p>
-        </div>
-        {total > 0 && (
-          <span className="text-sm text-slate-500 mt-1">
-            총 {total}건
-          </span>
-        )}
-      </div>
+    <div>
+      <PageHeader
+        title="인사이더 시그널"
+        description="내부자 거래, SEC 공시, 특허, 임원 이동 추적"
+        action={
+          total > 0 ? (
+            <span className="tnum text-[0.8125rem] text-slate-500">총 {total}건</span>
+          ) : undefined
+        }
+      />
 
       {/* Search bar */}
-      <form onSubmit={handleSearch} className="flex gap-2">
+      <form onSubmit={handleSearch} className="mb-3 flex gap-2">
         <div className="relative flex-1">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          <Icon
+            name="search"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+          />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="회사명 또는 티커 검색 (예: Apple, NVDA, 삼성...)"
-            className="w-full pl-9 pr-3 py-2.5 bg-slate-800 text-white text-sm rounded-lg border border-slate-700 focus:border-blue-500 focus:outline-none placeholder-slate-500"
+            placeholder="회사명 또는 티커 검색 (예: Apple, NVDA, 삼성)"
+            className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] pl-9 pr-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
           />
         </div>
-        <button
-          type="submit"
-          className="px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors"
-        >
+        <Button type="submit" variant="primary">
           검색
-        </button>
+        </Button>
         {searchQuery && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => { setSearchInput(''); setSearchQuery(''); }}
-            className="px-3 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-400 text-sm rounded-lg transition-colors"
           >
             초기화
-          </button>
+          </Button>
         )}
       </form>
 
       {/* Type filter tabs */}
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="scrollbar-hide mb-2 flex gap-1 overflow-x-auto">
         {['all', 'insider_trade', 'sec_filing', 'patent', 'executive_move'].map(type => (
-          <button
+          <FilterChip
             key={type}
+            active={filter === type}
             onClick={() => setFilter(type)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              filter === type ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
           >
-            {type === 'all' ? '전체' : `${typeIcons[type] || ''} ${typeLabels[type] || type}`}
-          </button>
+            {type === 'all' ? '전체' : typeLabels[type] || type}
+          </FilterChip>
         ))}
       </div>
 
       {/* Significance filter */}
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-500">중요도:</span>
+      <div className="mb-5 flex flex-wrap items-center gap-1">
+        <span className="mr-1 text-[0.6875rem] text-slate-500">중요도</span>
         {['all', 'high', 'medium', 'low'].map(sig => (
           <button
             key={sig}
+            type="button"
+            aria-pressed={significanceFilter === sig}
             onClick={() => setSignificanceFilter(sig)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+            className={`rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
               significanceFilter === sig
-                ? sig === 'high' ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                  : sig === 'medium' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                  : sig === 'low' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                  : 'bg-slate-600 text-white'
-                : 'bg-slate-800 text-slate-500 hover:text-slate-300'
+                ? 'bg-white/[0.09] text-slate-100'
+                : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
             }`}
           >
             {sig === 'all' ? '전체' : significanceLabels[sig] || sig}
@@ -192,83 +176,106 @@ export default function SignalsPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="flex justify-center py-16">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
         </div>
       ) : signals.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-slate-500 text-lg">시그널을 찾을 수 없습니다</p>
-          <p className="text-slate-600 text-sm mt-1">검색어나 필터를 변경해 보세요</p>
+        <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
+          <p className="text-[0.875rem] font-medium text-slate-300">
+            시그널을 찾을 수 없습니다
+          </p>
+          <p className="mt-1 text-[0.8125rem] text-slate-500">
+            검색어나 필터를 변경해 보세요
+          </p>
         </div>
       ) : (
         <>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {signals.map(signal => {
               const isExpanded = expandedId === signal.id;
               return (
                 <div
                   key={signal.id}
-                  className={`bg-slate-800 rounded-xl p-5 transition-all cursor-pointer ${
-                    isExpanded ? 'ring-1 ring-blue-500/50' : 'hover:ring-1 hover:ring-slate-600'
-                  }`}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
                   onClick={() => setExpandedId(isExpanded ? null : signal.id)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setExpandedId(isExpanded ? null : signal.id);
+                    }
+                  }}
+                  className={`cursor-pointer rounded-xl border bg-slate-800 px-5 py-4 transition-colors ${
+                    isExpanded
+                      ? 'border-blue-500/40'
+                      : 'border-white/[0.06] hover:border-white/[0.12]'
+                  }`}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <span className="text-2xl flex-shrink-0">{typeIcons[signal.type] || '📊'}</span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2 mb-1 flex-wrap">
-                          <Badge variant={signal.significance === 'high' ? 'danger' : signal.significance === 'medium' ? 'warning' : 'info'}>
-                            {significanceLabels[signal.significance] || signal.significance}
-                          </Badge>
-                          <span className="text-slate-500 text-xs">{typeLabels[signal.type] || signal.type}</span>
-                          {signal.ticker && (
-                            <span className="text-blue-400 text-xs font-mono bg-blue-500/10 px-1.5 py-0.5 rounded">
-                              ${signal.ticker}
-                            </span>
-                          )}
-                          {signal.company && (
-                            <span className="text-slate-400 text-xs">{signal.company}</span>
-                          )}
-                        </div>
-                        <h3 className="text-white font-semibold">{signal.titleKo}</h3>
-
-                        {/* Expanded content */}
-                        {isExpanded && (
-                          <div className="mt-3 space-y-2">
-                            <p className="text-slate-300 text-sm">{signal.descriptionKo}</p>
-                            <p className="text-slate-500 text-xs italic">{signal.description}</p>
-                            {signal.sourceUrl && (
-                              <a
-                                href={signal.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 text-blue-400 text-xs hover:text-blue-300 mt-1"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                원문 보기 →
-                              </a>
-                            )}
-                          </div>
+                  <div className="flex items-start gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                        <Badge variant={signal.significance === 'high' ? 'danger' : signal.significance === 'medium' ? 'warning' : 'info'}>
+                          {significanceLabels[signal.significance] || signal.significance}
+                        </Badge>
+                        <span className="text-[0.6875rem] text-slate-500">
+                          {typeLabels[signal.type] || signal.type}
+                        </span>
+                        {signal.ticker && (
+                          <span className="rounded bg-blue-400/10 px-1.5 py-0.5 font-mono text-[0.6875rem] text-blue-400">
+                            ${signal.ticker}
+                          </span>
                         )}
+                        {signal.company && (
+                          <span className="text-[0.6875rem] text-slate-400">{signal.company}</span>
+                        )}
+                      </div>
 
-                        <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
-                          <span>{formatRelativeTime(signal.detectedAt)}</span>
-                          <span>{signal.source}</span>
-                          {signal.value && <span className="text-amber-400">${formatNumber(signal.value)}</span>}
+                      <h3 className="text-[0.9375rem] font-semibold leading-snug text-slate-100">
+                        {signal.titleKo}
+                      </h3>
+
+                      {/* Expanded content */}
+                      {isExpanded && (
+                        <div className="mt-3 space-y-2 border-l-2 border-white/[0.08] pl-3">
+                          <p className="text-[0.8125rem] leading-relaxed text-slate-300">
+                            {signal.descriptionKo}
+                          </p>
+                          <p className="text-xs italic leading-relaxed text-slate-500">
+                            {signal.description}
+                          </p>
+                          {signal.sourceUrl && (
+                            <a
+                              href={signal.sourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 transition-colors hover:text-blue-300"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              원문 보기
+                              <Icon name="external" className="h-3 w-3" />
+                            </a>
+                          )}
                         </div>
+                      )}
+
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.6875rem] text-slate-500">
+                        <span>{formatRelativeTime(signal.detectedAt)}</span>
+                        <span>{signal.source}</span>
+                        {signal.value && (
+                          <span className="tnum text-amber-400">
+                            ${formatNumber(signal.value)}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                      <svg
-                        className={`w-4 h-4 text-slate-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
+
+                    <Icon
+                      name="chevronDown"
+                      className={`mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 transition-transform ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
                   </div>
                 </div>
               );
@@ -277,14 +284,14 @@ export default function SignalsPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-4">
-              <button
+            <div className="flex items-center justify-center gap-1.5 pt-6">
+              <Button
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 이전
-              </button>
+              </Button>
               <div className="flex items-center gap-1">
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                   let pageNum: number;
@@ -300,11 +307,13 @@ export default function SignalsPage() {
                   return (
                     <button
                       key={pageNum}
+                      type="button"
                       onClick={() => setPage(pageNum)}
-                      className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                      aria-current={page === pageNum ? 'page' : undefined}
+                      className={`tnum h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
                         page === pageNum
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-slate-800 text-slate-400 hover:text-white'
+                          ? 'bg-slate-100 text-slate-900'
+                          : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
                       }`}
                     >
                       {pageNum}
@@ -312,13 +321,13 @@ export default function SignalsPage() {
                   );
                 })}
               </div>
-              <button
+              <Button
+                size="sm"
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={!hasMore}
-                className="px-3 py-2 rounded-lg text-sm font-medium bg-slate-800 text-slate-400 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 다음
-              </button>
+              </Button>
             </div>
           )}
         </>

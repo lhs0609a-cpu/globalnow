@@ -71,41 +71,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">GN</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">GLOBAL<span className="text-blue-400">NOW</span></h1>
-          <p className="text-slate-400 text-sm mt-2">글로벌 뉴스 대시보드에 로그인</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
+      <div className="w-full max-w-[22rem]">
+        <div className="mb-7 text-center">
+          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold tracking-tight text-white">
+            GN
+          </span>
+          <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+            Global<span className="text-slate-500">now</span>
+          </h1>
+          <p className="mt-1 text-[0.8125rem] text-slate-500">
+            글로벌 뉴스 대시보드에 로그인
+          </p>
         </div>
 
-        <form onSubmit={handleLogin} className="bg-slate-800 rounded-2xl p-6 space-y-4">
+        <form
+          onSubmit={handleLogin}
+          className="space-y-3.5 rounded-xl border border-white/[0.06] bg-slate-800 p-5"
+        >
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 text-[0.8125rem] text-red-400">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">이메일</label>
+            <label htmlFor="email" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              이메일
+            </label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="your@email.com"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">비밀번호</label>
+            <label htmlFor="password" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              비밀번호
+            </label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="••••••••"
               required
             />
@@ -113,26 +126,26 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 font-medium transition-colors disabled:opacity-50"
+            className="h-9 w-full rounded-lg bg-blue-500 text-[0.8125rem] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
-            {isLoading ? '로그인 중...' : '로그인'}
+            {isLoading ? '로그인 중…' : '로그인'}
           </button>
 
-          <div className="relative my-4">
+          <div className="relative py-1">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-700" />
+              <div className="w-full border-t border-white/[0.06]" />
             </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-slate-800 px-2 text-slate-500">또는</span>
+            <div className="relative flex justify-center">
+              <span className="bg-slate-800 px-2 text-[0.6875rem] text-slate-600">또는</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="w-full bg-slate-700 hover:bg-slate-600 text-white rounded-lg py-2.5 font-medium transition-colors flex items-center justify-center gap-2"
+            className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[0.8125rem] font-medium text-slate-200 transition-colors hover:border-white/[0.14] hover:bg-white/[0.06]"
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -142,9 +155,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-slate-500 text-sm mt-4">
+        <p className="mt-4 text-center text-[0.8125rem] text-slate-500">
           계정이 없으신가요?{' '}
-          <Link href="/auth/signup" className="text-blue-400 hover:text-blue-300">
+          <Link href="/auth/signup" className="font-medium text-blue-400 transition-colors hover:text-blue-300">
             회원가입
           </Link>
         </p>

@@ -44,24 +44,27 @@ export function VoteButton({
     <button
       onClick={handleVote}
       disabled={hasVoted || disabled}
-      className={`relative w-full p-3 rounded-lg text-left transition-all overflow-hidden ${
+      className={`relative w-full overflow-hidden rounded-lg border px-3.5 py-2.5 text-left transition-colors ${
         hasVoted
-          ? choice === 'A'
-            ? 'bg-blue-500/20 border border-blue-500/30'
-            : 'bg-purple-500/20 border border-purple-500/30'
-          : 'bg-slate-700 hover:bg-slate-600 border border-transparent'
+          ? 'border-white/[0.1] bg-white/[0.03]'
+          : 'border-white/[0.06] bg-white/[0.03] hover:border-white/[0.14] hover:bg-white/[0.06]'
       }`}
     >
+      {/* 투표 후 채워지는 막대 — 배경으로 깔아야 글자를 가리지 않는다 */}
       {hasVoted && (
         <div
-          className={`absolute inset-0 ${choice === 'A' ? 'bg-blue-500/10' : 'bg-purple-500/10'}`}
+          className={`absolute inset-y-0 left-0 transition-[width] duration-500 ${
+            choice === 'A' ? 'bg-blue-500/20' : 'bg-violet-500/20'
+          }`}
           style={{ width: `${percentage}%` }}
         />
       )}
-      <div className="relative flex items-center justify-between">
-        <span className="text-white text-sm">{label}</span>
+      <div className="relative flex items-center justify-between gap-3">
+        <span className="text-[0.8125rem] text-slate-100">{label}</span>
         {hasVoted && (
-          <span className="text-slate-300 text-sm font-semibold">{percentage}%</span>
+          <span className="tnum text-[0.8125rem] font-semibold text-slate-200">
+            {percentage}%
+          </span>
         )}
       </div>
     </button>

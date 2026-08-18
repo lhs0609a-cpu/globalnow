@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { PageHeader } from '@/components/layout/AppShell';
+import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
 
 type SentimentData = {
   country: string;
@@ -45,68 +47,85 @@ export default function SentimentPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">센티먼트 맵</h1>
-        <p className="text-slate-400 text-sm mt-1">전세계 뉴스 감정 분석 현황</p>
-      </div>
+    <div>
+      <PageHeader title="센티먼트 맵" description="전세계 뉴스 감정 분석 현황" />
 
-      {/* Map placeholder */}
-      <div className="bg-slate-800 rounded-xl p-6 relative overflow-hidden min-h-[400px]">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <p className="text-slate-500 text-sm">Interactive world map (requires Leaflet)</p>
+      <Card>
+        <CardHeader title="국가별 감정" description="카드를 선택하면 상세 지표를 봅니다" icon="sentiment" />
+        <CardDivider />
+        <div className="grid grid-cols-2 gap-2 p-4 sm:grid-cols-3 md:grid-cols-5">
+          {data.map(item => {
+            const active = selectedCountry?.country === item.country;
+            return (
+              <button
+                key={item.country}
+                type="button"
+                onClick={() => setSelectedCountry(item)}
+                aria-pressed={active}
+                className={`rounded-lg border p-3 text-left transition-colors ${
+                  active
+                    ? 'border-blue-500/50 bg-blue-500/[0.08]'
+                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.14]'
+                }`}
+              >
+                <span className="text-base leading-none">{item.flag}</span>
+                <p className="mt-1.5 text-[0.8125rem] font-medium text-slate-100">
+                  {item.countryKo}
+                </p>
+                <span
+                  className={`mt-1.5 inline-block rounded px-1.5 py-0.5 text-[0.625rem] font-medium ${getSentimentColor(item.sentiment)}`}
+                >
+                  {getSentimentLabel(item.sentiment)}
+                </span>
+              </button>
+            );
+          })}
         </div>
-        {/* Country grid as fallback */}
-        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {data.map(item => (
-            <button
-              key={item.country}
-              onClick={() => setSelectedCountry(item)}
-              className={`p-3 rounded-lg border transition-all ${
-                selectedCountry?.country === item.country
-                  ? 'border-blue-500 bg-blue-500/10'
-                  : 'border-slate-700 bg-slate-700/30 hover:border-slate-600'
-              }`}
-            >
-              <div className="text-2xl mb-1">{item.flag}</div>
-              <div className="text-white text-sm font-medium">{item.countryKo}</div>
-              <div className={`text-xs mt-1 px-2 py-0.5 rounded-full inline-block ${getSentimentColor(item.sentiment)}`}>
-                {getSentimentLabel(item.sentiment)}
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
+      </Card>
 
       {/* Details panel */}
       {selectedCountry && (
-        <div className="bg-slate-800 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">{selectedCountry.flag}</span>
+        <Card className="mt-5">
+          <div className="flex items-center gap-3 px-5 py-4">
+            <span className="text-xl leading-none">{selectedCountry.flag}</span>
             <div>
-              <h2 className="text-white text-xl font-bold">{selectedCountry.countryKo}</h2>
-              <p className="text-slate-400 text-sm">분석 기사 수: {selectedCountry.articleCount.toLocaleString()}건</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-slate-700/30 rounded-lg p-4">
-              <p className="text-slate-400 text-xs mb-1">감정 점수</p>
-              <p className={`text-2xl font-bold ${selectedCountry.sentiment >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                {selectedCountry.sentiment > 0 ? '+' : ''}{selectedCountry.sentiment.toFixed(2)}
+              <h2 className="text-[0.9375rem] font-semibold text-slate-100">
+                {selectedCountry.countryKo}
+              </h2>
+              <p className="tnum text-xs text-slate-500">
+                분석 기사 {selectedCountry.articleCount.toLocaleString()}건
               </p>
             </div>
-            <div className="bg-slate-700/30 rounded-lg p-4">
-              <p className="text-slate-400 text-xs mb-1">주요 토픽</p>
-              <p className="text-white text-lg font-semibold">{selectedCountry.topTopic}</p>
+          </div>
+          <CardDivider />
+          <div className="grid grid-cols-1 gap-px bg-white/[0.05] sm:grid-cols-3">
+            <div className="bg-slate-800 px-5 py-4">
+              <p className="text-[0.6875rem] text-slate-500">감정 점수</p>
+              <p
+                className={`tnum mt-1 text-2xl font-semibold tracking-tight ${
+                  selectedCountry.sentiment >= 0 ? 'text-emerald-400' : 'text-red-400'
+                }`}
+              >
+                {selectedCountry.sentiment > 0 ? '+' : ''}
+                {selectedCountry.sentiment.toFixed(2)}
+              </p>
             </div>
-            <div className="bg-slate-700/30 rounded-lg p-4">
-              <p className="text-slate-400 text-xs mb-1">감정 상태</p>
-              <p className={`text-lg font-semibold ${getSentimentColor(selectedCountry.sentiment).split(' ')[0]}`}>
+            <div className="bg-slate-800 px-5 py-4">
+              <p className="text-[0.6875rem] text-slate-500">주요 토픽</p>
+              <p className="mt-1 text-[0.9375rem] font-semibold text-slate-100">
+                {selectedCountry.topTopic}
+              </p>
+            </div>
+            <div className="bg-slate-800 px-5 py-4">
+              <p className="text-[0.6875rem] text-slate-500">감정 상태</p>
+              <p
+                className={`mt-1 text-[0.9375rem] font-semibold ${getSentimentColor(selectedCountry.sentiment).split(' ')[0]}`}
+              >
                 {getSentimentLabel(selectedCountry.sentiment)}
               </p>
             </div>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

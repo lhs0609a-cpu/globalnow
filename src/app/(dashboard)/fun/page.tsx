@@ -5,20 +5,22 @@ import Link from 'next/link';
 import { HumorItem } from '@/types/prediction';
 import { formatNumber } from '@/lib/utils/format';
 import { Tabs } from '@/components/ui/Tabs';
+import { PageHeader } from '@/components/layout/AppShell';
+import { Icon } from '@/components/ui/Icon';
 
 const tabs = [
   { id: 'all', label: '전체' },
-  { id: 'meme', label: '밈', icon: '🖼️' },
-  { id: 'gif', label: 'GIF', icon: '🎬' },
-  { id: 'satire', label: '풍자', icon: '🎭' },
-  { id: 'comic', label: '만화', icon: '📰' },
+  { id: 'meme', label: '밈' },
+  { id: 'gif', label: 'GIF' },
+  { id: 'satire', label: '풍자' },
+  { id: 'comic', label: '만화' },
 ];
 
 const subPages = [
-  { href: '/fun/memes', label: '밈 모음', icon: '🖼️', desc: '최신 인터넷 밈' },
-  { href: '/fun/gifs', label: 'GIF 모음', icon: '🎬', desc: '재미있는 GIF' },
-  { href: '/fun/satire', label: '풍자 뉴스', icon: '🎭', desc: 'The Onion 스타일' },
-  { href: '/fun/comics', label: '만화', icon: '📰', desc: 'XKCD, 시사만평' },
+  { href: '/fun/memes', label: '밈 모음', desc: '최신 인터넷 밈' },
+  { href: '/fun/gifs', label: 'GIF 모음', desc: '재미있는 GIF' },
+  { href: '/fun/satire', label: '풍자 뉴스', desc: 'The Onion 스타일' },
+  { href: '/fun/comics', label: '만화', desc: 'XKCD, 시사만평' },
 ];
 
 export default function FunPage() {
@@ -44,64 +46,72 @@ export default function FunPage() {
   }, [activeType]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">유머 & 트렌딩</h1>
-        <p className="text-slate-400 text-sm mt-1">뉴스에 지친 당신을 위한 유머 모음</p>
-      </div>
+    <div>
+      <PageHeader title="유머 & 트렌딩" description="뉴스에 지친 당신을 위한 유머 모음" />
 
       {/* Sub-page links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
         {subPages.map(page => (
           <Link
             key={page.href}
             href={page.href}
-            className="bg-slate-800 rounded-xl p-4 hover:bg-slate-700/80 transition-colors group"
+            className="group rounded-xl border border-white/[0.06] bg-slate-800 p-4 transition-colors hover:border-white/[0.14]"
           >
-            <span className="text-2xl">{page.icon}</span>
-            <p className="text-white text-sm font-semibold mt-2 group-hover:text-blue-400 transition-colors">{page.label}</p>
-            <p className="text-slate-500 text-xs mt-0.5">{page.desc}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[0.875rem] font-semibold text-slate-100 transition-colors group-hover:text-blue-400">
+                {page.label}
+              </p>
+              <Icon
+                name="chevronRight"
+                className="h-4 w-4 text-slate-600 transition-colors group-hover:text-blue-400"
+              />
+            </div>
+            <p className="mt-1 text-xs text-slate-500">{page.desc}</p>
           </Link>
         ))}
       </div>
 
       {/* Filter tabs */}
-      <Tabs tabs={tabs} activeTab={activeType} onChange={setActiveType} />
+      <Tabs tabs={tabs} activeTab={activeType} onChange={setActiveType} className="mb-5" />
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="flex justify-center py-16">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map(item => (
             <a
               key={item.id}
               href={item.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-slate-800 rounded-xl overflow-hidden hover:ring-1 hover:ring-slate-600 transition-all group"
+              className="group overflow-hidden rounded-xl border border-white/[0.06] bg-slate-800 transition-colors hover:border-white/[0.14]"
             >
               {item.imageUrl && (
-                <div className="h-48 overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden bg-slate-700">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.imageUrl}
-                    alt={item.titleKo || item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                 </div>
               )}
               <div className="p-4">
-                <p className="text-white text-sm font-medium line-clamp-2 group-hover:text-blue-400 transition-colors">
+                <p className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
                   {item.titleKo || item.title}
                 </p>
                 {item.content && !item.imageUrl && (
-                  <p className="text-slate-400 text-xs mt-2 line-clamp-3">{item.content}</p>
+                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-slate-500">
+                    {item.content}
+                  </p>
                 )}
-                <div className="flex items-center justify-between mt-3 text-xs text-slate-500">
-                  <span>👍 {formatNumber(item.upvotes)}</span>
-                  <span>{item.source}</span>
+                <div className="mt-3 flex items-center justify-between text-[0.6875rem] text-slate-500">
+                  <span className="tnum">▲ {formatNumber(item.upvotes)}</span>
+                  <span className="truncate">{item.source}</span>
                 </div>
               </div>
             </a>

@@ -1,29 +1,99 @@
 @import "tailwindcss";
 
+/**
+ * 디자인 토큰.
+ *
+ * 화면마다 slate/blue 유틸리티를 직접 쓰고 있어, 팔레트 자체를 다시 정의하면
+ * 28개 파일을 일일이 고치지 않고도 전 화면의 색이 한 번에 정돈된다.
+ * 기본 slate는 푸른기가 옅고 명도 간격이 넓어 어두운 UI에서 층이 흐려지는데,
+ * 아래 램프는 배경-표면-경계선의 간격을 좁게 잡아 대비를 유지한다.
+ */
+@theme {
+  /* 중성색: 차가운 근사 검정 */
+  --color-slate-50: #f7f9fb;
+  --color-slate-100: #edf0f4;
+  --color-slate-200: #dce1e8;
+  --color-slate-300: #bfc6d1;
+  --color-slate-400: #949caa;
+  --color-slate-500: #6b7482;
+  --color-slate-600: #272e3c;
+  --color-slate-700: #1a1f2a;
+  --color-slate-800: #10131a;
+  --color-slate-900: #0a0c11;
+  --color-slate-950: #06070a;
+
+  /* 강조색 */
+  --color-blue-300: #9cbeff;
+  --color-blue-400: #6fa0ff;
+  --color-blue-500: #3b7bff;
+  --color-blue-600: #2563f0;
+
+  /* 의미색 */
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-red-400: #fb7185;
+  --color-red-500: #f43f5e;
+  --color-amber-400: #fbbf24;
+
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+}
+
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  --background: var(--color-slate-900);
+  --foreground: var(--color-slate-100);
+
+  /* 카드 위에 얹는 머리카락 굵기 경계선 */
+  --hairline: rgb(255 255 255 / 0.06);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 제목은 자간을 좁혀야 본문과 위계가 갈린다 */
+h1, h2, h3, h4 {
+  letter-spacing: -0.014em;
+}
+
+/* 숫자가 바뀔 때 자릿수가 흔들리지 않게 (시세·카운터) */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* 키보드 사용자에게만 보이는 포커스 링 */
+:focus-visible {
+  outline: 2px solid var(--color-blue-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgb(59 123 255 / 0.3);
+  color: #fff;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 3px;
+  background: rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: rgb(255 255 255 / 0.16);
+  background-clip: padding-box;
 }
 
 /* Hide scrollbar for tabs */
@@ -33,6 +103,42 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* 로딩 자리표시자: 맥박보다 훑고 지나가는 빛이 덜 산만하다 */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 0.04),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Line clamp */

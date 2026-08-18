@@ -10,7 +10,7 @@ export function NewsFeed({ category }: { category?: string }) {
 
   if (isLoading && items.length === 0) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {Array.from({ length: 6 }).map((_, i) => (
           <NewsCardSkeleton key={i} />
         ))}
@@ -20,17 +20,20 @@ export function NewsFeed({ category }: { category?: string }) {
 
   if (!isLoading && items.length === 0) {
     return (
-      <div className="bg-slate-800 rounded-xl p-12 text-center">
-        <span className="text-4xl block mb-3">📰</span>
-        <p className="text-slate-400">해당 카테고리의 뉴스가 없습니다</p>
-        <p className="text-slate-500 text-sm mt-1">다른 카테고리를 선택해보세요</p>
+      <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
+        <p className="text-[0.875rem] font-medium text-slate-300">
+          해당 카테고리의 뉴스가 없습니다
+        </p>
+        <p className="mt-1 text-[0.8125rem] text-slate-500">
+          다른 카테고리를 선택해보세요
+        </p>
       </div>
     );
   }
 
   return (
     <InfiniteScroll hasMore={hasMore} isLoading={isLoading} onLoadMore={loadMore}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {items.map(news => (
           <NewsCard key={news.id} news={news} />
         ))}

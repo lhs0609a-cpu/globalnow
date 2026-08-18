@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { NewsItem } from '@/types/news';
 import { formatRelativeTime } from '@/lib/utils/date';
+import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
 
 const countries = [
   { code: 'US', flag: '🇺🇸', name: '미국' },
@@ -39,46 +40,71 @@ export function CountryCompare() {
   }, []);
 
   return (
-    <div className="bg-slate-800 rounded-xl p-4">
-      <h3 className="text-white font-semibold text-sm mb-4 flex items-center gap-2">
-        <span>🌍</span> 국가별 주요 뉴스
-      </h3>
+    <Card>
+      <CardHeader
+        title="국가별 주요 뉴스"
+        description="같은 시각, 나라마다 어떤 뉴스를 앞세웠는지 비교합니다"
+        icon="compare"
+      />
+      <CardDivider />
 
       {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 gap-px bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-5">
           {countries.map(country => (
-            <div key={country.code} className="space-y-2">
-              <div className="flex items-center gap-2 pb-2 border-b border-slate-700/50">
-                <span className="text-lg">{country.flag}</span>
-                <span className="text-white text-sm font-medium">{country.name}</span>
+            <div key={country.code} className="bg-slate-800 px-5 py-4">
+              <div className="shimmer mb-3 h-3.5 w-16 rounded bg-white/[0.05]" />
+              <div className="space-y-3">
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="shimmer space-y-1.5">
+                    <div className="h-3 w-full rounded bg-white/[0.05]" />
+                    <div className="h-2.5 w-1/2 rounded bg-white/[0.05]" />
+                  </div>
+                ))}
               </div>
-              {(newsByCountry[country.code] || []).map(news => (
-                <a
-                  key={news.id}
-                  href={news.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-2 rounded hover:bg-slate-700/50 transition-colors"
-                >
-                  <p className="text-white text-xs line-clamp-2 hover:text-blue-400 transition-colors">
-                    {news.titleKo || news.title}
-                  </p>
-                  <p className="text-slate-500 text-[10px] mt-1">
-                    {formatRelativeTime(news.publishedAt)}
-                  </p>
-                </a>
-              ))}
-              {(!newsByCountry[country.code] || newsByCountry[country.code].length === 0) && (
-                <p className="text-slate-500 text-xs py-2">뉴스가 없습니다</p>
-              )}
             </div>
           ))}
         </div>
+      ) : (
+        // 얇은 간격을 배경색으로 만들어 칼럼 사이에 경계선을 세운다
+        <div className="grid grid-cols-1 gap-px bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-5">
+          {countries.map(country => {
+            const items = newsByCountry[country.code] || [];
+            return (
+              <div key={country.code} className="bg-slate-800 px-5 py-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-[0.8125rem] leading-none">{country.flag}</span>
+                  <span className="text-[0.8125rem] font-semibold text-slate-200">
+                    {country.name}
+                  </span>
+                </div>
+
+                {items.length === 0 ? (
+                  <p className="py-2 text-xs text-slate-500">뉴스가 없습니다</p>
+                ) : (
+                  <div className="-mx-2">
+                    {items.map(news => (
+                      <a
+                        key={news.id}
+                        href={news.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group block rounded-md px-2 py-2 transition-colors hover:bg-white/[0.03]"
+                      >
+                        <p className="line-clamp-3 text-xs leading-relaxed text-slate-300 transition-colors group-hover:text-blue-400">
+                          {news.titleKo || news.title}
+                        </p>
+                        <p className="mt-1 text-[0.625rem] text-slate-500">
+                          {formatRelativeTime(news.publishedAt)}
+                        </p>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       )}
-    </div>
+    </Card>
   );
 }

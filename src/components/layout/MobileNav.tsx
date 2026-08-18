@@ -10,9 +10,28 @@ import {
   SECONDARY_NAV_ITEMS,
   type NavItem,
 } from '@/lib/constants/navigation';
+import { Icon } from '@/components/ui/Icon';
 
 function label(item: NavItem) {
   return item.shortLabel ?? item.label;
+}
+
+function SheetLink({ item, active }: { item: NavItem; active: boolean }) {
+  return (
+    <Link
+      href={item.href}
+      aria-current={active ? 'page' : undefined}
+      className={clsx(
+        'flex flex-col items-center gap-2 rounded-xl border px-2 py-3.5 text-center transition-colors',
+        active
+          ? 'border-blue-500/30 bg-blue-500/10 text-blue-400'
+          : 'border-white/[0.06] bg-white/[0.03] text-slate-300 active:bg-white/[0.07]'
+      )}
+    >
+      <Icon name={item.icon} className="h-5 w-5" />
+      <span className="text-[0.6875rem] font-medium leading-tight">{item.label}</span>
+    </Link>
+  );
 }
 
 export function MobileNav() {
@@ -49,58 +68,36 @@ export function MobileNav() {
     <>
       {/* 더보기 시트 */}
       {moreOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
           <button
             type="button"
             aria-label="메뉴 닫기"
             onClick={() => setMoreOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
           />
           <div
             role="dialog"
             aria-modal="true"
             aria-label="전체 메뉴"
-            className="relative bg-slate-900 border-t border-slate-700/50 rounded-t-2xl px-4 pt-3 pb-6 max-h-[75vh] overflow-y-auto"
+            className="relative max-h-[75vh] overflow-y-auto rounded-t-2xl border-t border-white/[0.08] bg-slate-900 px-4 pb-8 pt-3"
           >
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-slate-700" />
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-white/15" />
 
-            <h2 className="text-slate-400 text-xs font-medium mb-2 px-1">전체 메뉴</h2>
+            <h2 className="px-1 pb-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+              전체 메뉴
+            </h2>
             <div className="grid grid-cols-3 gap-2">
               {SECONDARY_NAV_ITEMS.map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={pathname === item.href ? 'page' : undefined}
-                  className={clsx(
-                    'flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-center transition-colors',
-                    pathname === item.href
-                      ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                      : 'bg-slate-800 text-slate-300 border-slate-700/60 hover:bg-slate-700'
-                  )}
-                >
-                  <span className="text-xl">{item.icon}</span>
-                  <span className="text-[11px] font-medium leading-tight">{item.label}</span>
-                </Link>
+                <SheetLink key={item.href} item={item} active={pathname === item.href} />
               ))}
             </div>
 
-            <h2 className="text-slate-400 text-xs font-medium mt-4 mb-2 px-1">계정</h2>
+            <h2 className="px-1 pb-2 pt-5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+              계정
+            </h2>
             <div className="grid grid-cols-3 gap-2">
               {ACCOUNT_ITEMS.map(item => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={pathname === item.href ? 'page' : undefined}
-                  className={clsx(
-                    'flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-center transition-colors',
-                    pathname === item.href
-                      ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
-                      : 'bg-slate-800 text-slate-300 border-slate-700/60 hover:bg-slate-700'
-                  )}
-                >
-                  <span className="text-xl">{item.icon}</span>
-                  <span className="text-[11px] font-medium leading-tight">{item.label}</span>
-                </Link>
+                <SheetLink key={item.href} item={item} active={pathname === item.href} />
               ))}
             </div>
           </div>
@@ -110,25 +107,26 @@ export function MobileNav() {
       {/* 하단 탭바 */}
       <nav
         aria-label="주요 메뉴"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-sm border-t border-slate-700/50"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-slate-900/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
       >
-        <div className="flex items-center justify-around h-16">
-          {PRIMARY_NAV_ITEMS.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={pathname === item.href ? 'page' : undefined}
-              className={clsx(
-                'flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-colors',
-                pathname === item.href
-                  ? 'text-blue-400'
-                  : 'text-slate-500 hover:text-slate-300'
-              )}
-            >
-              <span className="text-xl">{item.icon}</span>
-              <span className="text-[10px] font-medium">{label(item)}</span>
-            </Link>
-          ))}
+        <div className="flex h-14 items-center justify-around">
+          {PRIMARY_NAV_ITEMS.map(item => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? 'page' : undefined}
+                className={clsx(
+                  'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
+                  active ? 'text-blue-400' : 'text-slate-500'
+                )}
+              >
+                <Icon name={item.icon} className="h-[1.125rem] w-[1.125rem]" />
+                <span className="text-[0.625rem] font-medium">{label(item)}</span>
+              </Link>
+            );
+          })}
 
           <button
             type="button"
@@ -136,14 +134,12 @@ export function MobileNav() {
             aria-expanded={moreOpen}
             aria-haspopup="dialog"
             className={clsx(
-              'flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-colors',
-              moreOpen || moreActive
-                ? 'text-blue-400'
-                : 'text-slate-500 hover:text-slate-300'
+              'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
+              moreOpen || moreActive ? 'text-blue-400' : 'text-slate-500'
             )}
           >
-            <span className="text-xl">☰</span>
-            <span className="text-[10px] font-medium">더보기</span>
+            <Icon name="menu" className="h-[1.125rem] w-[1.125rem]" />
+            <span className="text-[0.625rem] font-medium">더보기</span>
           </button>
         </div>
       </nav>

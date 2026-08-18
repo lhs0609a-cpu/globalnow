@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { WatchlistItem } from '@/types/watchdog';
 import { WATCHLIST_PRESETS } from '@/lib/constants/watchlist-presets';
 import { searchStocks, stockToWatchlistItem } from '@/lib/constants/stock-database';
+import { Icon } from '@/components/ui/Icon';
 
 type Props = {
   watchlist: WatchlistItem[];
@@ -90,13 +91,14 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
   }, [highlightIndex, results, searchQuery, handleSelectResult, addCustomTicker]);
 
   return (
-    <div className="bg-slate-800 rounded-xl p-4 space-y-4">
+    <div className="space-y-4 rounded-xl border border-white/[0.06] bg-slate-800 p-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-white font-semibold">관심 종목</h3>
+        <h3 className="text-[0.875rem] font-semibold text-slate-100">관심 종목</h3>
         {watchlist.length > 0 && (
           <button
+            type="button"
             onClick={onClearAll}
-            className="text-xs text-slate-400 hover:text-red-400 transition-colors"
+            className="rounded-md px-2 py-1 text-[0.6875rem] text-slate-500 transition-colors hover:bg-white/[0.04] hover:text-red-400"
           >
             전체 삭제
           </button>
@@ -106,14 +108,10 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
       {/* Search input */}
       <div className="relative">
         <div className="relative">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          <Icon
+            name="search"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+          />
           <input
             ref={inputRef}
             type="text"
@@ -125,8 +123,8 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
             }}
             onFocus={() => searchQuery.length > 0 && setShowDropdown(true)}
             onKeyDown={handleKeyDown}
-            placeholder="종목 검색 (AAPL, 삼성전자, 005930...)"
-            className="w-full pl-9 pr-3 py-2.5 bg-slate-700 text-white text-sm rounded-lg border border-slate-600 focus:border-blue-500 focus:outline-none placeholder-slate-500"
+            placeholder="종목 검색 (AAPL, 삼성전자, 005930)"
+            className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] pl-9 pr-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
           />
         </div>
 
@@ -134,50 +132,49 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
         {showDropdown && searchQuery.length > 0 && (
           <div
             ref={dropdownRef}
-            className="absolute z-20 top-full mt-1 w-full bg-slate-700 border border-slate-600 rounded-lg shadow-xl overflow-hidden"
+            className="absolute top-full z-20 mt-1 w-full overflow-hidden rounded-lg border border-white/[0.1] bg-slate-700 shadow-2xl shadow-black/40"
           >
             {results.length > 0 ? (
-              <>
-                {results.map((stock, idx) => {
-                  const alreadyAdded = hasTicker(stock.ticker);
-                  return (
-                    <button
-                      key={stock.ticker}
-                      onClick={() => !alreadyAdded && handleSelectResult(stock)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                        alreadyAdded
-                          ? 'opacity-40 cursor-not-allowed'
-                          : idx === highlightIndex
-                          ? 'bg-slate-600'
-                          : 'hover:bg-slate-600/50'
-                      }`}
-                      disabled={alreadyAdded}
-                    >
-                      <span className="text-xs text-slate-500 font-mono w-10 flex-shrink-0">
-                        {stock.exchange}
+              results.map((stock, idx) => {
+                const alreadyAdded = hasTicker(stock.ticker);
+                return (
+                  <button
+                    key={stock.ticker}
+                    type="button"
+                    onClick={() => !alreadyAdded && handleSelectResult(stock)}
+                    className={`flex w-full items-center gap-2.5 px-3 py-2 text-left transition-colors ${
+                      alreadyAdded
+                        ? 'cursor-not-allowed opacity-40'
+                        : idx === highlightIndex
+                        ? 'bg-white/[0.07]'
+                        : 'hover:bg-white/[0.05]'
+                    }`}
+                    disabled={alreadyAdded}
+                  >
+                    <span className="w-9 flex-shrink-0 font-mono text-[0.625rem] text-slate-500">
+                      {stock.exchange}
+                    </span>
+                    <span className="w-14 flex-shrink-0 text-[0.8125rem] font-medium text-blue-400">
+                      {stock.ticker}
+                    </span>
+                    <span className="truncate text-[0.8125rem] text-slate-100">
+                      {stock.nameKo}
+                    </span>
+                    {alreadyAdded && (
+                      <span className="ml-auto flex-shrink-0 text-[0.625rem] text-blue-400">
+                        추가됨
                       </span>
-                      <span className="text-blue-400 text-sm font-medium w-16 flex-shrink-0">
-                        {stock.ticker}
-                      </span>
-                      <span className="text-white text-sm truncate">
-                        {stock.nameKo}
-                      </span>
-                      <span className="text-slate-500 text-xs truncate ml-auto">
-                        {stock.name}
-                      </span>
-                      {alreadyAdded && (
-                        <span className="text-blue-400 text-[10px] flex-shrink-0">추가됨</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </>
+                    )}
+                  </button>
+                );
+              })
             ) : (
-              <div className="px-3 py-3 text-sm">
-                <p className="text-slate-400 mb-2">검색 결과 없음</p>
+              <div className="px-3 py-3">
+                <p className="mb-1.5 text-[0.8125rem] text-slate-400">검색 결과 없음</p>
                 <button
+                  type="button"
                   onClick={() => addCustomTicker(searchQuery)}
-                  className="text-blue-400 hover:text-blue-300 text-xs"
+                  className="text-xs font-medium text-blue-400 transition-colors hover:text-blue-300"
                 >
                   &quot;{searchQuery.toUpperCase()}&quot; 직접 추가 (Enter)
                 </button>
@@ -189,20 +186,20 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
 
       {/* Current watchlist */}
       {watchlist.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {watchlist.map(item => (
             <span
               key={item.ticker}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-blue-500/10 text-blue-400 border border-blue-500/20"
+              className="inline-flex items-center gap-1.5 rounded-md bg-blue-400/10 py-1 pl-2.5 pr-1.5 text-xs text-blue-400"
             >
               <span className="font-medium">{item.ticker}</span>
-              <span className="text-blue-400/60 text-xs">{item.nameKo}</span>
               <button
+                type="button"
                 onClick={() => onRemove(item.ticker)}
-                className="ml-1 text-blue-400/40 hover:text-red-400 transition-colors"
+                className="flex h-4 w-4 items-center justify-center rounded text-blue-400/50 transition-colors hover:bg-white/[0.08] hover:text-red-400"
                 aria-label={`${item.nameKo} 삭제`}
               >
-                x
+                <Icon name="close" className="h-3 w-3" strokeWidth={2} />
               </button>
             </span>
           ))}
@@ -215,28 +212,33 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
           const allAdded = group.items.every(i => hasTicker(i.ticker));
           return (
             <div key={group.label}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 font-medium">{group.label}</span>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                  {group.label}
+                </span>
                 {!allAdded && (
                   <button
+                    type="button"
                     onClick={() => onAddGroup(group.items)}
-                    className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                    className="rounded-md px-1.5 py-0.5 text-[0.6875rem] font-medium text-blue-400 transition-colors hover:bg-white/[0.04] hover:text-blue-300"
                   >
                     전체 추가
                   </button>
                 )}
               </div>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {group.items.map(item => {
                   const added = hasTicker(item.ticker);
                   return (
                     <button
                       key={item.ticker}
+                      type="button"
                       onClick={() => (added ? onRemove(item.ticker) : onAdd(item))}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                      aria-pressed={added}
+                      className={`rounded-md px-2 py-1 text-[0.6875rem] font-medium transition-colors ${
                         added
-                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                          : 'bg-slate-700 text-slate-400 hover:text-white hover:bg-slate-600'
+                          ? 'bg-blue-400/10 text-blue-400'
+                          : 'bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] hover:text-slate-100'
                       }`}
                     >
                       {item.ticker}
@@ -250,8 +252,8 @@ export function WatchlistManager({ watchlist, onAdd, onRemove, onAddGroup, onCle
       </div>
 
       {watchlist.length === 0 && (
-        <p className="text-slate-500 text-sm text-center py-2">
-          종목을 검색하거나 프리셋을 클릭하여 추가하세요
+        <p className="py-1 text-center text-[0.6875rem] text-slate-600">
+          종목을 검색하거나 위 프리셋을 눌러 추가하세요
         </p>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { SiteLinkCard } from '@/components/sources/SiteLinkCard';
 import { MediaLean } from '@/types/directory';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 type DirectorySiteData = {
   id: string;
@@ -30,10 +31,36 @@ type ScopeCounts = { kr: number; global: number; all: number };
 type Scope = 'all' | 'kr' | 'global';
 
 const leanFilters: { id: MediaLean; label: string; className: string }[] = [
-  { id: 'progressive', label: '🔵 진보', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  { id: 'center', label: '⚪ 중도', className: 'bg-slate-500/20 text-slate-200 border-slate-500/30' },
-  { id: 'conservative', label: '🔴 보수', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  { id: 'progressive', label: '진보', className: 'bg-blue-400/15 text-blue-400' },
+  { id: 'center', label: '중도', className: 'bg-white/[0.09] text-slate-200' },
+  { id: 'conservative', label: '보수', className: 'bg-red-400/15 text-red-400' },
 ];
+
+/** 디렉토리 전용 필터 알약 — 종류가 많아 칩보다 더 작게 잡는다 */
+function Pill({
+  active,
+  activeClassName = 'bg-white/[0.09] text-slate-100',
+  onClick,
+  children,
+}: {
+  active: boolean;
+  activeClassName?: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
+        active ? activeClassName : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
 
 export function SourceDirectory() {
   const [sections, setSections] = useState<Section[]>([]);
@@ -101,26 +128,34 @@ export function SourceDirectory() {
 
   const shownCount = sections.reduce((sum, section) => sum + section.sites.length, 0);
   const scopeTabs: { id: Scope; label: string; count?: number }[] = [
-    { id: 'all', label: '🌏 전체', count: scopeCounts?.all },
-    { id: 'kr', label: '🇰🇷 국내', count: scopeCounts?.kr },
-    { id: 'global', label: '🌐 해외', count: scopeCounts?.global },
+    { id: 'all', label: '전체', count: scopeCounts?.all },
+    { id: 'kr', label: '국내', count: scopeCounts?.kr },
+    { id: 'global', label: '해외', count: scopeCounts?.global },
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       {/* 국내 / 해외 */}
-      <div className="flex gap-1 bg-slate-800/60 p-1 rounded-lg w-fit">
+      <div className="inline-flex gap-1 rounded-lg border border-white/[0.06] bg-white/[0.02] p-1">
         {scopeTabs.map(tab => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setScope(tab.id)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-              scope === tab.id ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white'
+            aria-pressed={scope === tab.id}
+            className={`rounded-md px-3.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${
+              scope === tab.id
+                ? 'bg-slate-100 text-slate-900'
+                : 'text-slate-400 hover:text-slate-100'
             }`}
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className={`ml-1.5 text-xs ${scope === tab.id ? 'text-blue-100' : 'text-slate-500'}`}>
+              <span
+                className={`tnum ml-1.5 text-[0.6875rem] ${
+                  scope === tab.id ? 'text-slate-500' : 'text-slate-600'
+                }`}
+              >
                 {tab.count}
               </span>
             )}
@@ -130,36 +165,40 @@ export function SourceDirectory() {
 
       {/* Stats strip */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.05] sm:grid-cols-4">
           {[
             { label: '수록 사이트', value: stats.totalSites },
             { label: '카테고리', value: stats.totalGroups },
             { label: '국가·지역', value: stats.totalCountries },
             { label: '무료 열람', value: stats.freeSites },
           ].map(item => (
-            <div key={item.label} className="bg-slate-800/60 rounded-lg px-3 py-2 border border-slate-700/50">
-              <div className="text-white text-lg font-bold">{item.value}</div>
-              <div className="text-slate-400 text-xs">{item.label}</div>
+            <div key={item.label} className="bg-slate-800 px-4 py-3">
+              <div className="tnum text-lg font-semibold tracking-tight text-slate-100">
+                {item.value}
+              </div>
+              <div className="text-[0.6875rem] text-slate-500">{item.label}</div>
             </div>
           ))}
         </div>
       )}
 
       {/* Search + toggles */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <input
           type="search"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           placeholder="사이트 이름으로 검색 (예: 한겨레, 로이터, 네이처)"
-          className="flex-1 min-w-[200px] bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+          className="h-9 min-w-[12.5rem] flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
         />
         <button
+          type="button"
           onClick={() => setFreeOnly(v => !v)}
-          className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors border ${
+          aria-pressed={freeOnly}
+          className={`h-9 whitespace-nowrap rounded-lg px-3.5 text-[0.8125rem] font-medium transition-colors ${
             freeOnly
-              ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-              : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
+              ? 'bg-emerald-400/15 text-emerald-400'
+              : 'border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:border-white/[0.14] hover:text-slate-100'
           }`}
         >
           무료만
@@ -167,116 +206,94 @@ export function SourceDirectory() {
       </div>
 
       {/* 성향 필터 */}
-      <div className="flex gap-1.5 items-center flex-wrap">
-        <span className="text-slate-500 text-xs mr-1">보도 성향</span>
+      <div className="flex flex-wrap items-center gap-1">
+        <span className="mr-1 text-[0.6875rem] text-slate-500">보도 성향</span>
         {leanFilters.map(f => (
-          <button
+          <Pill
             key={f.id}
+            active={activeLean === f.id}
+            activeClassName={f.className}
             onClick={() => setActiveLean(prev => (prev === f.id ? null : f.id))}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-              activeLean === f.id
-                ? f.className
-                : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
-            }`}
           >
             {f.label}
-          </button>
+          </Pill>
         ))}
-        {activeLean && (
-          <button onClick={() => setActiveLean(null)} className="text-slate-500 text-xs hover:text-white underline">
-            해제
-          </button>
-        )}
       </div>
 
       {/* Category filter */}
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
-        <button
-          onClick={() => setActiveGroup('all')}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-            activeGroup === 'all'
-              ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-              : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
-          }`}
-        >
-          🗂 전체
-        </button>
+      <div className="scrollbar-hide flex gap-1 overflow-x-auto">
+        <Pill active={activeGroup === 'all'} onClick={() => setActiveGroup('all')}>
+          전체
+        </Pill>
         {groups.map(group => (
-          <button
+          <Pill
             key={group.id}
+            active={activeGroup === group.id}
             onClick={() => setActiveGroup(group.id)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-              activeGroup === group.id
-                ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
-            }`}
           >
-            {group.icon} {group.label} <span className="text-slate-500">{group.count}</span>
-          </button>
+            {group.label}
+            <span className="tnum ml-1 text-slate-600">{group.count}</span>
+          </Pill>
         ))}
       </div>
 
       {/* Country filter — 국내만 볼 때는 의미가 없어 숨긴다 */}
       {scope !== 'kr' && countries.length > 1 && (
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
-          <button
-            onClick={() => setActiveCountry('all')}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-              activeCountry === 'all'
-                ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
-            }`}
-          >
-            🌐 전체
-          </button>
+        <div className="scrollbar-hide flex gap-1 overflow-x-auto">
+          <Pill active={activeCountry === 'all'} onClick={() => setActiveCountry('all')}>
+            전체
+          </Pill>
           {countries.map(country => (
-            <button
+            <Pill
               key={country.code}
+              active={activeCountry === country.code}
               onClick={() => setActiveCountry(country.code)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${
-                activeCountry === country.code
-                  ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                  : 'text-slate-400 border-slate-700 hover:text-white hover:bg-slate-700'
-              }`}
             >
-              {country.flag} {country.nameKo} <span className="text-slate-500">{country.count}</span>
-            </button>
+              {country.flag} {country.nameKo}
+              <span className="tnum ml-1 text-slate-600">{country.count}</span>
+            </Pill>
           ))}
         </div>
       )}
 
       {/* Results */}
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="h-4 w-32 bg-slate-700 rounded animate-pulse" />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="shimmer h-3.5 w-32 rounded bg-white/[0.05]" />
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, j) => (
-                  <div key={j} className="h-20 bg-slate-800 rounded-lg animate-pulse" />
+                  <div
+                    key={j}
+                    className="shimmer h-[4.5rem] rounded-lg border border-white/[0.06] bg-slate-800"
+                  />
                 ))}
               </div>
             </div>
           ))}
         </div>
       ) : sections.length === 0 ? (
-        <div className="bg-slate-800/50 rounded-xl p-8 text-center">
-          <div className="text-4xl mb-3">🔍</div>
-          <h3 className="text-white font-semibold mb-1">조건에 맞는 사이트가 없습니다</h3>
-          <p className="text-slate-400 text-sm">검색어나 필터를 바꿔 보세요</p>
-        </div>
+        <EmptyState
+          title="조건에 맞는 사이트가 없습니다"
+          description="검색어나 필터를 바꿔 보세요"
+        />
       ) : (
         <div className="space-y-6">
           {sections.map(section => (
             <section key={section.group.id}>
-              <div className="flex items-baseline gap-2 mb-2">
-                <h2 className="text-white font-semibold">
-                  {section.group.icon} {section.group.label}
+              <div className="mb-2 flex items-baseline gap-2">
+                <h2 className="text-[0.875rem] font-semibold text-slate-100">
+                  {section.group.label}
                 </h2>
-                <span className="text-slate-500 text-xs">{section.group.description}</span>
-                <span className="text-slate-600 text-xs ml-auto">{section.sites.length}곳</span>
+                <span className="truncate text-[0.6875rem] text-slate-500">
+                  {section.group.description}
+                </span>
+                <span className="tnum ml-auto flex-shrink-0 text-[0.6875rem] text-slate-600">
+                  {section.sites.length}곳
+                </span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {section.sites.map(site => (
                   <SiteLinkCard key={site.id} {...site} />
                 ))}
@@ -287,7 +304,9 @@ export function SourceDirectory() {
       )}
 
       {!isLoading && shownCount > 0 && (
-        <div className="text-slate-500 text-xs text-center">총 {shownCount}개 사이트 표시 중</div>
+        <p className="text-center text-[0.6875rem] text-slate-600">
+          총 {shownCount}개 사이트 표시 중
+        </p>
       )}
     </div>
   );

@@ -1,9 +1,11 @@
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-slate-900 p-4 lg:p-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">개인정보처리방침</h1>
-        <div className="bg-slate-800 rounded-xl p-6 space-y-6 text-slate-300 text-sm leading-relaxed">
+    <div className="min-h-screen bg-slate-900 px-4 py-10 lg:px-8">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="mb-6 text-xl font-semibold tracking-tight text-slate-100">
+          개인정보처리방침
+        </h1>
+        <div className="space-y-6 rounded-xl border border-white/[0.06] bg-slate-800 p-6 text-[0.8125rem] leading-relaxed text-slate-400 [&_h2]:mb-2 [&_h2]:text-[0.875rem] [&_h2]:font-semibold [&_h2]:text-slate-100 [&_li]:mt-1 [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-5">
           <section>
             <h2 className="text-white font-semibold text-lg mb-3">1. 수집하는 개인정보</h2>
             <p>서비스는 회원가입 시 다음 정보를 수집합니다:</p>

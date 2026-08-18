@@ -74,21 +74,24 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <div className="w-full max-w-md text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+      <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
+        <div className="w-full max-w-[22rem] text-center">
+          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
-          </div>
-          <h2 className="text-xl font-bold text-white mb-2">이메일을 확인해주세요</h2>
-          <p className="text-slate-400 text-sm mb-6">
-            {email}로 인증 링크를 보냈습니다.<br />
-            이메일의 링크를 클릭하여 가입을 완료해주세요.
+          </span>
+          <h2 className="text-lg font-semibold tracking-tight text-slate-100">
+            이메일을 확인해주세요
+          </h2>
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-slate-500">
+            {email}로 인증 링크를 보냈습니다.
+            <br />
+            링크를 눌러 가입을 완료해주세요.
           </p>
           <Link
             href="/auth/login"
-            className="text-blue-400 hover:text-blue-300 text-sm"
+            className="mt-5 inline-block text-[0.8125rem] font-medium text-blue-400 transition-colors hover:text-blue-300"
           >
             로그인 페이지로 돌아가기
           </Link>
@@ -98,64 +101,81 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">GN</span>
-          </div>
-          <h1 className="text-2xl font-bold text-white">GLOBAL<span className="text-blue-400">NOW</span></h1>
-          <p className="text-slate-400 text-sm mt-2">새 계정을 만들어보세요</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
+      <div className="w-full max-w-[22rem]">
+        <div className="mb-7 text-center">
+          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold tracking-tight text-white">
+            GN
+          </span>
+          <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+            Global<span className="text-slate-500">now</span>
+          </h1>
+          <p className="mt-1 text-[0.8125rem] text-slate-500">새 계정을 만들어보세요</p>
         </div>
 
-        <form onSubmit={handleSignup} className="bg-slate-800 rounded-2xl p-6 space-y-4">
+        <form
+          onSubmit={handleSignup}
+          className="space-y-3.5 rounded-xl border border-white/[0.06] bg-slate-800 p-5"
+        >
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm">
+            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 text-[0.8125rem] text-red-400">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">닉네임</label>
+            <label htmlFor="nickname" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              닉네임
+            </label>
             <input
+              id="nickname"
               type="text"
               value={nickname}
               onChange={e => setNickname(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="닉네임을 입력하세요"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">이메일</label>
+            <label htmlFor="email" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              이메일
+            </label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="your@email.com"
               required
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">비밀번호</label>
+            <label htmlFor="password" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              비밀번호
+            </label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="6자 이상"
               required
               minLength={6}
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1.5">비밀번호 확인</label>
+            <label htmlFor="passwordConfirm" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+              비밀번호 확인
+            </label>
             <input
+              id="passwordConfirm"
               type="password"
               value={passwordConfirm}
               onChange={e => setPasswordConfirm(e.target.value)}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 py-2.5 border border-slate-600 focus:border-blue-500 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
               placeholder="비밀번호를 다시 입력하세요"
               required
               minLength={6}
@@ -165,15 +185,15 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 font-medium transition-colors disabled:opacity-50"
+            className="h-9 w-full rounded-lg bg-blue-500 text-[0.8125rem] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
-            {isLoading ? '가입 중...' : '회원가입'}
+            {isLoading ? '가입 중…' : '회원가입'}
           </button>
         </form>
 
-        <p className="text-center text-slate-500 text-sm mt-4">
+        <p className="mt-4 text-center text-[0.8125rem] text-slate-500">
           이미 계정이 있으신가요?{' '}
-          <Link href="/auth/login" className="text-blue-400 hover:text-blue-300">
+          <Link href="/auth/login" className="font-medium text-blue-400 transition-colors hover:text-blue-300">
             로그인
           </Link>
         </p>

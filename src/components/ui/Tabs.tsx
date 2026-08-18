@@ -21,22 +21,30 @@ export function Tabs({
   className?: string;
 }) {
   return (
-    <div className={clsx('flex gap-1 overflow-x-auto scrollbar-hide', className)}>
-      {tabs.map(tab => (
-        <button
-          key={tab.id}
-          onClick={() => onChange(tab.id)}
-          className={clsx(
-            'px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
-            activeTab === tab.id
-              ? 'bg-blue-500 text-white'
-              : 'text-slate-400 hover:text-white hover:bg-slate-700'
-          )}
-        >
-          {tab.icon && <span className="mr-1.5">{tab.icon}</span>}
-          {tab.label}
-        </button>
-      ))}
+    <div
+      role="tablist"
+      className={clsx('scrollbar-hide flex gap-1 overflow-x-auto', className)}
+    >
+      {tabs.map(tab => {
+        const active = activeTab === tab.id;
+        return (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={active}
+            onClick={() => onChange(tab.id)}
+            className={clsx(
+              'whitespace-nowrap rounded-lg px-3 py-1.5 text-[0.8125rem] font-medium transition-colors',
+              // 선택된 탭을 반전시키면 강조색을 쓰지 않고도 대비가 가장 확실하다
+              active
+                ? 'bg-slate-100 text-slate-900'
+                : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
+            )}
+          >
+            {tab.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

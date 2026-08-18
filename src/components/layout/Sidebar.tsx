@@ -4,7 +4,39 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-import { ACCOUNT_ITEMS, NAV_ITEMS } from '@/lib/constants/navigation';
+import { ACCOUNT_ITEMS, NAV_GROUPS, NAV_ITEMS, type NavItem } from '@/lib/constants/navigation';
+import { Icon } from '@/components/ui/Icon';
+
+function NavLink({ item, active }: { item: NavItem; active: boolean }) {
+  return (
+    <Link
+      href={item.href}
+      aria-current={active ? 'page' : undefined}
+      className={clsx(
+        'group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.8125rem] font-medium transition-colors',
+        active
+          ? 'bg-white/[0.06] text-slate-100'
+          : 'text-slate-400 hover:bg-white/[0.035] hover:text-slate-100'
+      )}
+    >
+      {/* 활성 표시는 배경만으로는 약해서 왼쪽에 짧은 축을 세운다 */}
+      <span
+        className={clsx(
+          'absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-blue-500 transition-opacity',
+          active ? 'opacity-100' : 'opacity-0'
+        )}
+      />
+      <Icon
+        name={item.icon}
+        className={clsx(
+          'h-[1.125rem] w-[1.125rem] flex-shrink-0 transition-colors',
+          active ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300'
+        )}
+      />
+      <span className="truncate">{item.label}</span>
+    </Link>
+  );
+}
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -13,65 +45,55 @@ export function Sidebar() {
   useEffect(() => {
     async function fetchStreak() {
       try {
-        const res = await fetch("/api/user/streak");
+        const res = await fetch('/api/user/streak');
         const data = await res.json();
         setStreak(data.streak || 0);
       } catch (error) {
-        console.error("Failed to fetch streak:", error);
+        console.error('Failed to fetch streak:', error);
       }
     }
     fetchStreak();
   }, []);
 
   return (
-    <aside className="hidden lg:flex lg:flex-col w-64 bg-slate-900 border-r border-slate-700/50 h-[calc(100vh-4rem)] sticky top-16">
-      <nav aria-label="주요 메뉴" className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map(item => (
-          <Link
-            key={item.href}
-            href={item.href}
-            aria-current={pathname === item.href ? 'page' : undefined}
-            className={clsx(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-              pathname === item.href
-                ? 'bg-blue-500/10 text-blue-400'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            )}
-          >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+    <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 flex-col border-r border-white/[0.06] bg-slate-900 lg:flex">
+      <nav aria-label="주요 메뉴" className="flex-1 overflow-y-auto px-3 py-4">
+        {NAV_GROUPS.map((group, index) => {
+          const items = NAV_ITEMS.filter(item => item.group === group.id);
+          if (items.length === 0) return null;
+
+          return (
+            <div key={group.id} className={index > 0 ? 'mt-6' : undefined}>
+              <p className="px-2.5 pb-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                {group.label}
+              </p>
+              <div className="space-y-0.5">
+                {items.map(item => (
+                  <NavLink key={item.href} item={item} active={pathname === item.href} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-slate-700/50 space-y-1">
+      <div className="space-y-0.5 border-t border-white/[0.06] px-3 py-3">
         {ACCOUNT_ITEMS.map(item => (
-          <Link
-            key={item.href}
-            href={item.href}
-            aria-current={pathname === item.href ? 'page' : undefined}
-            className={clsx(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-              pathname === item.href
-                ? 'bg-blue-500/10 text-blue-400'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
-            )}
-          >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
+          <NavLink key={item.href} item={item} active={pathname === item.href} />
         ))}
       </div>
 
-      {/* Streak widget */}
-      <div className="px-3 py-4 border-t border-slate-700/50">
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-3 border border-blue-500/20">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-lg">🔥</span>
-            <span className="text-white text-sm font-semibold">{streak}일 연속</span>
-          </div>
-          <p className="text-slate-400 text-xs">매일 뉴스를 읽고 스트릭을 유지하세요!</p>
+      {/* 스트릭: 카드로 띄우면 시선을 뺏어서, 상태 표시줄처럼 조용히 둔다 */}
+      <div className="border-t border-white/[0.06] px-5 py-3.5">
+        <div className="flex items-center gap-2">
+          <Icon name="flame" className="h-4 w-4 text-amber-400" />
+          <span className="tnum text-[0.8125rem] font-semibold text-slate-200">
+            {streak}일 연속
+          </span>
         </div>
+        <p className="mt-1 text-[0.6875rem] leading-relaxed text-slate-500">
+          매일 읽고 스트릭을 이어가세요
+        </p>
       </div>
     </aside>
   );

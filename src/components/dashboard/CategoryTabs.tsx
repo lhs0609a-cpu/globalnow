@@ -3,10 +3,10 @@
 import { Tabs } from '@/components/ui/Tabs';
 import { CATEGORIES } from '@/lib/constants/categories';
 
+// 이모지를 떼고 이름만 남겨야 탭 줄의 높이와 리듬이 일정해진다
 const tabs = CATEGORIES.map(c => ({
   id: c.id,
   label: c.nameKo,
-  icon: c.icon,
 }));
 
 export function CategoryTabs({

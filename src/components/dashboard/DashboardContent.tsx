@@ -15,8 +15,10 @@ function Widget({ name, children }: { name: string; children: React.ReactNode })
   return (
     <ErrorBoundary
       fallback={
-        <div className="bg-slate-800 rounded-xl p-4 text-center">
-          <p className="text-slate-400 text-sm">{name}을(를) 불러오지 못했습니다</p>
+        <div className="rounded-xl border border-white/[0.06] bg-slate-800 p-5 text-center">
+          <p className="text-[0.8125rem] text-slate-400">
+            {name}을(를) 불러오지 못했습니다
+          </p>
         </div>
       }
     >
@@ -29,16 +31,16 @@ export function DashboardContent() {
   const [activeCategory, setActiveCategory] = useState('all');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Morning Brief */}
       <Widget name="모닝 브리프">
         <MorningBrief />
       </Widget>
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col gap-5 lg:flex-row">
         {/* News Feed */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <CategoryTabs
             activeCategory={activeCategory}
             onChange={setActiveCategory}
@@ -49,7 +51,7 @@ export function DashboardContent() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-full lg:w-80 flex-shrink-0 space-y-4">
+        <div className="w-full flex-shrink-0 space-y-5 lg:w-[20.5rem]">
           <Widget name="시장 데이터">
             <MarketWidget />
           </Widget>

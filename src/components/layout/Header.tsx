@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import clsx from 'clsx';
+import { Icon } from '@/components/ui/Icon';
 
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // Ctrl+K shortcut
@@ -15,11 +18,17 @@ export function Header() {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         setSearchOpen(true);
+        inputRef.current?.focus();
       }
+      if (e.key === 'Escape') setSearchOpen(false);
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (searchOpen) inputRef.current?.focus();
+  }, [searchOpen]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
@@ -28,69 +37,77 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50">
-      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-slate-900/80 backdrop-blur-xl">
+      <div className="flex h-14 items-center gap-4 px-4 lg:px-5">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">GN</span>
-          </div>
-          <span className="text-white font-bold text-lg hidden sm:block">
-            GLOBAL<span className="text-blue-400">NOW</span>
+        <Link
+          href="/"
+          className="flex flex-shrink-0 items-center gap-2.5 lg:w-[13.75rem]"
+        >
+          <span className="flex h-7 w-7 items-center justify-center rounded-[0.5rem] bg-blue-500 text-[0.6875rem] font-bold tracking-tight text-white">
+            GN
+          </span>
+          <span className="hidden text-[0.9375rem] font-semibold tracking-tight text-slate-100 sm:block">
+            Global<span className="text-slate-500">now</span>
           </span>
         </Link>
 
         {/* Search */}
-        <div className="flex-1 max-w-xl mx-4">
-          {searchOpen ? (
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder="뉴스 검색..."
-                className="w-full bg-slate-800 text-white rounded-lg px-4 py-2 pl-10 text-sm border border-slate-600 focus:border-blue-500 focus:outline-none"
-                autoFocus
-                onBlur={() => !searchQuery && setSearchOpen(false)}
-              />
-              <svg className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-          ) : (
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="hidden sm:flex items-center gap-2 text-slate-400 hover:text-white bg-slate-800 rounded-lg px-4 py-2 text-sm w-full max-w-md transition-colors"
+        <div className="flex flex-1 justify-center">
+          <div className="relative w-full max-w-md">
+            <Icon
+              name="search"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+            />
+            <input
+              ref={inputRef}
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              onFocus={() => setSearchOpen(true)}
+              onBlur={() => !searchQuery && setSearchOpen(false)}
+              placeholder="뉴스 검색"
+              aria-label="뉴스 검색"
+              className={clsx(
+                'h-9 w-full rounded-lg border bg-white/[0.03] pl-9 pr-16 text-[0.8125rem] text-slate-100 transition-colors',
+                'placeholder:text-slate-500 focus:outline-none',
+                searchOpen
+                  ? 'border-blue-500/50 bg-white/[0.05]'
+                  : 'border-white/[0.06] hover:border-white/10'
+              )}
+            />
+            <kbd
+              className={clsx(
+                'pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.5 text-[0.625rem] font-medium text-slate-500 transition-opacity',
+                searchOpen ? 'opacity-0' : 'hidden opacity-100 sm:block'
+              )}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <span>뉴스 검색...</span>
-              <kbd className="ml-auto text-xs bg-slate-700 px-1.5 py-0.5 rounded">Ctrl+K</kbd>
-            </button>
-          )}
+              ⌘K
+            </kbd>
+          </div>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
-          {/* Mobile search */}
+        <div className="flex flex-shrink-0 items-center gap-1 lg:w-[13.75rem] lg:justify-end">
           <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="sm:hidden p-2 text-slate-400 hover:text-white"
+            type="button"
+            aria-label="알림"
+            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Icon name="bell" className="h-[1.125rem] w-[1.125rem]" />
+            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-500 ring-2 ring-slate-900" />
           </button>
 
-          {/* Notifications */}
-          <button className="relative p-2 text-slate-400 hover:text-white transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-          </button>
+          <Link
+            href="/profile"
+            aria-label="마이페이지"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04]">
+              <Icon name="profile" className="h-4 w-4" />
+            </span>
+          </Link>
         </div>
       </div>
     </header>

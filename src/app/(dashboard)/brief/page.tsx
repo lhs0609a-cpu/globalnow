@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { MorningBrief as MorningBriefType } from '@/types/news';
 import { Badge } from '@/components/ui/Badge';
+import { PageHeader } from '@/components/layout/AppShell';
+import { Card, CardDivider } from '@/components/ui/Card';
 
 export default function BriefPage() {
   const [brief, setBrief] = useState<MorningBriefType | null>(null);
@@ -26,54 +28,63 @@ export default function BriefPage() {
   }, [selectedDate]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white">모닝 브리프</h1>
-          <p className="text-slate-400 text-sm mt-1">매일 아침 꼭 알아야 할 글로벌 뉴스</p>
-        </div>
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-          className="bg-slate-800 text-white border border-slate-600 rounded-lg px-3 py-2 text-sm"
-        />
-      </div>
+    <div>
+      <PageHeader
+        title="모닝 브리프"
+        description="매일 아침 꼭 알아야 할 글로벌 뉴스"
+        action={
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={e => setSelectedDate(e.target.value)}
+            aria-label="날짜 선택"
+            className="h-9 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+          />
+        }
+      />
 
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        <div className="flex justify-center py-16">
+          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
         </div>
       ) : brief ? (
-        <div className="bg-slate-800 rounded-xl overflow-hidden">
-          <div className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-b border-slate-700">
-            <p className="text-slate-300 text-sm">{brief.summary}</p>
+        <Card>
+          <div className="px-6 py-5">
+            <p className="text-[0.875rem] leading-relaxed text-slate-300">{brief.summary}</p>
           </div>
-          <div className="p-6 space-y-4">
+          <CardDivider />
+          <div className="divide-y divide-white/[0.04]">
             {brief.items.map(item => (
-              <div key={item.rank} className="flex gap-4 p-4 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors">
-                <div className="flex-shrink-0 w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center">
-                  <span className="text-blue-400 font-bold">{item.rank}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+              <div key={item.rank} className="group flex gap-4 px-6 py-5 transition-colors hover:bg-white/[0.02]">
+                <span className="tnum flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-white/[0.05] text-xs font-semibold text-slate-400">
+                  {item.rank}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
                     <Badge variant={item.impact === 'high' ? 'danger' : item.impact === 'medium' ? 'warning' : 'info'}>
                       {item.impact === 'high' ? '높음' : item.impact === 'medium' ? '보통' : '낮음'}
                     </Badge>
-                    <span className="text-slate-500 text-xs">{item.source}</span>
-                    <span className="text-slate-600 text-xs">|</span>
-                    <span className="text-slate-500 text-xs">{item.category}</span>
+                    <span className="text-[0.6875rem] text-slate-500">{item.source}</span>
+                    <span className="text-[0.6875rem] text-slate-600">·</span>
+                    <span className="text-[0.6875rem] text-slate-500">{item.category}</span>
                   </div>
-                  <h3 className="text-white font-semibold mb-2">{item.titleKo}</h3>
-                  <p className="text-slate-400 text-sm">{item.summaryKo}</p>
+                  <h3 className="text-[0.9375rem] font-semibold leading-snug text-slate-100">
+                    {item.titleKo}
+                  </h3>
+                  <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-slate-500">
+                    {item.summaryKo}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-slate-500">해당 날짜의 브리프가 없습니다.</p>
+        <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
+          <p className="text-[0.875rem] font-medium text-slate-300">
+            해당 날짜의 브리프가 없습니다
+          </p>
+          <p className="mt-1 text-[0.8125rem] text-slate-500">다른 날짜를 선택해보세요</p>
         </div>
       )}
     </div>

@@ -2,14 +2,17 @@
 
 import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import clsx from 'clsx';
 import { useCountryNews } from '@/hooks/useCountryNews';
 import { formatRelativeTime } from '@/lib/utils/date';
+import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
 
 const WorldMapChart = dynamic(() => import('./WorldMapChart'), {
   ssr: false,
   loading: () => (
-    <div className="flex-1 flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
-      <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    <div className="flex min-h-[18rem] flex-1 items-center justify-center lg:min-h-[25rem]">
+      <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
     </div>
   ),
 });
@@ -61,6 +64,29 @@ const QUICK_SELECT_COUNTRIES: { code: string; center: [number, number]; zoom: nu
 const DEFAULT_CENTER: [number, number] = [0, 0];
 const DEFAULT_ZOOM = 1;
 
+/** 지도 위에 겹치는 버튼들은 같은 표면을 써야 지도를 덜 어지럽힌다 */
+function MapButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-white/[0.07] hover:text-slate-100"
+    >
+      {children}
+    </button>
+  );
+}
+
 export function WorldNewsMap() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>(DEFAULT_CENTER);
@@ -98,19 +124,15 @@ export function WorldNewsMap() {
   }, []);
 
   return (
-    <section className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden">
-      <div className="p-4 border-b border-slate-700/50">
-        <h2 className="text-white font-semibold text-lg flex items-center gap-2">
-          <span className="text-2xl">🗺️</span>
-          세계 뉴스 맵
-        </h2>
-        <p className="text-slate-400 text-sm mt-1">
-          국가를 클릭하면 해당 국가의 최신 뉴스를 확인할 수 있습니다
-        </p>
-      </div>
+    <Card>
+      <CardHeader
+        title="세계 뉴스 맵"
+        description="국가를 선택하면 해당 국가의 최신 뉴스를 볼 수 있습니다"
+        icon="globe"
+      />
 
       {/* Country quick select strip */}
-      <div className="px-4 py-2 border-b border-slate-700/50 flex gap-1.5 overflow-x-auto scrollbar-thin">
+      <div className="scrollbar-hide flex gap-1 px-3 pb-3 overflow-x-auto">
         {QUICK_SELECT_COUNTRIES.map(({ code, center, zoom }) => {
           const info = CODE_TO_COUNTRY.get(code);
           if (!info) return null;
@@ -118,23 +140,27 @@ export function WorldNewsMap() {
           return (
             <button
               key={code}
+              type="button"
               onClick={() => handleQuickSelect(code, center, zoom)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+              className={clsx(
+                'flex flex-shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors',
                 isActive
-                  ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                  : 'bg-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-600/50'
-              }`}
+                  ? 'bg-white/[0.09] text-slate-100'
+                  : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100'
+              )}
             >
-              <span>{info.flag}</span>
-              <span>{info.nameKo}</span>
+              <span className="text-[0.8125rem] leading-none">{info.flag}</span>
+              {info.nameKo}
             </button>
           );
         })}
       </div>
 
+      <CardDivider />
+
       <div className="flex flex-col lg:flex-row">
         {/* Map Area */}
-        <div className="flex-1 p-2 lg:p-4 relative">
+        <div className="relative min-w-0 flex-1 p-2 lg:p-3">
           <WorldMapChart
             selectedCountry={selectedCountry}
             onSelectCountry={handleSelectCountry}
@@ -144,114 +170,115 @@ export function WorldNewsMap() {
           />
 
           {/* Zoom controls overlay */}
-          <div className="absolute bottom-4 right-4 lg:bottom-6 lg:right-6 flex flex-col gap-1">
-            <button
-              onClick={handleZoomIn}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/80 backdrop-blur-sm text-white hover:bg-slate-600/80 transition-colors text-lg font-bold"
-              title="확대"
-            >
-              +
-            </button>
-            <button
-              onClick={handleZoomOut}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/80 backdrop-blur-sm text-white hover:bg-slate-600/80 transition-colors text-lg font-bold"
-              title="축소"
-            >
-              -
-            </button>
-            <button
-              onClick={handleZoomReset}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-700/80 backdrop-blur-sm text-slate-300 hover:text-white hover:bg-slate-600/80 transition-colors text-xs"
-              title="초기화"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
+          <div className="absolute bottom-4 right-4 flex flex-col divide-y divide-white/[0.06] overflow-hidden rounded-lg border border-white/[0.08] bg-slate-900/85 backdrop-blur-sm">
+            <MapButton label="확대" onClick={handleZoomIn}>
+              <Icon name="plus" className="h-3.5 w-3.5" strokeWidth={2} />
+            </MapButton>
+            <MapButton label="축소" onClick={handleZoomOut}>
+              <Icon name="minus" className="h-3.5 w-3.5" strokeWidth={2} />
+            </MapButton>
+            <MapButton label="초기화" onClick={handleZoomReset}>
+              <Icon name="reset" className="h-3.5 w-3.5" />
+            </MapButton>
           </div>
 
           {/* Zoom level indicator */}
           {mapZoom > 1 && (
-            <div className="absolute top-4 left-4 lg:top-6 lg:left-6 px-2 py-1 rounded bg-slate-700/80 backdrop-blur-sm text-slate-300 text-[10px]">
-              {mapZoom.toFixed(1)}x
+            <div className="tnum absolute left-4 top-4 rounded-md border border-white/[0.08] bg-slate-900/85 px-2 py-1 text-[0.625rem] font-medium text-slate-400 backdrop-blur-sm">
+              {mapZoom.toFixed(1)}×
             </div>
           )}
         </div>
 
         {/* News Panel */}
-        <div
-          className={`lg:w-80 border-t lg:border-t-0 lg:border-l border-slate-700/50 transition-all duration-300 ${
-            selectedCountry ? 'max-h-[500px] lg:max-h-none' : 'max-h-0 lg:max-h-none lg:w-0 overflow-hidden'
-          }`}
-        >
-          {selectedCountry && selectedInfo && (
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">{selectedInfo.flag}</span>
-                <div>
-                  <h3 className="text-white font-semibold">{selectedInfo.nameKo}</h3>
-                  <p className="text-slate-500 text-xs">{selectedInfo.name}</p>
-                </div>
-                <button
-                  onClick={() => setSelectedCountry(null)}
-                  className="ml-auto text-slate-500 hover:text-white transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+        {selectedCountry && selectedInfo && (
+          <div className="w-full flex-shrink-0 border-t border-white/[0.06] lg:w-80 lg:border-l lg:border-t-0">
+            <div className="flex items-center gap-2.5 px-5 py-3.5">
+              <span className="text-base leading-none">{selectedInfo.flag}</span>
+              <div className="min-w-0 flex-1">
+                <h3 className="truncate text-[0.875rem] font-semibold text-slate-100">
+                  {selectedInfo.nameKo}
+                </h3>
+                <p className="truncate text-[0.6875rem] text-slate-500">
+                  {selectedInfo.name}
+                </p>
               </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCountry(null)}
+                aria-label="닫기"
+                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+              >
+                <Icon name="close" className="h-4 w-4" />
+              </button>
+            </div>
 
+            <CardDivider />
+
+            <div className="max-h-[24rem] overflow-y-auto lg:max-h-[26rem]">
               {isLoading && (
-                <div className="space-y-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="animate-pulse">
-                      <div className="h-3 bg-slate-700 rounded w-full mb-2" />
-                      <div className="h-2 bg-slate-700 rounded w-3/4 mb-1" />
-                      <div className="h-2 bg-slate-700 rounded w-1/2" />
+                <div className="space-y-4 px-5 py-4">
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className="shimmer space-y-1.5 rounded">
+                      <div className="h-3 w-full rounded bg-white/[0.05]" />
+                      <div className="h-3 w-4/5 rounded bg-white/[0.05]" />
+                      <div className="h-2.5 w-1/3 rounded bg-white/[0.05]" />
                     </div>
                   ))}
                 </div>
               )}
 
               {error && (
-                <p className="text-red-400 text-sm">{error}</p>
+                <p className="px-5 py-8 text-center text-[0.8125rem] text-red-400">{error}</p>
               )}
 
               {!isLoading && !error && news.length === 0 && (
-                <p className="text-slate-500 text-sm">이 국가의 뉴스를 찾을 수 없습니다</p>
+                <p className="px-5 py-8 text-center text-[0.8125rem] text-slate-500">
+                  이 국가의 뉴스를 찾을 수 없습니다
+                </p>
               )}
 
               {!isLoading && news.length > 0 && (
-                <div className="space-y-3">
+                <div className="divide-y divide-white/[0.04]">
                   {news.map((item, idx) => (
                     <a
                       key={item.id || idx}
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/60 transition-colors"
+                      className="group block px-5 py-3 transition-colors hover:bg-white/[0.025]"
                     >
                       {item.titleKo && (
-                        <p className="text-white text-sm font-medium line-clamp-2 mb-1">
+                        <p className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
                           {item.titleKo}
                         </p>
                       )}
-                      <p className={`text-xs line-clamp-2 mb-2 ${item.titleKo ? 'text-slate-400' : 'text-white font-medium'}`}>
+                      <p
+                        className={clsx(
+                          'line-clamp-2 text-xs leading-snug',
+                          item.titleKo
+                            ? 'mt-1 text-slate-500'
+                            : 'font-medium text-slate-100 transition-colors group-hover:text-blue-400'
+                        )}
+                      >
                         {item.title}
                       </p>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500">
-                        <span>{item.source?.countryFlag} {item.source?.nameKo || item.sourceId}</span>
-                        <span>{formatRelativeTime(item.publishedAt)}</span>
+                      <div className="mt-2 flex items-center justify-between gap-2 text-[0.6875rem] text-slate-500">
+                        <span className="truncate">
+                          {item.source?.nameKo || item.sourceId}
+                        </span>
+                        <span className="flex-shrink-0">
+                          {formatRelativeTime(item.publishedAt)}
+                        </span>
                       </div>
                     </a>
                   ))}
                 </div>
               )}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </section>
+    </Card>
   );
 }

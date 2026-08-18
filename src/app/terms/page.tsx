@@ -1,9 +1,9 @@
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-slate-900 p-4 lg:p-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">이용약관</h1>
-        <div className="bg-slate-800 rounded-xl p-6 space-y-6 text-slate-300 text-sm leading-relaxed">
+    <div className="min-h-screen bg-slate-900 px-4 py-10 lg:px-8">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="mb-6 text-xl font-semibold tracking-tight text-slate-100">이용약관</h1>
+        <div className="space-y-6 rounded-xl border border-white/[0.06] bg-slate-800 p-6 text-[0.8125rem] leading-relaxed text-slate-400 [&_h2]:mb-2 [&_h2]:text-[0.875rem] [&_h2]:font-semibold [&_h2]:text-slate-100 [&_li]:mt-1 [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-5">
           <section>
             <h2 className="text-white font-semibold text-lg mb-3">제1조 (목적)</h2>
             <p>이 약관은 GLOBALNOW(이하 "서비스")가 제공하는 뉴스 큐레이션 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>

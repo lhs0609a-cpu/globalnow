@@ -7,10 +7,14 @@ import { EventCategory } from '@/types/event';
 import { EventCard } from '@/components/events/EventCard';
 import { EventCalendar } from '@/components/events/EventCalendar';
 import { format, isSameDay, parseISO } from 'date-fns';
+import { PageHeader } from '@/components/layout/AppShell';
+import { FilterChip } from '@/components/ui/Button';
+import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
 
 const categoryTabs = [
-  { id: 'all', label: '전체', icon: '📋' },
-  ...EVENT_CATEGORIES.map(c => ({ id: c.id, label: c.label, icon: c.icon })),
+  { id: 'all', label: '전체' },
+  ...EVENT_CATEGORIES.map(c => ({ id: c.id, label: c.label })),
 ];
 
 export default function EventsPage() {
@@ -48,56 +52,52 @@ export default function EventsPage() {
   }, [events, selectedDay]);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <span>📅</span> 전시회/컨퍼런스
-        </h1>
-        <p className="text-slate-400 text-sm mt-1">
-          한국 주요 전시회, 컨퍼런스, 데모데이 일정
-        </p>
-      </div>
+    <div>
+      <PageHeader
+        title="전시회 · 컨퍼런스"
+        description="한국 주요 전시회, 컨퍼런스, 데모데이 일정"
+      />
 
       {/* Search */}
-      <div className="relative">
+      <div className="relative mb-3">
+        <Icon
+          name="search"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+        />
         <input
           type="text"
-          placeholder="이벤트 검색..."
+          placeholder="이벤트 검색"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-colors"
+          className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] pl-9 pr-9 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
         />
         {search && (
           <button
+            type="button"
             onClick={() => setSearch('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+            aria-label="검색어 지우기"
+            className="absolute right-2.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-slate-500 transition-colors hover:text-slate-100"
           >
-            ✕
+            <Icon name="close" className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
 
       {/* Category tabs */}
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide">
+      <div className="scrollbar-hide mb-5 flex gap-1 overflow-x-auto">
         {categoryTabs.map(tab => (
-          <button
+          <FilterChip
             key={tab.id}
+            active={(category || 'all') === tab.id}
             onClick={() => handleCategoryChange(tab.id)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              (category || 'all') === tab.id
-                ? 'bg-blue-500 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
-            }`}
           >
-            <span className="mr-1">{tab.icon}</span>
             {tab.label}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
       {/* Main content: Calendar + Event list */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {/* Calendar (left on lg) */}
         <div className="lg:col-span-1">
           <EventCalendar
@@ -111,55 +111,64 @@ export default function EventsPage() {
           {selectedDay && (
             <div className="mt-2 text-center">
               <button
+                type="button"
                 onClick={() => setSelectedDay(null)}
-                className="text-xs text-slate-400 hover:text-white transition-colors"
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-100"
               >
-                {format(selectedDay, 'M월 d일')} 필터 해제 ✕
+                {format(selectedDay, 'M월 d일')} 필터 해제
+                <Icon name="close" className="h-3 w-3" />
               </button>
             </div>
           )}
 
           {/* Stats */}
-          <div className="mt-4 bg-slate-800 rounded-xl p-4 space-y-2">
-            <h4 className="text-white text-sm font-semibold mb-2">이벤트 현황</h4>
-            <div className="flex justify-between text-sm">
-              <span className="text-green-400">진행 중</span>
-              <span className="text-white">{events.filter(e => e.status === 'ongoing').length}</span>
+          <Card className="mt-4">
+            <CardHeader title="이벤트 현황" />
+            <CardDivider />
+            <div className="px-5 py-3">
+              {[
+                { label: '진행 중', dot: 'bg-emerald-400', count: events.filter(e => e.status === 'ongoing').length },
+                { label: '예정', dot: 'bg-blue-400', count: events.filter(e => e.status === 'upcoming').length },
+                { label: '종료', dot: 'bg-slate-600', count: events.filter(e => e.status === 'ended').length },
+              ].map(row => (
+                <div key={row.label} className="flex items-center justify-between py-1.5">
+                  <span className="flex items-center gap-2 text-[0.8125rem] text-slate-400">
+                    <span className={`h-1.5 w-1.5 rounded-full ${row.dot}`} />
+                    {row.label}
+                  </span>
+                  <span className="tnum text-[0.8125rem] font-medium text-slate-100">
+                    {row.count}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-blue-400">예정</span>
-              <span className="text-white">{events.filter(e => e.status === 'upcoming').length}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-400">종료</span>
-              <span className="text-white">{events.filter(e => e.status === 'ended').length}</span>
-            </div>
-          </div>
+          </Card>
         </div>
 
         {/* Event list (right on lg) */}
-        <div className="lg:col-span-2 space-y-3">
+        <div className="space-y-3 lg:col-span-2">
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="bg-slate-800 rounded-xl p-4 animate-pulse">
+                <div
+                  key={i}
+                  className="rounded-xl border border-white/[0.06] bg-slate-800 p-4"
+                >
                   <div className="flex items-start gap-3">
                     <div className="flex-1 space-y-2">
-                      <div className="h-3 bg-slate-700 rounded w-1/4" />
-                      <div className="h-5 bg-slate-700 rounded w-2/3" />
-                      <div className="h-3 bg-slate-700 rounded w-1/2" />
-                      <div className="h-3 bg-slate-700 rounded w-1/3" />
+                      <div className="shimmer h-2.5 w-1/4 rounded bg-white/[0.05]" />
+                      <div className="shimmer h-4 w-2/3 rounded bg-white/[0.05]" />
+                      <div className="shimmer h-3 w-1/2 rounded bg-white/[0.05]" />
                     </div>
-                    <div className="w-14 h-14 bg-slate-700 rounded-lg" />
+                    <div className="shimmer h-14 w-14 rounded-lg bg-white/[0.05]" />
                   </div>
                 </div>
               ))}
             </div>
           ) : displayEvents.length === 0 ? (
-            <div className="bg-slate-800/50 rounded-xl p-8 text-center">
-              <div className="text-4xl mb-3">📅</div>
-              <h3 className="text-white font-semibold mb-1">이벤트가 없습니다</h3>
-              <p className="text-slate-400 text-sm">
+            <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
+              <p className="text-[0.875rem] font-medium text-slate-300">이벤트가 없습니다</p>
+              <p className="mt-1 text-[0.8125rem] text-slate-500">
                 {selectedDay ? '선택한 날짜에 이벤트가 없습니다' : '필터를 변경해 보세요'}
               </p>
             </div>
@@ -170,9 +179,9 @@ export default function EventsPage() {
           )}
 
           {!isLoading && displayEvents.length > 0 && (
-            <div className="text-slate-500 text-xs text-center pt-2">
+            <p className="pt-1 text-center text-[0.6875rem] text-slate-500">
               총 {displayEvents.length}개 이벤트
-            </div>
+            </p>
           )}
         </div>
       </div>

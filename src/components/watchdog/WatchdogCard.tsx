@@ -23,19 +23,21 @@ export function WatchdogCard({ item }: Props) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block bg-slate-800 rounded-xl p-4 hover:bg-slate-750 transition-colors border border-slate-700/50 hover:border-slate-600/50"
+      className="group block rounded-xl border border-white/[0.06] bg-slate-800 p-4 transition-colors hover:border-white/[0.14]"
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3.5">
         {item.imageUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={item.imageUrl}
             alt=""
-            className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+            loading="lazy"
+            className="h-16 w-16 flex-shrink-0 rounded-lg bg-slate-700 object-cover"
           />
         )}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Matched ticker badges */}
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="mb-1.5 flex flex-wrap gap-1">
             {item.matchedTickers.map(ticker => (
               <Badge key={ticker} variant="info">
                 {ticker}
@@ -44,35 +46,35 @@ export function WatchdogCard({ item }: Props) {
           </div>
 
           {/* Title */}
-          <h3 className="text-white font-medium text-sm leading-snug line-clamp-2">
+          <h3 className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
             {item.titleKo || item.title}
           </h3>
 
           {/* Summary */}
           {(item.summaryKo || item.summary) && (
-            <p className="text-slate-400 text-xs mt-1 line-clamp-2">
+            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
               {item.summaryKo || item.summary}
             </p>
           )}
 
           {/* Meta */}
-          <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem] text-slate-500">
             <span>{item.source?.name || item.sourceId}</span>
-            <span>-</span>
+            <span className="text-slate-700">·</span>
             <span>{timeAgo(item.publishedAt)}</span>
             {item.sentiment !== undefined && (
               <>
-                <span>-</span>
+                <span className="text-slate-700">·</span>
                 <span
                   className={
                     item.sentiment > 0.2
                       ? 'text-emerald-400'
                       : item.sentiment < -0.2
                         ? 'text-red-400'
-                        : 'text-slate-400'
+                        : 'text-slate-500'
                   }
                 >
-                  {item.sentiment > 0.2 ? 'Positive' : item.sentiment < -0.2 ? 'Negative' : 'Neutral'}
+                  {item.sentiment > 0.2 ? '긍정' : item.sentiment < -0.2 ? '부정' : '중립'}
                 </span>
               </>
             )}

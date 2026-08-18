@@ -21,14 +21,20 @@ export const CATEGORIES: CategoryInfo[] = [
   { id: 'sports', name: 'Sports', nameKo: '스포츠', icon: '⚽', color: 'orange' },
 ];
 
+/**
+ * 카테고리 칩 색.
+ *
+ * 테두리까지 두르면 촘촘한 목록에서 상자가 겹겹이 보인다. 배경과 글자색만
+ * 남겨 색으로만 구분되게 한다.
+ */
 export const CATEGORY_COLORS: Record<string, string> = {
-  international: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  economy: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  tech: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
-  politics: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  risk: 'bg-red-500/10 text-red-400 border-red-500/20',
-  culture: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
-  science: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  health: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
-  sports: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  international: 'bg-blue-400/10 text-blue-400',
+  economy: 'bg-emerald-400/10 text-emerald-400',
+  tech: 'bg-violet-400/10 text-violet-400',
+  politics: 'bg-amber-400/10 text-amber-400',
+  risk: 'bg-red-400/10 text-red-400',
+  culture: 'bg-pink-400/10 text-pink-400',
+  science: 'bg-cyan-400/10 text-cyan-400',
+  health: 'bg-teal-400/10 text-teal-400',
+  sports: 'bg-orange-400/10 text-orange-400',
 };

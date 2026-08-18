@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { SourceRankCard } from '@/components/sources/SourceRankCard';
 import { MediaTier, TIER_LABELS } from '@/lib/constants/media-rankings';
+import { FilterChip } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 type RankedSourceData = {
   sourceId: string;
@@ -61,42 +63,42 @@ export function SourceRankingList() {
   return (
     <div className="space-y-5">
       {/* Tier filter tabs */}
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         {tierTabs.map(tab => (
-          <button
+          <FilterChip
             key={tab.id}
+            active={activeTier === tab.id}
             onClick={() => setActiveTier(tab.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeTier === tab.id
-                ? 'bg-blue-500 text-white'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700'
-            }`}
           >
             {tab.label}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
       {/* Country filter — horizontal scroll */}
-      <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1">
+      <div className="scrollbar-hide flex gap-1 overflow-x-auto">
         <button
+          type="button"
           onClick={() => setActiveCountry('all')}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+          aria-pressed={activeCountry === 'all'}
+          className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
             activeCountry === 'all'
-              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-700 border border-slate-700'
+              ? 'bg-white/[0.09] text-slate-100'
+              : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
           }`}
         >
-          🌐 전체
+          전체
         </button>
         {countries.map(c => (
           <button
             key={c.code}
+            type="button"
             onClick={() => setActiveCountry(c.code)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+            aria-pressed={activeCountry === c.code}
+            className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
               activeCountry === c.code
-                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                : 'text-slate-400 hover:text-white hover:bg-slate-700 border border-slate-700'
+                ? 'bg-white/[0.09] text-slate-100'
+                : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
             }`}
           >
             {c.flag} {c.code}
@@ -108,24 +110,23 @@ export function SourceRankingList() {
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-slate-800 rounded-xl p-4 animate-pulse">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-slate-700 rounded" />
+            <div
+              key={i}
+              className="rounded-xl border border-white/[0.06] bg-slate-800 p-4"
+            >
+              <div className="flex items-start gap-3.5">
+                <div className="shimmer h-6 w-7 rounded bg-white/[0.05]" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-slate-700 rounded w-1/3" />
-                  <div className="h-3 bg-slate-700 rounded w-2/3" />
-                  <div className="h-3 bg-slate-700 rounded w-1/2" />
+                  <div className="shimmer h-3.5 w-1/3 rounded bg-white/[0.05]" />
+                  <div className="shimmer h-3 w-2/3 rounded bg-white/[0.05]" />
+                  <div className="shimmer h-3 w-1/2 rounded bg-white/[0.05]" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : sources.length === 0 ? (
-        <div className="bg-slate-800/50 rounded-xl p-8 text-center">
-          <div className="text-4xl mb-3">🏆</div>
-          <h3 className="text-white font-semibold mb-1">해당하는 매체가 없습니다</h3>
-          <p className="text-slate-400 text-sm">필터를 변경해 보세요</p>
-        </div>
+        <EmptyState title="해당하는 매체가 없습니다" description="필터를 변경해 보세요" />
       ) : (
         <div className="space-y-3">
           {sources.map(source => (
@@ -136,9 +137,9 @@ export function SourceRankingList() {
 
       {/* Stats */}
       {!isLoading && sources.length > 0 && (
-        <div className="text-slate-500 text-xs text-center">
+        <p className="text-center text-[0.6875rem] text-slate-600">
           총 {sources.length}개 매체 표시 중
-        </div>
+        </p>
       )}
     </div>
   );

@@ -3,6 +3,19 @@
 import { useState, useEffect } from 'react';
 import { UserStreak, NewsDNA } from '@/types/user';
 import { Badge } from '@/components/ui/Badge';
+import { PageHeader } from '@/components/layout/AppShell';
+import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
+
+/** 숫자 하나를 강조하는 통계 칸 */
+function Stat({ value, label }: { value: React.ReactNode; label: string }) {
+  return (
+    <div className="bg-slate-800 px-5 py-4 text-center">
+      <p className="tnum text-xl font-semibold tracking-tight text-slate-100">{value}</p>
+      <p className="mt-0.5 text-[0.6875rem] text-slate-500">{label}</p>
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const [streak, setStreak] = useState<UserStreak | null>(null);
@@ -29,110 +42,121 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-12">
-        <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center py-16">
+        <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">마이페이지</h1>
+    <div>
+      <PageHeader title="마이페이지" description="읽기 습관과 관심사를 한눈에 봅니다" />
 
-      {/* Streak */}
-      {streak && (
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl p-6 border border-blue-500/20">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-              <span className="text-3xl">🔥</span>
-            </div>
-            <div>
-              <p className="text-white text-3xl font-bold">{streak.currentStreak}일</p>
-              <p className="text-slate-400 text-sm">연속 방문 스트릭</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4 mt-4">
-            <div className="bg-slate-800/50 rounded-lg p-3 text-center">
-              <p className="text-white text-xl font-bold">{streak.longestStreak}</p>
-              <p className="text-slate-400 text-xs">최장 스트릭</p>
-            </div>
-            <div className="bg-slate-800/50 rounded-lg p-3 text-center">
-              <p className="text-white text-xl font-bold">{streak.badges.length}</p>
-              <p className="text-slate-400 text-xs">획득 배지</p>
-            </div>
-            <div className="bg-slate-800/50 rounded-lg p-3 text-center">
-              <p className="text-white text-xl font-bold">{streak.todayRead ? 'O' : 'X'}</p>
-              <p className="text-slate-400 text-xs">오늘 방문</p>
-            </div>
-          </div>
-
-          {/* Badges */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {streak.badges.map(badge => (
-              <div key={badge.id} className="flex items-center gap-1.5 bg-slate-800/50 rounded-full px-3 py-1.5">
-                <span>{badge.icon}</span>
-                <span className="text-white text-xs font-medium">{badge.nameKo}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* News DNA */}
-      {dna && (
-        <div className="bg-slate-800 rounded-xl p-6">
-          <h2 className="text-white font-bold text-lg mb-4">뉴스 DNA</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Category distribution */}
-            <div>
-              <h3 className="text-slate-400 text-sm mb-3">카테고리 분포</h3>
-              <div className="space-y-2">
-                {dna.categoryDistribution.map(cat => (
-                  <div key={cat.category}>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-white">{cat.category}</span>
-                      <span className="text-slate-400">{cat.percentage}%</span>
-                    </div>
-                    <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-blue-500 rounded-full transition-all"
-                        style={{ width: `${cat.percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+      <div className="space-y-5">
+        {/* Streak */}
+        {streak && (
+          <Card>
+            <div className="flex items-center gap-3.5 px-5 py-5">
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400">
+                <Icon name="flame" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="tnum text-2xl font-semibold tracking-tight text-slate-100">
+                  {streak.currentStreak}일
+                </p>
+                <p className="text-[0.8125rem] text-slate-500">연속 방문 스트릭</p>
               </div>
             </div>
+            <CardDivider />
 
-            {/* Top Keywords */}
-            <div>
-              <h3 className="text-slate-400 text-sm mb-3">관심 키워드 TOP 5</h3>
-              <div className="space-y-2">
-                {dna.topKeywords.map((kw, i) => (
-                  <div key={kw.keyword} className="flex items-center justify-between p-2 bg-slate-700/30 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-500 text-xs w-5">{i + 1}</span>
-                      <span className="text-white text-sm">{kw.keyword}</span>
+            <div className="grid grid-cols-3 gap-px bg-white/[0.05]">
+              <Stat value={streak.longestStreak} label="최장 스트릭" />
+              <Stat value={streak.badges.length} label="획득 배지" />
+              <Stat value={streak.todayRead ? '완료' : '미완'} label="오늘 방문" />
+            </div>
+
+            {/* Badges */}
+            {streak.badges.length > 0 && (
+              <>
+                <CardDivider />
+                <div className="flex flex-wrap gap-1.5 px-5 py-4">
+                  {streak.badges.map(badge => (
+                    <span
+                      key={badge.id}
+                      className="flex items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.03] px-2.5 py-1"
+                    >
+                      <span className="text-[0.8125rem] leading-none">{badge.icon}</span>
+                      <span className="text-[0.6875rem] font-medium text-slate-300">
+                        {badge.nameKo}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </Card>
+        )}
+
+        {/* News DNA */}
+        {dna && (
+          <Card>
+            <CardHeader title="뉴스 DNA" description="무엇을 얼마나 읽었는지" icon="chart" />
+            <CardDivider />
+
+            <div className="grid grid-cols-1 gap-8 px-5 py-5 md:grid-cols-2">
+              {/* Category distribution */}
+              <div>
+                <h3 className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                  카테고리 분포
+                </h3>
+                <div className="space-y-2.5">
+                  {dna.categoryDistribution.map(cat => (
+                    <div key={cat.category}>
+                      <div className="mb-1.5 flex justify-between text-[0.8125rem]">
+                        <span className="text-slate-300">{cat.category}</span>
+                        <span className="tnum text-slate-500">{cat.percentage}%</span>
+                      </div>
+                      <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                        <div
+                          className="h-full rounded-full bg-blue-500 transition-[width] duration-500"
+                          style={{ width: `${cat.percentage}%` }}
+                        />
+                      </div>
                     </div>
-                    <Badge variant="info">{kw.count}회</Badge>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              {/* Top Keywords */}
+              <div>
+                <h3 className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                  관심 키워드 TOP 5
+                </h3>
+                <div className="space-y-1">
+                  {dna.topKeywords.map((kw, i) => (
+                    <div
+                      key={kw.keyword}
+                      className="flex items-center justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-white/[0.03]"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="tnum w-3 text-[0.6875rem] text-slate-600">{i + 1}</span>
+                        <span className="text-[0.8125rem] text-slate-200">{kw.keyword}</span>
+                      </div>
+                      <Badge variant="info">{kw.count}회</Badge>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-slate-700">
-            <div className="text-center">
-              <p className="text-white text-2xl font-bold">{dna.totalReads}</p>
-              <p className="text-slate-400 text-xs">총 읽은 기사</p>
+            <CardDivider />
+            <div className="grid grid-cols-2 gap-px bg-white/[0.05]">
+              <Stat value={dna.totalReads} label="총 읽은 기사" />
+              <Stat value={`${dna.avgReadTime}분`} label="평균 읽기 시간" />
             </div>
-            <div className="text-center">
-              <p className="text-white text-2xl font-bold">{dna.avgReadTime}분</p>
-              <p className="text-slate-400 text-xs">평균 읽기 시간</p>
-            </div>
-          </div>
-        </div>
-      )}
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

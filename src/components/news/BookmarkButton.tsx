@@ -29,15 +29,15 @@ export function BookmarkButton({ newsId }: { newsId: string }) {
       onClick={handleClick}
       disabled={isLoading}
       aria-label={isBookmarked ? '북마크 해제' : '북마크 추가'}
-      className="flex items-center gap-1 p-2 min-w-[44px] min-h[44px] rounded text-xs text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors disabled:opacity-50"
+      className="flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-white/[0.05] hover:text-amber-400 disabled:opacity-50 lg:h-8 lg:w-8"
     >
       <svg
-        className="w-4 h-4"
+        className="h-[1.125rem] w-[1.125rem] lg:h-4 lg:w-4"
         fill={isBookmarked ? 'currentColor' : 'none'}
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
       </svg>
     </button>
   );

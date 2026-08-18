@@ -91,11 +91,11 @@ function WorldMapChartInner({ selectedCountry, onSelectCountry, center, zoom, on
                   style={{
                     default: {
                       fill: isSelected
-                        ? '#3b82f6'
+                        ? '#3b7bff'
                         : isSupported
-                        ? '#475569'
-                        : '#1e293b',
-                      stroke: '#0f172a',
+                        ? '#232b38'
+                        : '#151a23',
+                      stroke: '#0a0c11',
                       strokeWidth: 0.5,
                       outline: 'none',
                       cursor: isSupported ? 'pointer' : 'default',
@@ -103,17 +103,17 @@ function WorldMapChartInner({ selectedCountry, onSelectCountry, center, zoom, on
                     hover: {
                       fill: isSupported
                         ? isSelected
-                          ? '#60a5fa'
-                          : '#64748b'
-                        : '#1e293b',
-                      stroke: isSupported ? '#94a3b8' : '#0f172a',
-                      strokeWidth: isSupported ? 1 : 0.5,
+                          ? '#6fa0ff'
+                          : '#323b4c'
+                        : '#151a23',
+                      stroke: isSupported ? '#3b7bff' : '#0a0c11',
+                      strokeWidth: isSupported ? 0.75 : 0.5,
                       outline: 'none',
                       cursor: isSupported ? 'pointer' : 'default',
                     },
                     pressed: {
-                      fill: isSelected ? '#2563eb' : '#475569',
-                      stroke: '#0f172a',
+                      fill: isSelected ? '#2563f0' : '#323b4c',
+                      stroke: '#0a0c11',
                       strokeWidth: 0.5,
                       outline: 'none',
                     },
@@ -134,19 +134,20 @@ function WorldMapChartInner({ selectedCountry, onSelectCountry, center, zoom, on
               onClick={() => onSelectCountry(isSelected ? null : marker.code)}
             >
               <circle
-                r={3}
-                fill={isSelected ? '#3b82f6' : '#475569'}
-                stroke={isSelected ? '#60a5fa' : '#64748b'}
+                r={2.5}
+                fill={isSelected ? '#3b7bff' : '#3a4356'}
+                stroke={isSelected ? '#9cbeff' : 'transparent'}
                 strokeWidth={1}
                 style={{ cursor: 'pointer' }}
               />
               <text
                 textAnchor="middle"
-                y={-7}
+                y={-6}
                 style={{
-                  fontSize: '8px',
-                  fill: isSelected ? '#60a5fa' : '#94a3b8',
-                  fontWeight: isSelected ? 700 : 500,
+                  fontSize: '7.5px',
+                  fill: isSelected ? '#9cbeff' : '#6b7482',
+                  fontWeight: isSelected ? 600 : 500,
+                  letterSpacing: '0.02em',
                   pointerEvents: 'none',
                 }}
               >
@@ -166,19 +167,20 @@ function WorldMapChartInner({ selectedCountry, onSelectCountry, center, zoom, on
               onClick={() => onSelectCountry(isSelected ? null : marker.code)}
             >
               <circle
-                r={5}
-                fill={isSelected ? '#3b82f6' : '#475569'}
-                stroke={isSelected ? '#60a5fa' : '#64748b'}
-                strokeWidth={1.5}
+                r={4}
+                fill={isSelected ? '#3b7bff' : '#3a4356'}
+                stroke={isSelected ? '#9cbeff' : '#4b566b'}
+                strokeWidth={1}
                 style={{ cursor: 'pointer' }}
               />
               <text
                 textAnchor="middle"
-                y={-10}
+                y={-8}
                 style={{
-                  fontSize: '9px',
-                  fill: '#94a3b8',
+                  fontSize: '7.5px',
+                  fill: isSelected ? '#9cbeff' : '#6b7482',
                   fontWeight: 600,
+                  letterSpacing: '0.02em',
                   pointerEvents: 'none',
                 }}
               >

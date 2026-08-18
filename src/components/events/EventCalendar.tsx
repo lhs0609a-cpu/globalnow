@@ -15,6 +15,7 @@ import {
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { KoreaEvent } from '@/types/event';
+import { Icon } from '@/components/ui/Icon';
 
 type EventCalendarProps = {
   events: KoreaEvent[];
@@ -55,37 +56,41 @@ export function EventCalendar({
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
-    <div className="bg-slate-800 rounded-xl p-4">
+    <div className="rounded-xl border border-white/[0.06] bg-slate-800 p-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-3 flex items-center justify-between">
         <button
+          type="button"
           onClick={() => onMonthChange(subMonths(currentMonth, 1))}
-          className="text-slate-400 hover:text-white p-1 transition-colors"
+          aria-label="이전 달"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
         >
-          ◀
+          <Icon name="chevronRight" className="h-4 w-4 rotate-180" />
         </button>
-        <h3 className="text-white font-semibold">
+        <h3 className="tnum text-[0.875rem] font-semibold text-slate-100">
           {format(currentMonth, 'yyyy년 M월', { locale: ko })}
         </h3>
         <button
+          type="button"
           onClick={() => onMonthChange(addMonths(currentMonth, 1))}
-          className="text-slate-400 hover:text-white p-1 transition-colors"
+          aria-label="다음 달"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
         >
-          ▶
+          <Icon name="chevronRight" className="h-4 w-4" />
         </button>
       </div>
 
       {/* Weekday headers */}
-      <div className="grid grid-cols-7 gap-1 mb-1">
+      <div className="mb-1 grid grid-cols-7">
         {weekDays.map(d => (
-          <div key={d} className="text-center text-xs text-slate-500 py-1">
+          <div key={d} className="py-1 text-center text-[0.625rem] font-medium text-slate-600">
             {d}
           </div>
         ))}
       </div>
 
       {/* Days grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5">
         {days.map(day => {
           const dateKey = format(day, 'yyyy-MM-dd');
           const eventCount = eventDays.get(dateKey) || 0;
@@ -96,25 +101,27 @@ export function EventCalendar({
           return (
             <button
               key={dateKey}
+              type="button"
               onClick={() => onDayClick(day)}
-              className={`relative h-9 rounded-lg text-xs font-medium transition-colors ${
+              aria-pressed={isSelected}
+              className={`tnum relative h-8 rounded-md text-[0.6875rem] font-medium transition-colors ${
                 !isCurrentMonth
-                  ? 'text-slate-600'
+                  ? 'text-slate-700'
                   : isSelected
                   ? 'bg-blue-500 text-white'
                   : isToday
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-300 hover:bg-slate-700'
+                  ? 'bg-white/[0.08] text-slate-100'
+                  : 'text-slate-300 hover:bg-white/[0.05]'
               }`}
             >
               {format(day, 'd')}
               {eventCount > 0 && isCurrentMonth && (
-                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex gap-0.5">
+                <span className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-0.5">
                   {Array.from({ length: Math.min(eventCount, 3) }).map((_, i) => (
                     <span
                       key={i}
-                      className={`w-1 h-1 rounded-full ${
-                        isSelected ? 'bg-white' : 'bg-blue-400'
+                      className={`h-[0.1875rem] w-[0.1875rem] rounded-full ${
+                        isSelected ? 'bg-white/80' : 'bg-blue-400'
                       }`}
                     />
                   ))}

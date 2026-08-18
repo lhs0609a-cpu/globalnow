@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { MorningBrief as MorningBriefType } from '@/types/news';
 import { BriefSkeleton } from '@/components/ui/Skeleton';
 import { Badge } from '@/components/ui/Badge';
+import { Card, CardDivider } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
 
 const impactColors = {
   high: 'danger' as const,
@@ -45,72 +47,79 @@ export function MorningBrief() {
   if (!brief) return null;
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 to-slate-800/80 rounded-xl border border-slate-700/50 overflow-hidden">
+    <Card>
       {/* Header */}
-      <div
-        className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-slate-700/20 transition-colors"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">☀️</span>
-          <div>
-            <h2 className="text-white font-bold text-lg">모닝 브리프</h2>
-            <p className="text-slate-400 text-sm">오늘 꼭 알아야 할 5가지</p>
+      <div className="flex items-center justify-between gap-4 px-5 py-4">
+        <button
+          type="button"
+          onClick={() => setIsExpanded(v => !v)}
+          aria-expanded={isExpanded}
+          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+        >
+          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400">
+            <Icon name="brief" className="h-4 w-4" />
+          </span>
+          <div className="min-w-0">
+            <h2 className="text-[0.9375rem] font-semibold text-slate-100">모닝 브리프</h2>
+            <p className="mt-0.5 text-xs text-slate-500">오늘 꼭 알아야 할 5가지</p>
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/brief"
-            className="text-blue-400 text-sm hover:text-blue-300 transition-colors"
-            onClick={e => e.stopPropagation()}
-          >
-            아카이브 →
-          </Link>
-          <svg
-            className={`w-5 h-5 text-slate-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
+          <Icon
+            name="chevronDown"
+            className={`ml-1 h-4 w-4 flex-shrink-0 text-slate-500 transition-transform ${
+              isExpanded ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
+
+        <Link
+          href="/brief"
+          className="flex flex-shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-100"
+        >
+          아카이브
+          <Icon name="chevronRight" className="h-3.5 w-3.5" />
+        </Link>
       </div>
 
       {/* Content */}
       {isExpanded && (
-        <div className="px-6 pb-6">
-          <p className="text-slate-300 text-sm mb-4 bg-slate-700/30 rounded-lg p-3">
-            {brief.summary}
-          </p>
-          <div className="space-y-3">
-            {brief.items.map((item) => (
-              <div
-                key={item.rank}
-                className="flex gap-4 p-3 rounded-lg hover:bg-slate-700/30 transition-colors group"
-              >
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-500/10 rounded-full flex items-center justify-center">
-                  <span className="text-blue-400 font-bold text-sm">{item.rank}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant={impactColors[item.impact]}>
-                      {impactLabels[item.impact]}
-                    </Badge>
-                    <span className="text-slate-500 text-xs">{item.source}</span>
+        <>
+          <CardDivider />
+          <div className="px-5 py-4">
+            <p className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-3.5 text-[0.8125rem] leading-relaxed text-slate-300">
+              {brief.summary}
+            </p>
+
+            <div className="mt-2">
+              {brief.items.map(item => (
+                <div
+                  key={item.rank}
+                  className="group -mx-2 flex gap-3.5 rounded-lg px-2 py-3 transition-colors hover:bg-white/[0.025]"
+                >
+                  <span className="tnum mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-white/[0.05] text-[0.6875rem] font-semibold text-slate-400">
+                    {item.rank}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1.5 flex items-center gap-2">
+                      <Badge variant={impactColors[item.impact]}>
+                        {impactLabels[item.impact]}
+                      </Badge>
+                      <span className="truncate text-[0.6875rem] text-slate-500">
+                        {item.source}
+                      </span>
+                    </div>
+                    <h3 className="text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
+                      {item.titleKo}
+                    </h3>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                      {item.summaryKo}
+                    </p>
                   </div>
-                  <h3 className="text-white text-sm font-medium group-hover:text-blue-400 transition-colors">
-                    {item.titleKo}
-                  </h3>
-                  <p className="text-slate-400 text-xs mt-1 line-clamp-2">
-                    {item.summaryKo}
-                  </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
-    </div>
+    </Card>
   );
 }
