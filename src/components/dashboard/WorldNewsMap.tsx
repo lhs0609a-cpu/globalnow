@@ -161,13 +161,16 @@ export function WorldNewsMap() {
       <div className="flex flex-col lg:flex-row">
         {/* Map Area */}
         <div className="relative min-w-0 flex-1 p-2 lg:p-3">
-          <WorldMapChart
-            selectedCountry={selectedCountry}
-            onSelectCountry={handleSelectCountry}
-            center={mapCenter}
-            zoom={mapZoom}
-            onMoveEnd={handleMoveEnd}
-          />
+          {/* 폭을 묶어두지 않으면 패널을 열고 닫을 때마다 지도 높이가 튄다 */}
+          <div className="mx-auto w-full max-w-[52rem]">
+            <WorldMapChart
+              selectedCountry={selectedCountry}
+              onSelectCountry={handleSelectCountry}
+              center={mapCenter}
+              zoom={mapZoom}
+              onMoveEnd={handleMoveEnd}
+            />
+          </div>
 
           {/* Zoom controls overlay */}
           <div className="absolute bottom-4 right-4 flex flex-col divide-y divide-white/[0.06] overflow-hidden rounded-lg border border-white/[0.08] bg-slate-900/85 backdrop-blur-sm">
