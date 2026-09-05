@@ -42,7 +42,7 @@ export function HumorSection() {
         action={
           <Link
             href="/fun"
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-100"
+            className="t-meta flex items-center gap-0.5 rounded-md px-2 py-1 text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
           >
             더보기
             <Icon name="chevronRight" className="h-3.5 w-3.5" />
@@ -57,20 +57,18 @@ export function HumorSection() {
             {[0, 1, 2, 3].map(i => (
               <div
                 key={i}
-                className="overflow-hidden rounded-lg border border-white/[0.05]"
+                className="overflow-hidden rounded-lg border border-line"
               >
-                <div className="shimmer aspect-[4/3] bg-white/[0.04]" />
+                <div className="shimmer aspect-[4/3] bg-fill-weak" />
                 <div className="space-y-1.5 p-2.5">
-                  <div className="shimmer h-3 w-full rounded bg-white/[0.05]" />
-                  <div className="shimmer h-2.5 w-1/2 rounded bg-white/[0.05]" />
+                  <div className="shimmer h-3 w-full rounded bg-fill-weak" />
+                  <div className="shimmer h-2.5 w-1/2 rounded bg-fill-weak" />
                 </div>
               </div>
             ))}
           </div>
         ) : items.length === 0 ? (
-          <p className="py-8 text-center text-[0.8125rem] text-slate-500">
-            표시할 항목이 없습니다
-          </p>
+          <p className="t-body-sm py-10 text-center text-slate-500">표시할 항목이 없습니다</p>
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {items.slice(0, 4).map(item => (
@@ -79,10 +77,10 @@ export function HumorSection() {
                 href={item.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group overflow-hidden rounded-lg border border-white/[0.06] bg-white/[0.02] transition-colors hover:border-white/[0.12]"
+                className="group overflow-hidden rounded-lg border border-line bg-fill-subtle transition-colors hover:border-line-strong"
               >
                 {item.imageUrl && (
-                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-700">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={item.imageUrl}
@@ -90,16 +88,16 @@ export function HumorSection() {
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     />
-                    <span className="absolute right-2 top-2 rounded bg-slate-950/70 px-1.5 py-0.5 text-[0.625rem] font-medium text-slate-200 backdrop-blur-sm">
+                    <span className="absolute right-2 top-2 rounded bg-black/65 px-1.5 py-0.5 t-meta-sm font-semibold text-white backdrop-blur-sm">
                       {typeLabels[item.type] || item.type}
                     </span>
                   </div>
                 )}
                 <div className="p-2.5">
-                  <p className="line-clamp-2 text-xs leading-snug text-slate-200 transition-colors group-hover:text-blue-400">
+                  <p className="t-body-sm line-clamp-2 font-medium text-slate-200 transition-colors group-hover:text-accent-text">
                     {item.titleKo || item.title}
                   </p>
-                  <div className="mt-1.5 flex items-center gap-2 text-[0.625rem] text-slate-500">
+                  <div className="t-meta-sm mt-1.5 flex items-center gap-2 font-normal text-slate-500">
                     <span className="tnum">▲ {formatNumber(item.upvotes)}</span>
                     <span className="truncate">{item.source}</span>
                   </div>

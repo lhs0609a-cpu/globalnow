@@ -10,8 +10,8 @@ export default function HomePage() {
         {/* World News Map */}
         <ErrorBoundary
           fallback={
-            <div className="rounded-xl border border-white/[0.06] bg-slate-800 p-6 text-center">
-              <p className="text-sm text-slate-400">세계 뉴스 맵을 불러오지 못했습니다</p>
+            <div className="surface p-6 text-center">
+              <p className="t-body text-slate-400">세계 뉴스 맵을 불러오지 못했습니다</p>
             </div>
           }
         >

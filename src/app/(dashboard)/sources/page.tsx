@@ -22,7 +22,7 @@ export default function SourcesPage() {
       <PageHeader title="글로벌 미디어" description={active.description} />
 
       {/* View switcher: 두 개뿐이라 세그먼트 컨트롤이 탭보다 명확하다 */}
-      <div className="mb-5 inline-flex gap-1 rounded-lg border border-white/[0.06] bg-white/[0.02] p-1">
+      <div className="mb-5 inline-flex gap-1 rounded-lg border border-line bg-fill-subtle p-1">
         {views.map(v => (
           <button
             key={v.id}
@@ -30,7 +30,7 @@ export default function SourcesPage() {
             onClick={() => setView(v.id)}
             aria-pressed={view === v.id}
             className={clsx(
-              'rounded-md px-3.5 py-1.5 text-[0.8125rem] font-medium transition-colors',
+              'rounded-md px-3.5 py-1.5 t-body-sm font-medium transition-colors',
               view === v.id
                 ? 'bg-slate-100 text-slate-900'
                 : 'text-slate-400 hover:text-slate-100'

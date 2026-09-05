@@ -36,9 +36,9 @@ export default function ReportsPage() {
       ) : report ? (
         <ReportCard report={report} />
       ) : (
-        <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
-          <p className="text-[0.875rem] font-medium text-slate-300">리포트 준비 중</p>
-          <p className="mt-1 text-[0.8125rem] text-slate-500">
+        <div className="surface px-6 py-16 text-center">
+          <p className="t-body font-medium text-slate-300">리포트 준비 중</p>
+          <p className="mt-1 t-body-sm text-slate-500">
             해당 산업의 주간 리포트가 아직 생성되지 않았습니다
           </p>
         </div>

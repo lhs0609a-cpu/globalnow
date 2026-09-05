@@ -7,6 +7,7 @@ import { formatNumber } from '@/lib/utils/format';
 import { PageHeader } from '@/components/layout/AppShell';
 import { Button, FilterChip } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { Spinner } from '@/components/ui/Skeleton';
 
 type Signal = {
   id: string;
@@ -108,7 +109,7 @@ export default function SignalsPage() {
         description="내부자 거래, SEC 공시, 특허, 임원 이동 추적"
         action={
           total > 0 ? (
-            <span className="tnum text-[0.8125rem] text-slate-500">총 {total}건</span>
+            <span className="tnum t-body-sm text-slate-500">총 {total}건</span>
           ) : undefined
         }
       />
@@ -125,7 +126,7 @@ export default function SignalsPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="회사명 또는 티커 검색 (예: Apple, NVDA, 삼성)"
-            className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] pl-9 pr-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+            className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle pl-9 pr-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
           />
         </div>
         <Button type="submit" variant="primary">
@@ -157,17 +158,17 @@ export default function SignalsPage() {
 
       {/* Significance filter */}
       <div className="mb-5 flex flex-wrap items-center gap-1">
-        <span className="mr-1 text-[0.6875rem] text-slate-500">중요도</span>
+        <span className="mr-1 t-meta-sm text-slate-500">중요도</span>
         {['all', 'high', 'medium', 'low'].map(sig => (
           <button
             key={sig}
             type="button"
             aria-pressed={significanceFilter === sig}
             onClick={() => setSignificanceFilter(sig)}
-            className={`rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
+            className={`rounded-md px-2.5 py-1 t-meta-sm font-medium transition-colors ${
               significanceFilter === sig
-                ? 'bg-white/[0.09] text-slate-100'
-                : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+                ? 'bg-fill text-slate-100'
+                : 'text-slate-500 hover:bg-fill-weak hover:text-slate-300'
             }`}
           >
             {sig === 'all' ? '전체' : significanceLabels[sig] || sig}
@@ -177,14 +178,14 @@ export default function SignalsPage() {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+          <Spinner className="h-7 w-7" />
         </div>
       ) : signals.length === 0 ? (
-        <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
-          <p className="text-[0.875rem] font-medium text-slate-300">
+        <div className="surface px-6 py-16 text-center">
+          <p className="t-body font-medium text-slate-300">
             시그널을 찾을 수 없습니다
           </p>
-          <p className="mt-1 text-[0.8125rem] text-slate-500">
+          <p className="mt-1 t-body-sm text-slate-500">
             검색어나 필터를 변경해 보세요
           </p>
         </div>
@@ -206,10 +207,10 @@ export default function SignalsPage() {
                       setExpandedId(isExpanded ? null : signal.id);
                     }
                   }}
-                  className={`cursor-pointer rounded-xl border bg-slate-800 px-5 py-4 transition-colors ${
+                  className={`cursor-pointer rounded-xl border bg-surface px-5 py-4 transition-colors ${
                     isExpanded
                       ? 'border-blue-500/40'
-                      : 'border-white/[0.06] hover:border-white/[0.12]'
+                      : 'border-line hover:border-line-strong'
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -218,30 +219,30 @@ export default function SignalsPage() {
                         <Badge variant={signal.significance === 'high' ? 'danger' : signal.significance === 'medium' ? 'warning' : 'info'}>
                           {significanceLabels[signal.significance] || signal.significance}
                         </Badge>
-                        <span className="text-[0.6875rem] text-slate-500">
+                        <span className="t-meta-sm text-slate-500">
                           {typeLabels[signal.type] || signal.type}
                         </span>
                         {signal.ticker && (
-                          <span className="rounded bg-blue-400/10 px-1.5 py-0.5 font-mono text-[0.6875rem] text-blue-400">
+                          <span className="rounded bg-blue-400/10 px-1.5 py-0.5 font-mono t-meta-sm text-blue-400">
                             ${signal.ticker}
                           </span>
                         )}
                         {signal.company && (
-                          <span className="text-[0.6875rem] text-slate-400">{signal.company}</span>
+                          <span className="t-meta-sm text-slate-400">{signal.company}</span>
                         )}
                       </div>
 
-                      <h3 className="text-[0.9375rem] font-semibold leading-snug text-slate-100">
+                      <h3 className="t-headline-sm text-slate-100">
                         {signal.titleKo}
                       </h3>
 
                       {/* Expanded content */}
                       {isExpanded && (
-                        <div className="mt-3 space-y-2 border-l-2 border-white/[0.08] pl-3">
-                          <p className="text-[0.8125rem] leading-relaxed text-slate-300">
+                        <div className="mt-3 space-y-2 border-l-2 border-line-strong pl-3">
+                          <p className="t-body-sm text-slate-300">
                             {signal.descriptionKo}
                           </p>
-                          <p className="text-xs italic leading-relaxed text-slate-500">
+                          <p className="t-body-sm italic leading-relaxed text-slate-500">
                             {signal.description}
                           </p>
                           {signal.sourceUrl && (
@@ -249,7 +250,7 @@ export default function SignalsPage() {
                               href={signal.sourceUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 transition-colors hover:text-blue-300"
+                              className="inline-flex items-center gap-1 t-body-sm font-medium text-blue-400 transition-colors hover:text-blue-300"
                               onClick={(e) => e.stopPropagation()}
                             >
                               원문 보기
@@ -259,7 +260,7 @@ export default function SignalsPage() {
                         </div>
                       )}
 
-                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.6875rem] text-slate-500">
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 t-meta-sm text-slate-500">
                         <span>{formatRelativeTime(signal.detectedAt)}</span>
                         <span>{signal.source}</span>
                         {signal.value && (
@@ -310,10 +311,10 @@ export default function SignalsPage() {
                       type="button"
                       onClick={() => setPage(pageNum)}
                       aria-current={page === pageNum ? 'page' : undefined}
-                      className={`tnum h-8 w-8 rounded-lg text-xs font-medium transition-colors ${
+                      className={`tnum h-8 w-8 rounded-lg text-[0.8125rem] font-medium transition-colors ${
                         page === pageNum
                           ? 'bg-slate-100 text-slate-900'
-                          : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-100'
+                          : 'text-slate-400 hover:bg-fill-weak hover:text-slate-100'
                       }`}
                     >
                       {pageNum}

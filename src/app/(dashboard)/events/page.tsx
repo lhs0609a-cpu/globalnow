@@ -69,7 +69,7 @@ export default function EventsPage() {
           placeholder="이벤트 검색"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] pl-9 pr-9 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+          className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle pl-9 pr-9 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
         />
         {search && (
           <button
@@ -113,7 +113,7 @@ export default function EventsPage() {
               <button
                 type="button"
                 onClick={() => setSelectedDay(null)}
-                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-100"
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 t-body-sm text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
               >
                 {format(selectedDay, 'M월 d일')} 필터 해제
                 <Icon name="close" className="h-3 w-3" />
@@ -132,11 +132,11 @@ export default function EventsPage() {
                 { label: '종료', dot: 'bg-slate-600', count: events.filter(e => e.status === 'ended').length },
               ].map(row => (
                 <div key={row.label} className="flex items-center justify-between py-1.5">
-                  <span className="flex items-center gap-2 text-[0.8125rem] text-slate-400">
+                  <span className="flex items-center gap-2 t-body-sm text-slate-400">
                     <span className={`h-1.5 w-1.5 rounded-full ${row.dot}`} />
                     {row.label}
                   </span>
-                  <span className="tnum text-[0.8125rem] font-medium text-slate-100">
+                  <span className="tnum t-body-sm font-medium text-slate-100">
                     {row.count}
                   </span>
                 </div>
@@ -152,23 +152,23 @@ export default function EventsPage() {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-xl border border-white/[0.06] bg-slate-800 p-4"
+                  className="surface p-4"
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-1 space-y-2">
-                      <div className="shimmer h-2.5 w-1/4 rounded bg-white/[0.05]" />
-                      <div className="shimmer h-4 w-2/3 rounded bg-white/[0.05]" />
-                      <div className="shimmer h-3 w-1/2 rounded bg-white/[0.05]" />
+                      <div className="shimmer h-2.5 w-1/4 rounded bg-fill-weak" />
+                      <div className="shimmer h-4 w-2/3 rounded bg-fill-weak" />
+                      <div className="shimmer h-3 w-1/2 rounded bg-fill-weak" />
                     </div>
-                    <div className="shimmer h-14 w-14 rounded-lg bg-white/[0.05]" />
+                    <div className="shimmer h-14 w-14 rounded-lg bg-fill-weak" />
                   </div>
                 </div>
               ))}
             </div>
           ) : displayEvents.length === 0 ? (
-            <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
-              <p className="text-[0.875rem] font-medium text-slate-300">이벤트가 없습니다</p>
-              <p className="mt-1 text-[0.8125rem] text-slate-500">
+            <div className="surface px-6 py-16 text-center">
+              <p className="t-body font-medium text-slate-300">이벤트가 없습니다</p>
+              <p className="mt-1 t-body-sm text-slate-500">
                 {selectedDay ? '선택한 날짜에 이벤트가 없습니다' : '필터를 변경해 보세요'}
               </p>
             </div>
@@ -179,7 +179,7 @@ export default function EventsPage() {
           )}
 
           {!isLoading && displayEvents.length > 0 && (
-            <p className="pt-1 text-center text-[0.6875rem] text-slate-500">
+            <p className="pt-1 text-center t-meta-sm text-slate-500">
               총 {displayEvents.length}개 이벤트
             </p>
           )}

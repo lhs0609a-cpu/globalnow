@@ -25,8 +25,8 @@ export function FearGreedGauge({ value, label }: { value: number; label: string 
         </svg>
       </div>
       <div className="text-center mt-1">
-        <span className="text-white text-2xl font-bold">{value}</span>
-        <span className="text-slate-400 text-sm ml-2">{label}</span>
+        <span className="text-slate-100 t-headline-xl">{value}</span>
+        <span className="text-slate-400 t-body ml-2">{label}</span>
       </div>
     </div>
   );

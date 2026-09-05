@@ -5,6 +5,7 @@ import { NewsItem } from '@/types/news';
 import { PageHeader } from '@/components/layout/AppShell';
 import { FilterChip } from '@/components/ui/Button';
 import { Card, CardDivider } from '@/components/ui/Card';
+import { Spinner } from '@/components/ui/Skeleton';
 
 const comparisonTopics = [
   { id: 'ai', label: 'AI 규제', labelEn: 'AI Regulation' },
@@ -65,7 +66,7 @@ export default function ComparePage() {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+          <Spinner className="h-7 w-7" />
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -74,34 +75,34 @@ export default function ComparePage() {
             return (
               <Card key={country.code}>
                 <div className="flex items-center gap-2.5 px-5 py-3.5">
-                  <span className="text-base leading-none">{country.flag}</span>
-                  <span className="text-[0.875rem] font-semibold text-slate-100">
+                  <span className="text-[1.0625rem] leading-none">{country.flag}</span>
+                  <span className="t-title font-semibold text-slate-100">
                     {country.name}
                   </span>
                 </div>
                 <CardDivider />
 
                 {items.length === 0 ? (
-                  <p className="px-5 py-10 text-center text-[0.8125rem] text-slate-500">
+                  <p className="px-5 py-10 text-center t-body-sm text-slate-500">
                     관련 뉴스 없음
                   </p>
                 ) : (
-                  <div className="divide-y divide-white/[0.04]">
+                  <div className="divide-y divide-line">
                     {items.map(news => (
                       <a
                         key={news.id}
                         href={news.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group block px-5 py-3.5 transition-colors hover:bg-white/[0.025]"
+                        className="group block px-5 py-3.5 transition-colors hover:bg-fill-subtle"
                       >
-                        <p className="line-clamp-2 text-[0.8125rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
+                        <p className="line-clamp-2 t-body-sm font-medium leading-snug text-slate-100 transition-colors group-hover:text-accent-text">
                           {news.titleKo || news.title}
                         </p>
-                        <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                        <p className="mt-1.5 line-clamp-2 t-body-sm text-slate-500">
                           {news.summaryKo || news.summary}
                         </p>
-                        <p className="mt-1.5 text-[0.6875rem] text-slate-600">
+                        <p className="mt-1.5 t-meta-sm text-slate-600">
                           {news.source?.nameKo}
                         </p>
                       </a>

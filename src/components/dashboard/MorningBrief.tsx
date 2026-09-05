@@ -20,6 +20,13 @@ const impactLabels = {
   low: '낮음',
 };
 
+/**
+ * 모닝 브리프.
+ *
+ * 화면 맨 위에 놓이는 유일한 "읽는 글"이다. 나머지가 목록·수치인 만큼
+ * 여기만 본문 활자(17px/1.72)를 크게 쓰고, 순번은 신문 사설의 항목 번호처럼
+ * 세리프 숫자로 세워 기사 목록과 성격을 갈라 놓는다.
+ */
 export function MorningBrief() {
   const [brief, setBrief] = useState<MorningBriefType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,24 +55,23 @@ export function MorningBrief() {
 
   return (
     <Card>
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4 px-5 py-4">
+      <div className="flex items-center justify-between gap-4 px-5 py-3.5">
         <button
           type="button"
           onClick={() => setIsExpanded(v => !v)}
           aria-expanded={isExpanded}
-          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+          className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
         >
-          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-amber-400/10 text-amber-400">
-            <Icon name="brief" className="h-4 w-4" />
-          </span>
+          <Icon name="brief" className="h-4 w-4 flex-shrink-0 text-amber-400" />
           <div className="min-w-0">
-            <h2 className="text-[0.9375rem] font-semibold text-slate-100">모닝 브리프</h2>
-            <p className="mt-0.5 text-xs text-slate-500">오늘 꼭 알아야 할 5가지</p>
+            <h2 className="t-title text-slate-100">모닝 브리프</h2>
           </div>
+          <span className="t-meta-sm truncate font-normal text-slate-500">
+            오늘 꼭 알아야 할 5가지
+          </span>
           <Icon
             name="chevronDown"
-            className={`ml-1 h-4 w-4 flex-shrink-0 text-slate-500 transition-transform ${
+            className={`ml-auto h-4 w-4 flex-shrink-0 text-slate-500 transition-transform ${
               isExpanded ? 'rotate-180' : ''
             }`}
           />
@@ -73,29 +79,29 @@ export function MorningBrief() {
 
         <Link
           href="/brief"
-          className="flex flex-shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-slate-100"
+          className="t-meta flex flex-shrink-0 items-center gap-0.5 rounded-md px-2 py-1 text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
         >
           아카이브
           <Icon name="chevronRight" className="h-3.5 w-3.5" />
         </Link>
       </div>
 
-      {/* Content */}
       {isExpanded && (
         <>
           <CardDivider />
-          <div className="px-5 py-4">
-            <p className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-3.5 text-[0.8125rem] leading-relaxed text-slate-300">
+          <div className="px-5 py-5">
+            {/* 요약은 리드문이다 — 상자에 가두지 않고 왼쪽 괘선만 세운다 */}
+            <p className="t-body-lg border-l-2 border-accent pl-4 text-slate-200">
               {brief.summary}
             </p>
 
-            <div className="mt-2">
+            <ol className="mt-4 divide-y divide-line">
               {brief.items.map(item => (
-                <div
-                  key={item.rank}
-                  className="group -mx-2 flex gap-3.5 rounded-lg px-2 py-3 transition-colors hover:bg-white/[0.025]"
-                >
-                  <span className="tnum mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md bg-white/[0.05] text-[0.6875rem] font-semibold text-slate-400">
+                <li key={item.rank} className="group flex gap-4 py-3.5">
+                  <span
+                    aria-hidden
+                    className="t-editorial tnum mt-0.5 w-5 flex-shrink-0 text-right text-[1.125rem] font-medium leading-none text-slate-600"
+                  >
                     {item.rank}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -103,20 +109,18 @@ export function MorningBrief() {
                       <Badge variant={impactColors[item.impact]}>
                         {impactLabels[item.impact]}
                       </Badge>
-                      <span className="truncate text-[0.6875rem] text-slate-500">
+                      <span className="t-meta-sm truncate font-normal text-slate-500">
                         {item.source}
                       </span>
                     </div>
-                    <h3 className="text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
-                      {item.titleKo}
-                    </h3>
-                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                    <h3 className="t-headline-sm text-slate-100">{item.titleKo}</h3>
+                    <p className="t-body-sm mt-1 line-clamp-2 text-slate-500">
                       {item.summaryKo}
                     </p>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </>
       )}

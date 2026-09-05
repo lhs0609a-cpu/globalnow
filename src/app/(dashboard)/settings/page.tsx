@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PageHeader } from '@/components/layout/AppShell';
 import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
+import { useTheme } from '@/components/ui/ThemeToggle';
 
 /** 설정 화면 전용 토글. 세 곳에서 같은 마크업을 복사하고 있었다. */
 function Toggle({
@@ -22,7 +23,7 @@ function Toggle({
       aria-label={label}
       onClick={onChange}
       className={`relative h-5 w-9 flex-shrink-0 rounded-full transition-colors ${
-        checked ? 'bg-blue-500' : 'bg-white/[0.12]'
+        checked ? 'bg-accent' : 'bg-fill-strong'
       }`}
     >
       <span
@@ -46,8 +47,8 @@ function SettingRow({
   return (
     <div className="flex items-center justify-between gap-4 px-5 py-3.5">
       <div className="min-w-0">
-        <p className="text-[0.8125rem] text-slate-200">{title}</p>
-        <p className="mt-0.5 text-[0.6875rem] text-slate-500">{description}</p>
+        <p className="t-body-sm text-slate-200">{title}</p>
+        <p className="mt-0.5 t-meta-sm text-slate-500">{description}</p>
       </div>
       {children}
     </div>
@@ -56,7 +57,8 @@ function SettingRow({
 
 export default function SettingsPage() {
   const [emailNotif, setEmailNotif] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  // 예전에는 useState 만 붙어 있어 스위치가 켜져도 화면은 그대로였다
+  const { theme, setTheme } = useTheme();
   const [language, setLanguage] = useState('ko');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
@@ -102,11 +104,11 @@ export default function SettingsPage() {
         <Card>
           <CardHeader title="외관" />
           <CardDivider />
-          <div className="divide-y divide-white/[0.04]">
+          <div className="divide-y divide-line">
             <SettingRow title="다크 모드" description="어두운 테마 사용">
               <Toggle
-                checked={darkMode}
-                onChange={() => setDarkMode(!darkMode)}
+                checked={theme === 'dark'}
+                onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 label="다크 모드 전환"
               />
             </SettingRow>
@@ -114,7 +116,7 @@ export default function SettingsPage() {
               <select
                 value={language}
                 onChange={e => setLanguage(e.target.value)}
-                className="h-8 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 text-[0.8125rem] text-slate-100 transition-colors hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+                className="h-8 rounded-lg border border-line-strong bg-fill-subtle px-2.5 text-[0.875rem] text-slate-100 transition-colors hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
                 aria-label="언어 선택"
               >
                 <option value="ko">한국어</option>
@@ -141,17 +143,17 @@ export default function SettingsPage() {
         <Card>
           <CardHeader title="데이터" />
           <CardDivider />
-          <div className="divide-y divide-white/[0.04]">
+          <div className="divide-y divide-line">
             <button
               type="button"
               onClick={handleExportBookmarks}
               disabled={exportLoading}
-              className="w-full px-5 py-3.5 text-left transition-colors hover:bg-white/[0.025] disabled:opacity-50"
+              className="w-full px-5 py-3.5 text-left transition-colors hover:bg-fill-subtle disabled:opacity-50"
             >
-              <p className="text-[0.8125rem] text-slate-200">
+              <p className="t-body-sm text-slate-200">
                 {exportLoading ? '내보내는 중…' : '북마크 내보내기'}
               </p>
-              <p className="mt-0.5 text-[0.6875rem] text-slate-500">
+              <p className="mt-0.5 t-meta-sm text-slate-500">
                 저장한 뉴스를 CSV로 다운로드
               </p>
             </button>
@@ -160,10 +162,10 @@ export default function SettingsPage() {
               onClick={handleDeleteAccount}
               className="w-full px-5 py-3.5 text-left transition-colors hover:bg-red-400/[0.06]"
             >
-              <p className="text-[0.8125rem] text-red-400">
+              <p className="t-body-sm text-red-400">
                 {showDeleteConfirm ? '정말 삭제하시겠습니까? 다시 누르면 삭제됩니다' : '계정 삭제'}
               </p>
-              <p className="mt-0.5 text-[0.6875rem] text-red-400/60">
+              <p className="mt-0.5 t-meta-sm text-red-400/60">
                 모든 데이터가 영구적으로 삭제됩니다
               </p>
             </button>
@@ -174,23 +176,23 @@ export default function SettingsPage() {
         <Card>
           <CardHeader title="법적 고지" />
           <CardDivider />
-          <div className="divide-y divide-white/[0.04]">
+          <div className="divide-y divide-line">
             <a
               href="/terms"
-              className="block px-5 py-3 text-[0.8125rem] text-slate-300 transition-colors hover:bg-white/[0.025] hover:text-slate-100"
+              className="block px-5 py-3 t-body-sm text-slate-300 transition-colors hover:bg-fill-subtle hover:text-slate-100"
             >
               이용약관
             </a>
             <a
               href="/privacy"
-              className="block px-5 py-3 text-[0.8125rem] text-slate-300 transition-colors hover:bg-white/[0.025] hover:text-slate-100"
+              className="block px-5 py-3 t-body-sm text-slate-300 transition-colors hover:bg-fill-subtle hover:text-slate-100"
             >
               개인정보처리방침
             </a>
           </div>
         </Card>
 
-        <p className="text-center text-[0.6875rem] text-slate-600">GLOBALNOW v1.0.0</p>
+        <p className="text-center t-meta-sm text-slate-600">GLOBALNOW v1.0.0</p>
       </div>
     </div>
   );

@@ -14,14 +14,12 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
-      <p className="text-[0.875rem] font-medium text-slate-300">{title}</p>
+    <div className="surface px-6 py-16 text-center">
+      <p className="t-title text-slate-200">{title}</p>
       {description && (
-        <p className="mx-auto mt-1 max-w-sm text-[0.8125rem] leading-relaxed text-slate-500">
-          {description}
-        </p>
+        <p className="t-body-sm mx-auto mt-1.5 max-w-sm text-slate-500">{description}</p>
       )}
-      {action && <div className="mt-4 flex justify-center">{action}</div>}
+      {action && <div className="mt-5 flex justify-center">{action}</div>}
     </div>
   );
 }

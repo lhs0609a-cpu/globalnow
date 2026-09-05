@@ -5,14 +5,22 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { Icon } from '@/components/ui/Icon';
+import { IconButton } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
+/**
+ * 상단 바.
+ *
+ * 워드마크는 편집 세리프로 둔다. 라틴 한 단어짜리 제호는 신문 마스트헤드처럼
+ * 세리프로 두면 UI 서체로 짜인 나머지와 확실히 구분된다.
+ */
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  // Ctrl+K shortcut
+  // Ctrl+K / ⌘K
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -20,7 +28,10 @@ export function Header() {
         setSearchOpen(true);
         inputRef.current?.focus();
       }
-      if (e.key === 'Escape') setSearchOpen(false);
+      if (e.key === 'Escape') {
+        setSearchOpen(false);
+        inputRef.current?.blur();
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -32,27 +43,27 @@ export function Header() {
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
-      router.push(`/?search=${encodeURIComponent(searchQuery)}`);
+      router.push(`/?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-slate-900/80 backdrop-blur-xl">
-      <div className="flex h-14 items-center gap-4 px-4 lg:px-5">
-        {/* Logo */}
+    <header className="sticky top-0 z-40 border-b border-line bg-canvas/85 backdrop-blur-xl">
+      <div className="flex h-14 items-center gap-3 px-4 lg:gap-4 lg:px-5">
+        {/* 제호 */}
         <Link
           href="/"
           className="flex flex-shrink-0 items-center gap-2.5 lg:w-[13.75rem]"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-[0.5rem] bg-blue-500 text-[0.6875rem] font-bold tracking-tight text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-[0.5rem] bg-accent t-meta-sm font-bold tracking-tight text-white">
             GN
           </span>
-          <span className="hidden text-[0.9375rem] font-semibold tracking-tight text-slate-100 sm:block">
+          <span className="t-editorial hidden text-[1.0625rem] font-semibold tracking-tight text-slate-100 sm:block">
             Global<span className="text-slate-500">now</span>
           </span>
         </Link>
 
-        {/* Search */}
+        {/* 검색 */}
         <div className="flex flex-1 justify-center">
           <div className="relative w-full max-w-md">
             <Icon
@@ -61,7 +72,7 @@ export function Header() {
             />
             <input
               ref={inputRef}
-              type="text"
+              type="search"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchKeyDown}
@@ -70,16 +81,15 @@ export function Header() {
               placeholder="뉴스 검색"
               aria-label="뉴스 검색"
               className={clsx(
-                'h-9 w-full rounded-lg border bg-white/[0.03] pl-9 pr-16 text-[0.8125rem] text-slate-100 transition-colors',
+                'h-9 w-full rounded-lg border bg-fill-subtle pl-9 pr-16 text-[0.875rem] text-slate-100 transition-colors',
                 'placeholder:text-slate-500 focus:outline-none',
-                searchOpen
-                  ? 'border-blue-500/50 bg-white/[0.05]'
-                  : 'border-white/[0.06] hover:border-white/10'
+                searchOpen ? 'border-accent bg-fill-weak' : 'border-line hover:border-line-strong'
               )}
             />
             <kbd
               className={clsx(
-                'pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-white/[0.08] bg-white/[0.04] px-1.5 py-0.5 text-[0.625rem] font-medium text-slate-500 transition-opacity',
+                'tnum pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-line-strong',
+                'bg-fill-weak px-1.5 py-0.5 t-meta-sm font-medium text-slate-500 transition-opacity',
                 searchOpen ? 'opacity-0' : 'hidden opacity-100 sm:block'
               )}
             >
@@ -88,23 +98,21 @@ export function Header() {
           </div>
         </div>
 
-        {/* Right side */}
-        <div className="flex flex-shrink-0 items-center gap-1 lg:w-[13.75rem] lg:justify-end">
-          <button
-            type="button"
-            aria-label="알림"
-            className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
-          >
+        {/* 오른쪽 동작 */}
+        <div className="flex flex-shrink-0 items-center gap-0.5 lg:w-[13.75rem] lg:justify-end">
+          <ThemeToggle />
+
+          <IconButton label="알림" className="relative">
             <Icon name="bell" className="h-[1.125rem] w-[1.125rem]" />
-            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-blue-500 ring-2 ring-slate-900" />
-          </button>
+            <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-live ring-2 ring-canvas" />
+          </IconButton>
 
           <Link
             href="/profile"
             aria-label="마이페이지"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:text-slate-100"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04]">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-line-strong bg-fill-weak">
               <Icon name="profile" className="h-4 w-4" />
             </span>
           </Link>

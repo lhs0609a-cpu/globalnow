@@ -18,9 +18,9 @@ export function StockTicker() {
     <div className="bg-slate-800/50 border-b border-slate-700/50 overflow-hidden">
       <div className="flex animate-scroll gap-8 py-2 px-4 whitespace-nowrap">
         {allItems.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 text-xs">
+          <span key={i} className="inline-flex items-center gap-2 t-body-sm">
             <span className="text-slate-400">{item.name}</span>
-            <span className="text-white">{item.value}</span>
+            <span className="text-slate-100">{item.value}</span>
             <span className={item.change >= 0 ? 'text-emerald-400' : 'text-red-400'}>
               {formatPercent(item.change)}
             </span>

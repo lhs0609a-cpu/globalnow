@@ -26,14 +26,19 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
-          <div className="bg-slate-800 rounded-xl p-6 text-center">
-            <p className="text-red-400 text-sm">Something went wrong</p>
-            <p className="text-slate-500 text-xs mt-1">{this.state.error?.message}</p>
+          <div className="surface px-6 py-10 text-center">
+            <p className="t-title text-slate-200">화면을 그리지 못했습니다</p>
+            {this.state.error?.message && (
+              <p className="t-body-sm mx-auto mt-1.5 max-w-sm break-all text-slate-500">
+                {this.state.error.message}
+              </p>
+            )}
             <button
+              type="button"
               onClick={() => this.setState({ hasError: false })}
-              className="mt-3 px-4 py-2 bg-slate-700 rounded-lg text-sm text-white hover:bg-slate-600 transition-colors"
+              className="t-label mt-5 inline-flex h-9 items-center rounded-lg border border-line-strong bg-fill-subtle px-3.5 text-slate-200 transition-colors hover:bg-fill-weak hover:text-slate-100"
             >
-              Try Again
+              다시 시도
             </button>
           </div>
         )

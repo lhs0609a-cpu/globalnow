@@ -32,14 +32,14 @@ type Scope = 'all' | 'kr' | 'global';
 
 const leanFilters: { id: MediaLean; label: string; className: string }[] = [
   { id: 'progressive', label: '진보', className: 'bg-blue-400/15 text-blue-400' },
-  { id: 'center', label: '중도', className: 'bg-white/[0.09] text-slate-200' },
+  { id: 'center', label: '중도', className: 'bg-fill text-slate-200' },
   { id: 'conservative', label: '보수', className: 'bg-red-400/15 text-red-400' },
 ];
 
 /** 디렉토리 전용 필터 알약 — 종류가 많아 칩보다 더 작게 잡는다 */
 function Pill({
   active,
-  activeClassName = 'bg-white/[0.09] text-slate-100',
+  activeClassName = 'bg-fill text-slate-100',
   onClick,
   children,
 }: {
@@ -53,8 +53,8 @@ function Pill({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
-        active ? activeClassName : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+      className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 t-meta-sm font-medium transition-colors ${
+        active ? activeClassName : 'text-slate-500 hover:bg-fill-weak hover:text-slate-300'
       }`}
     >
       {children}
@@ -136,14 +136,14 @@ export function SourceDirectory() {
   return (
     <div className="space-y-4">
       {/* 국내 / 해외 */}
-      <div className="inline-flex gap-1 rounded-lg border border-white/[0.06] bg-white/[0.02] p-1">
+      <div className="inline-flex gap-1 rounded-lg border border-line bg-fill-subtle p-1">
         {scopeTabs.map(tab => (
           <button
             key={tab.id}
             type="button"
             onClick={() => setScope(tab.id)}
             aria-pressed={scope === tab.id}
-            className={`rounded-md px-3.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${
+            className={`rounded-md px-3.5 py-1.5 t-body-sm font-medium transition-colors ${
               scope === tab.id
                 ? 'bg-slate-100 text-slate-900'
                 : 'text-slate-400 hover:text-slate-100'
@@ -152,7 +152,7 @@ export function SourceDirectory() {
             {tab.label}
             {tab.count !== undefined && (
               <span
-                className={`tnum ml-1.5 text-[0.6875rem] ${
+                className={`tnum ml-1.5 t-meta-sm ${
                   scope === tab.id ? 'text-slate-500' : 'text-slate-600'
                 }`}
               >
@@ -165,18 +165,18 @@ export function SourceDirectory() {
 
       {/* Stats strip */}
       {stats && (
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.05] sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-fill-weak sm:grid-cols-4">
           {[
             { label: '수록 사이트', value: stats.totalSites },
             { label: '카테고리', value: stats.totalGroups },
             { label: '국가·지역', value: stats.totalCountries },
             { label: '무료 열람', value: stats.freeSites },
           ].map(item => (
-            <div key={item.label} className="bg-slate-800 px-4 py-3">
-              <div className="tnum text-lg font-semibold tracking-tight text-slate-100">
+            <div key={item.label} className="bg-surface px-4 py-3">
+              <div className="tnum t-headline-lg font-semibold tracking-tight text-slate-100">
                 {item.value}
               </div>
-              <div className="text-[0.6875rem] text-slate-500">{item.label}</div>
+              <div className="t-meta-sm text-slate-500">{item.label}</div>
             </div>
           ))}
         </div>
@@ -189,16 +189,16 @@ export function SourceDirectory() {
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           placeholder="사이트 이름으로 검색 (예: 한겨레, 로이터, 네이처)"
-          className="h-9 min-w-[12.5rem] flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+          className="h-9 min-w-[12.5rem] flex-1 rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
         />
         <button
           type="button"
           onClick={() => setFreeOnly(v => !v)}
           aria-pressed={freeOnly}
-          className={`h-9 whitespace-nowrap rounded-lg px-3.5 text-[0.8125rem] font-medium transition-colors ${
+          className={`h-9 whitespace-nowrap rounded-lg px-3.5 text-[0.875rem] font-medium transition-colors ${
             freeOnly
               ? 'bg-emerald-400/15 text-emerald-400'
-              : 'border border-white/[0.08] bg-white/[0.03] text-slate-400 hover:border-white/[0.14] hover:text-slate-100'
+              : 'border border-line-strong bg-fill-subtle text-slate-400 hover:border-line-strong hover:text-slate-100'
           }`}
         >
           무료만
@@ -207,7 +207,7 @@ export function SourceDirectory() {
 
       {/* 성향 필터 */}
       <div className="flex flex-wrap items-center gap-1">
-        <span className="mr-1 text-[0.6875rem] text-slate-500">보도 성향</span>
+        <span className="mr-1 t-meta-sm text-slate-500">보도 성향</span>
         {leanFilters.map(f => (
           <Pill
             key={f.id}
@@ -261,12 +261,12 @@ export function SourceDirectory() {
         <div className="space-y-5">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="shimmer h-3.5 w-32 rounded bg-white/[0.05]" />
+              <div className="shimmer h-3.5 w-32 rounded bg-fill-weak" />
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, j) => (
                   <div
                     key={j}
-                    className="shimmer h-[4.5rem] rounded-lg border border-white/[0.06] bg-slate-800"
+                    className="shimmer h-[4.5rem] surface rounded-lg"
                   />
                 ))}
               </div>
@@ -283,13 +283,13 @@ export function SourceDirectory() {
           {sections.map(section => (
             <section key={section.group.id}>
               <div className="mb-2 flex items-baseline gap-2">
-                <h2 className="text-[0.875rem] font-semibold text-slate-100">
+                <h2 className="t-title font-semibold text-slate-100">
                   {section.group.label}
                 </h2>
-                <span className="truncate text-[0.6875rem] text-slate-500">
+                <span className="truncate t-meta-sm text-slate-500">
                   {section.group.description}
                 </span>
-                <span className="tnum ml-auto flex-shrink-0 text-[0.6875rem] text-slate-600">
+                <span className="tnum ml-auto flex-shrink-0 t-meta-sm text-slate-600">
                   {section.sites.length}곳
                 </span>
               </div>
@@ -304,7 +304,7 @@ export function SourceDirectory() {
       )}
 
       {!isLoading && shownCount > 0 && (
-        <p className="text-center text-[0.6875rem] text-slate-600">
+        <p className="text-center t-meta-sm text-slate-600">
           총 {shownCount}개 사이트 표시 중
         </p>
       )}

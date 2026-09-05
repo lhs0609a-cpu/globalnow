@@ -36,7 +36,14 @@ export type IconName =
   | 'exchange'
   | 'gauge'
   | 'globe'
-  | 'external';
+  | 'external'
+  | 'sun'
+  | 'moon'
+  | 'list'
+  | 'grid'
+  | 'bookmark'
+  | 'bulb'
+  | 'arrowUpRight';
 
 /** 모든 아이콘은 24×24 그리드, currentColor 스트로크를 공유한다. */
 const PATHS: Record<IconName, React.ReactNode> = {
@@ -195,6 +202,39 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M14 4h6v6" />
       <path d="M20 4l-8.5 8.5" />
       <path d="M18 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10" />
+    </>
+  ),
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.1 5.1l1.4 1.4M17.5 17.5l1.4 1.4M18.9 5.1l-1.4 1.4M6.5 17.5l-1.4 1.4" />
+    </>
+  ),
+  moon: <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.2 8.2 0 1 0 20 14.2z" />,
+  list: (
+    <>
+      <path d="M4 6.5h16M4 12h16M4 17.5h16" />
+    </>
+  ),
+  grid: (
+    <>
+      <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+      <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+      <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+    </>
+  ),
+  bookmark: <path d="M6.5 4h11a1 1 0 0 1 1 1v15l-6.5-4-6.5 4V5a1 1 0 0 1 1-1z" />,
+  bulb: (
+    <>
+      <path d="M9.2 16.5a5.6 5.6 0 1 1 5.6 0v1.2a1.3 1.3 0 0 1-1.3 1.3h-3a1.3 1.3 0 0 1-1.3-1.3z" />
+      <path d="M10 21.5h4" />
+    </>
+  ),
+  arrowUpRight: (
+    <>
+      <path d="M8 16L16 8" />
+      <path d="M9.5 8H16v6.5" />
     </>
   ),
 };

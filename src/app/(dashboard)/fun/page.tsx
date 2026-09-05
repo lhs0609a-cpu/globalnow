@@ -7,6 +7,7 @@ import { formatNumber } from '@/lib/utils/format';
 import { Tabs } from '@/components/ui/Tabs';
 import { PageHeader } from '@/components/layout/AppShell';
 import { Icon } from '@/components/ui/Icon';
+import { Spinner } from '@/components/ui/Skeleton';
 
 const tabs = [
   { id: 'all', label: '전체' },
@@ -55,18 +56,18 @@ export default function FunPage() {
           <Link
             key={page.href}
             href={page.href}
-            className="group rounded-xl border border-white/[0.06] bg-slate-800 p-4 transition-colors hover:border-white/[0.14]"
+            className="group surface p-4 transition-colors hover:border-line-strong"
           >
             <div className="flex items-center justify-between">
-              <p className="text-[0.875rem] font-semibold text-slate-100 transition-colors group-hover:text-blue-400">
+              <p className="t-title font-semibold text-slate-100 transition-colors group-hover:text-accent-text">
                 {page.label}
               </p>
               <Icon
                 name="chevronRight"
-                className="h-4 w-4 text-slate-600 transition-colors group-hover:text-blue-400"
+                className="h-4 w-4 text-slate-600 transition-colors group-hover:text-accent-text"
               />
             </div>
-            <p className="mt-1 text-xs text-slate-500">{page.desc}</p>
+            <p className="mt-1 t-body-sm text-slate-500">{page.desc}</p>
           </Link>
         ))}
       </div>
@@ -77,7 +78,7 @@ export default function FunPage() {
       {/* Content */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+          <Spinner className="h-7 w-7" />
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,10 +88,10 @@ export default function FunPage() {
               href={item.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group overflow-hidden rounded-xl border border-white/[0.06] bg-slate-800 transition-colors hover:border-white/[0.14]"
+              className="group overflow-hidden surface transition-colors hover:border-line-strong"
             >
               {item.imageUrl && (
-                <div className="aspect-[4/3] overflow-hidden bg-slate-700">
+                <div className="aspect-[4/3] overflow-hidden bg-surface-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.imageUrl}
@@ -101,15 +102,15 @@ export default function FunPage() {
                 </div>
               )}
               <div className="p-4">
-                <p className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
+                <p className="line-clamp-2 t-headline-sm text-slate-100 transition-colors group-hover:text-accent-text">
                   {item.titleKo || item.title}
                 </p>
                 {item.content && !item.imageUrl && (
-                  <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-slate-500">
+                  <p className="mt-2 line-clamp-3 t-body-sm text-slate-500">
                     {item.content}
                   </p>
                 )}
-                <div className="mt-3 flex items-center justify-between text-[0.6875rem] text-slate-500">
+                <div className="mt-3 flex items-center justify-between t-meta-sm text-slate-500">
                   <span className="tnum">▲ {formatNumber(item.upvotes)}</span>
                   <span className="truncate">{item.source}</span>
                 </div>

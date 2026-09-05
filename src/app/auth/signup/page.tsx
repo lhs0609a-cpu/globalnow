@@ -81,17 +81,17 @@ export default function SignupPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
             </svg>
           </span>
-          <h2 className="text-lg font-semibold tracking-tight text-slate-100">
+          <h2 className="t-headline-lg font-semibold tracking-tight text-slate-100">
             이메일을 확인해주세요
           </h2>
-          <p className="mt-2 text-[0.8125rem] leading-relaxed text-slate-500">
+          <p className="mt-2 t-body-sm text-slate-500">
             {email}로 인증 링크를 보냈습니다.
             <br />
             링크를 눌러 가입을 완료해주세요.
           </p>
           <Link
             href="/auth/login"
-            className="mt-5 inline-block text-[0.8125rem] font-medium text-blue-400 transition-colors hover:text-blue-300"
+            className="mt-5 inline-block t-body-sm font-medium text-blue-400 transition-colors hover:text-blue-300"
           >
             로그인 페이지로 돌아가기
           </Link>
@@ -104,27 +104,27 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
       <div className="w-full max-w-[22rem]">
         <div className="mb-7 text-center">
-          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold tracking-tight text-white">
+          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 t-title font-bold tracking-tight text-white">
             GN
           </span>
-          <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+          <h1 className="t-headline-lg font-semibold tracking-tight text-slate-100">
             Global<span className="text-slate-500">now</span>
           </h1>
-          <p className="mt-1 text-[0.8125rem] text-slate-500">새 계정을 만들어보세요</p>
+          <p className="mt-1 t-body-sm text-slate-500">새 계정을 만들어보세요</p>
         </div>
 
         <form
           onSubmit={handleSignup}
-          className="space-y-3.5 rounded-xl border border-white/[0.06] bg-slate-800 p-5"
+          className="space-y-3.5 surface p-5"
         >
           {error && (
-            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 text-[0.8125rem] text-red-400">
+            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 t-body-sm text-red-400">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="nickname" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="nickname" className="mb-1.5 block t-body-sm text-slate-400">
               닉네임
             </label>
             <input
@@ -132,13 +132,13 @@ export default function SignupPage() {
               type="text"
               value={nickname}
               onChange={e => setNickname(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="닉네임을 입력하세요"
               required
             />
           </div>
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="email" className="mb-1.5 block t-body-sm text-slate-400">
               이메일
             </label>
             <input
@@ -146,13 +146,13 @@ export default function SignupPage() {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="your@email.com"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="password" className="mb-1.5 block t-body-sm text-slate-400">
               비밀번호
             </label>
             <input
@@ -160,14 +160,14 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="6자 이상"
               required
               minLength={6}
             />
           </div>
           <div>
-            <label htmlFor="passwordConfirm" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="passwordConfirm" className="mb-1.5 block t-body-sm text-slate-400">
               비밀번호 확인
             </label>
             <input
@@ -175,7 +175,7 @@ export default function SignupPage() {
               type="password"
               value={passwordConfirm}
               onChange={e => setPasswordConfirm(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="비밀번호를 다시 입력하세요"
               required
               minLength={6}
@@ -185,13 +185,13 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="h-9 w-full rounded-lg bg-blue-500 text-[0.8125rem] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="h-9 w-full rounded-lg bg-accent text-[0.875rem] font-semibold text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {isLoading ? '가입 중…' : '회원가입'}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-[0.8125rem] text-slate-500">
+        <p className="mt-4 text-center t-body-sm text-slate-500">
           이미 계정이 있으신가요?{' '}
           <Link href="/auth/login" className="font-medium text-blue-400 transition-colors hover:text-blue-300">
             로그인

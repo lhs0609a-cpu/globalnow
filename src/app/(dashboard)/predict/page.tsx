@@ -5,6 +5,7 @@ import { Prediction, LeaderboardEntry } from '@/types/prediction';
 import { VoteButton } from '@/components/news/VoteButton';
 import { Badge } from '@/components/ui/Badge';
 import { PageHeader } from '@/components/layout/AppShell';
+import { Spinner } from '@/components/ui/Skeleton';
 
 export default function PredictPage() {
   const [predictions, setPredictions] = useState<Prediction[]>([]);
@@ -45,17 +46,17 @@ export default function PredictPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         {/* Predictions */}
         <div className="space-y-4 lg:col-span-2">
-          <h2 className="text-[0.9375rem] font-semibold text-slate-100">진행 중인 예측</h2>
+          <h2 className="t-title font-semibold text-slate-100">진행 중인 예측</h2>
           {isLoading ? (
             <div className="flex justify-center py-16">
-              <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+              <Spinner className="h-7 w-7" />
             </div>
           ) : predictions.length === 0 ? (
-            <div className="rounded-xl border border-white/[0.06] bg-slate-800 px-6 py-16 text-center">
-              <p className="text-[0.875rem] font-medium text-slate-300">
+            <div className="surface px-6 py-16 text-center">
+              <p className="t-body font-medium text-slate-300">
                 현재 진행 중인 예측이 없습니다
               </p>
-              <p className="mt-1 text-[0.8125rem] text-slate-500">
+              <p className="mt-1 t-body-sm text-slate-500">
                 새로운 예측이 곧 등록됩니다
               </p>
             </div>
@@ -63,15 +64,15 @@ export default function PredictPage() {
             predictions.map(pred => (
               <div
                 key={pred.id}
-                className="rounded-xl border border-white/[0.06] bg-slate-800 p-5"
+                className="surface p-5"
               >
                 <div className="mb-3 flex items-center gap-2">
                   <Badge variant="info">{pred.category}</Badge>
-                  <span className="text-[0.6875rem] text-slate-500">
+                  <span className="t-meta-sm text-slate-500">
                     마감 {new Date(pred.deadline).toLocaleDateString('ko-KR')}
                   </span>
                 </div>
-                <h3 className="mb-4 text-[0.9375rem] font-semibold leading-snug text-slate-100">
+                <h3 className="mb-4 t-headline-sm text-slate-100">
                   {pred.questionKo}
                 </h3>
                 <div className="space-y-2">
@@ -97,38 +98,38 @@ export default function PredictPage() {
 
         {/* Leaderboard */}
         <div>
-          <h2 className="mb-4 text-[0.9375rem] font-semibold text-slate-100">랭킹</h2>
-          <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-slate-800">
+          <h2 className="mb-4 t-title font-semibold text-slate-100">랭킹</h2>
+          <div className="overflow-hidden surface">
             {leaderboard.length === 0 ? (
-              <p className="px-5 py-10 text-center text-[0.8125rem] text-slate-500">
+              <p className="px-5 py-10 text-center t-body-sm text-slate-500">
                 랭킹 데이터가 없습니다
               </p>
             ) : (
-              <div className="divide-y divide-white/[0.04]">
+              <div className="divide-y divide-line">
                 {leaderboard.map(entry => (
                   <div
                     key={entry.userId}
-                    className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.025]"
+                    className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-fill-subtle"
                   >
                     {/* 상위 3위만 강조하고 나머지는 숫자로 조용히 둔다 */}
                     <span
-                      className={`tnum flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md text-[0.6875rem] font-semibold ${
+                      className={`tnum flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md t-meta-sm font-semibold ${
                         entry.rank <= 3
                           ? 'bg-amber-400/10 text-amber-400'
-                          : 'bg-white/[0.05] text-slate-500'
+                          : 'bg-fill-weak text-slate-500'
                       }`}
                     >
                       {entry.rank}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[0.8125rem] font-medium text-slate-100">
+                      <p className="truncate t-body-sm font-medium text-slate-100">
                         {entry.nickname}
                       </p>
-                      <p className="tnum text-[0.6875rem] text-slate-500">
+                      <p className="tnum t-meta-sm text-slate-500">
                         정확도 {entry.accuracy.toFixed(1)}%
                       </p>
                     </div>
-                    <span className="tnum text-[0.8125rem] font-semibold text-slate-200">
+                    <span className="tnum t-body-sm font-semibold text-slate-200">
                       {entry.score}
                     </span>
                   </div>

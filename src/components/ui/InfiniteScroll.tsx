@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import { Spinner } from './Skeleton';
 
 export function InfiniteScroll({
   children,
@@ -45,7 +46,7 @@ export function InfiniteScroll({
       <div ref={sentinelRef} className="h-4" />
       {isLoading && (
         <div className="flex justify-center py-6">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+          <Spinner className="h-6 w-6" />
         </div>
       )}
     </div>

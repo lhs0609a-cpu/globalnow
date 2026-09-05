@@ -23,7 +23,7 @@ export function WatchdogCard({ item }: Props) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block rounded-xl border border-white/[0.06] bg-slate-800 p-4 transition-colors hover:border-white/[0.14]"
+      className="group block surface p-4 transition-colors hover:border-line-strong"
     >
       <div className="flex items-start gap-3.5">
         {item.imageUrl && (
@@ -32,7 +32,7 @@ export function WatchdogCard({ item }: Props) {
             src={item.imageUrl}
             alt=""
             loading="lazy"
-            className="h-16 w-16 flex-shrink-0 rounded-lg bg-slate-700 object-cover"
+            className="h-16 w-16 flex-shrink-0 rounded-lg bg-surface-2 object-cover"
           />
         )}
         <div className="min-w-0 flex-1">
@@ -46,25 +46,25 @@ export function WatchdogCard({ item }: Props) {
           </div>
 
           {/* Title */}
-          <h3 className="line-clamp-2 text-[0.875rem] font-medium leading-snug text-slate-100 transition-colors group-hover:text-blue-400">
+          <h3 className="line-clamp-2 t-headline-sm text-slate-100 transition-colors group-hover:text-accent-text">
             {item.titleKo || item.title}
           </h3>
 
           {/* Summary */}
           {(item.summaryKo || item.summary) && (
-            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+            <p className="mt-1 line-clamp-2 t-body-sm text-slate-500">
               {item.summaryKo || item.summary}
             </p>
           )}
 
           {/* Meta */}
-          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.6875rem] text-slate-500">
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 t-meta-sm text-slate-500">
             <span>{item.source?.name || item.sourceId}</span>
-            <span className="text-slate-700">·</span>
+            <span className="text-slate-600">·</span>
             <span>{timeAgo(item.publishedAt)}</span>
             {item.sentiment !== undefined && (
               <>
-                <span className="text-slate-700">·</span>
+                <span className="text-slate-600">·</span>
                 <span
                   className={
                     item.sentiment > 0.2

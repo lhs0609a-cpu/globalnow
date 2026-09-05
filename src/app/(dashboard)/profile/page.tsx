@@ -6,13 +6,14 @@ import { Badge } from '@/components/ui/Badge';
 import { PageHeader } from '@/components/layout/AppShell';
 import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { Spinner } from '@/components/ui/Skeleton';
 
 /** 숫자 하나를 강조하는 통계 칸 */
 function Stat({ value, label }: { value: React.ReactNode; label: string }) {
   return (
-    <div className="bg-slate-800 px-5 py-4 text-center">
-      <p className="tnum text-xl font-semibold tracking-tight text-slate-100">{value}</p>
-      <p className="mt-0.5 text-[0.6875rem] text-slate-500">{label}</p>
+    <div className="bg-surface px-5 py-4 text-center">
+      <p className="tnum t-headline-xl tracking-tight text-slate-100">{value}</p>
+      <p className="mt-0.5 t-meta-sm text-slate-500">{label}</p>
     </div>
   );
 }
@@ -43,7 +44,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="flex justify-center py-16">
-        <div className="h-7 w-7 animate-spin rounded-full border-2 border-white/10 border-t-blue-500" />
+        <Spinner className="h-7 w-7" />
       </div>
     );
   }
@@ -61,15 +62,15 @@ export default function ProfilePage() {
                 <Icon name="flame" className="h-5 w-5" />
               </span>
               <div>
-                <p className="tnum text-2xl font-semibold tracking-tight text-slate-100">
+                <p className="tnum t-headline-xl tracking-tight text-slate-100">
                   {streak.currentStreak}일
                 </p>
-                <p className="text-[0.8125rem] text-slate-500">연속 방문 스트릭</p>
+                <p className="t-body-sm text-slate-500">연속 방문 스트릭</p>
               </div>
             </div>
             <CardDivider />
 
-            <div className="grid grid-cols-3 gap-px bg-white/[0.05]">
+            <div className="grid grid-cols-3 gap-px bg-fill-weak">
               <Stat value={streak.longestStreak} label="최장 스트릭" />
               <Stat value={streak.badges.length} label="획득 배지" />
               <Stat value={streak.todayRead ? '완료' : '미완'} label="오늘 방문" />
@@ -83,10 +84,10 @@ export default function ProfilePage() {
                   {streak.badges.map(badge => (
                     <span
                       key={badge.id}
-                      className="flex items-center gap-1.5 rounded-md border border-white/[0.06] bg-white/[0.03] px-2.5 py-1"
+                      className="flex items-center gap-1.5 rounded-md border border-line bg-fill-subtle px-2.5 py-1"
                     >
-                      <span className="text-[0.8125rem] leading-none">{badge.icon}</span>
-                      <span className="text-[0.6875rem] font-medium text-slate-300">
+                      <span className="t-body-sm leading-none">{badge.icon}</span>
+                      <span className="t-meta-sm font-medium text-slate-300">
                         {badge.nameKo}
                       </span>
                     </span>
@@ -106,17 +107,17 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 gap-8 px-5 py-5 md:grid-cols-2">
               {/* Category distribution */}
               <div>
-                <h3 className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-3 t-meta-sm font-semibold uppercase tracking-wider text-slate-500">
                   카테고리 분포
                 </h3>
                 <div className="space-y-2.5">
                   {dna.categoryDistribution.map(cat => (
                     <div key={cat.category}>
-                      <div className="mb-1.5 flex justify-between text-[0.8125rem]">
+                      <div className="mb-1.5 flex justify-between t-body-sm">
                         <span className="text-slate-300">{cat.category}</span>
                         <span className="tnum text-slate-500">{cat.percentage}%</span>
                       </div>
-                      <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                      <div className="h-1 overflow-hidden rounded-full bg-fill">
                         <div
                           className="h-full rounded-full bg-blue-500 transition-[width] duration-500"
                           style={{ width: `${cat.percentage}%` }}
@@ -129,18 +130,18 @@ export default function ProfilePage() {
 
               {/* Top Keywords */}
               <div>
-                <h3 className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+                <h3 className="mb-3 t-meta-sm font-semibold uppercase tracking-wider text-slate-500">
                   관심 키워드 TOP 5
                 </h3>
                 <div className="space-y-1">
                   {dna.topKeywords.map((kw, i) => (
                     <div
                       key={kw.keyword}
-                      className="flex items-center justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-white/[0.03]"
+                      className="flex items-center justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-fill-subtle"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="tnum w-3 text-[0.6875rem] text-slate-600">{i + 1}</span>
-                        <span className="text-[0.8125rem] text-slate-200">{kw.keyword}</span>
+                        <span className="tnum w-3 t-meta-sm text-slate-600">{i + 1}</span>
+                        <span className="t-body-sm text-slate-200">{kw.keyword}</span>
                       </div>
                       <Badge variant="info">{kw.count}회</Badge>
                     </div>
@@ -150,7 +151,7 @@ export default function ProfilePage() {
             </div>
 
             <CardDivider />
-            <div className="grid grid-cols-2 gap-px bg-white/[0.05]">
+            <div className="grid grid-cols-2 gap-px bg-fill-weak">
               <Stat value={dna.totalReads} label="총 읽은 기사" />
               <Stat value={`${dna.avgReadTime}분`} label="평균 읽기 시간" />
             </div>

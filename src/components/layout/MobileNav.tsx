@@ -24,12 +24,12 @@ function SheetLink({ item, active }: { item: NavItem; active: boolean }) {
       className={clsx(
         'flex flex-col items-center gap-2 rounded-xl border px-2 py-3.5 text-center transition-colors',
         active
-          ? 'border-blue-500/30 bg-blue-500/10 text-blue-400'
-          : 'border-white/[0.06] bg-white/[0.03] text-slate-300 active:bg-white/[0.07]'
+          ? 'border-transparent bg-accent-soft text-accent-text'
+          : 'border-line bg-fill-subtle text-slate-300 active:bg-fill'
       )}
     >
       <Icon name={item.icon} className="h-5 w-5" />
-      <span className="text-[0.6875rem] font-medium leading-tight">{item.label}</span>
+      <span className="t-meta-sm leading-tight">{item.label}</span>
     </Link>
   );
 }
@@ -73,28 +73,24 @@ export function MobileNav() {
             type="button"
             aria-label="메뉴 닫기"
             onClick={() => setMoreOpen(false)}
-            className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/55 backdrop-blur-sm"
           />
           <div
             role="dialog"
             aria-modal="true"
             aria-label="전체 메뉴"
-            className="relative max-h-[75vh] overflow-y-auto rounded-t-2xl border-t border-white/[0.08] bg-slate-900 px-4 pb-8 pt-3"
+            className="relative max-h-[75vh] overflow-y-auto rounded-t-2xl border-t border-line-strong bg-canvas px-4 pb-8 pt-3"
           >
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-white/15" />
+            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-fill-strong" />
 
-            <h2 className="px-1 pb-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
-              전체 메뉴
-            </h2>
+            <h2 className="t-kicker px-1 pb-2 text-slate-500">전체 메뉴</h2>
             <div className="grid grid-cols-3 gap-2">
               {SECONDARY_NAV_ITEMS.map(item => (
                 <SheetLink key={item.href} item={item} active={pathname === item.href} />
               ))}
             </div>
 
-            <h2 className="px-1 pb-2 pt-5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
-              계정
-            </h2>
+            <h2 className="t-kicker px-1 pb-2 pt-5 text-slate-500">계정</h2>
             <div className="grid grid-cols-3 gap-2">
               {ACCOUNT_ITEMS.map(item => (
                 <SheetLink key={item.href} item={item} active={pathname === item.href} />
@@ -107,7 +103,7 @@ export function MobileNav() {
       {/* 하단 탭바 */}
       <nav
         aria-label="주요 메뉴"
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] bg-slate-900/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-line bg-canvas/92 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
       >
         <div className="flex h-14 items-center justify-around">
           {PRIMARY_NAV_ITEMS.map(item => {
@@ -119,11 +115,11 @@ export function MobileNav() {
                 aria-current={active ? 'page' : undefined}
                 className={clsx(
                   'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
-                  active ? 'text-blue-400' : 'text-slate-500'
+                  active ? 'text-accent-text' : 'text-slate-500'
                 )}
               >
                 <Icon name={item.icon} className="h-[1.125rem] w-[1.125rem]" />
-                <span className="text-[0.625rem] font-medium">{label(item)}</span>
+                <span className="t-meta-sm font-semibold">{label(item)}</span>
               </Link>
             );
           })}
@@ -135,11 +131,11 @@ export function MobileNav() {
             aria-haspopup="dialog"
             className={clsx(
               'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
-              moreOpen || moreActive ? 'text-blue-400' : 'text-slate-500'
+              moreOpen || moreActive ? 'text-accent-text' : 'text-slate-500'
             )}
           >
             <Icon name="menu" className="h-[1.125rem] w-[1.125rem]" />
-            <span className="text-[0.625rem] font-medium">더보기</span>
+            <span className="t-meta-sm font-semibold">더보기</span>
           </button>
         </div>
       </nav>

@@ -31,9 +31,9 @@ export function Leaderboard() {
   }
 
   return (
-    <div className="bg-slate-800 rounded-xl">
+    <div className="surface">
       <div className="p-4 border-b border-slate-700">
-        <h3 className="text-white font-semibold flex items-center gap-2">
+        <h3 className="text-slate-100 font-semibold flex items-center gap-2">
           <span>🏆</span> 예측 랭킹
         </h3>
       </div>
@@ -44,16 +44,16 @@ export function Leaderboard() {
               {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : entry.rank}
             </span>
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs">{entry.nickname.charAt(0)}</span>
+              <span className="text-white t-body-sm">{entry.nickname.charAt(0)}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">{entry.nickname}</p>
-              <p className="text-slate-500 text-xs">{entry.correctPredictions}/{entry.totalPredictions} ({entry.accuracy}%)</p>
+              <p className="text-slate-100 t-body font-medium truncate">{entry.nickname}</p>
+              <p className="text-slate-500 t-body-sm">{entry.correctPredictions}/{entry.totalPredictions} ({entry.accuracy}%)</p>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-blue-400 text-sm font-bold">{entry.score}</p>
+              <p className="text-blue-400 t-title font-bold">{entry.score}</p>
               {entry.streak > 0 && (
-                <p className="text-amber-400 text-xs">🔥 {entry.streak}</p>
+                <p className="text-amber-400 t-body-sm">🔥 {entry.streak}</p>
               )}
             </div>
           </div>

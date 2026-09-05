@@ -74,29 +74,29 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
       <div className="w-full max-w-[22rem]">
         <div className="mb-7 text-center">
-          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold tracking-tight text-white">
+          <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 t-title font-bold tracking-tight text-white">
             GN
           </span>
-          <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+          <h1 className="t-headline-lg font-semibold tracking-tight text-slate-100">
             Global<span className="text-slate-500">now</span>
           </h1>
-          <p className="mt-1 text-[0.8125rem] text-slate-500">
+          <p className="mt-1 t-body-sm text-slate-500">
             글로벌 뉴스 대시보드에 로그인
           </p>
         </div>
 
         <form
           onSubmit={handleLogin}
-          className="space-y-3.5 rounded-xl border border-white/[0.06] bg-slate-800 p-5"
+          className="space-y-3.5 surface p-5"
         >
           {error && (
-            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 text-[0.8125rem] text-red-400">
+            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 t-body-sm text-red-400">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="email" className="mb-1.5 block t-body-sm text-slate-400">
               이메일
             </label>
             <input
@@ -104,13 +104,13 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="your@email.com"
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="mb-1.5 block text-[0.8125rem] text-slate-400">
+            <label htmlFor="password" className="mb-1.5 block t-body-sm text-slate-400">
               비밀번호
             </label>
             <input
@@ -118,7 +118,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="h-9 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 text-[0.8125rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-white/[0.14] focus:border-blue-500/50 focus:outline-none"
+              className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
               placeholder="••••••••"
               required
             />
@@ -126,24 +126,24 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="h-9 w-full rounded-lg bg-blue-500 text-[0.8125rem] font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="h-9 w-full rounded-lg bg-accent text-[0.875rem] font-semibold text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {isLoading ? '로그인 중…' : '로그인'}
           </button>
 
           <div className="relative py-1">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/[0.06]" />
+              <div className="w-full border-t border-line" />
             </div>
             <div className="relative flex justify-center">
-              <span className="bg-slate-800 px-2 text-[0.6875rem] text-slate-600">또는</span>
+              <span className="bg-surface px-2 t-meta-sm text-slate-600">또는</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] text-[0.8125rem] font-medium text-slate-200 transition-colors hover:border-white/[0.14] hover:bg-white/[0.06]"
+            className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-line-strong bg-fill-subtle text-[0.875rem] font-semibold text-slate-200 transition-colors hover:border-line-strong hover:bg-fill"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -155,7 +155,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-[0.8125rem] text-slate-500">
+        <p className="mt-4 text-center t-body-sm text-slate-500">
           계정이 없으신가요?{' '}
           <Link href="/auth/signup" className="font-medium text-blue-400 transition-colors hover:text-blue-300">
             회원가입

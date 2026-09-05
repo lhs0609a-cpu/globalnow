@@ -14,7 +14,7 @@ type Props = {
 
 function WatchdogSkeleton() {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-slate-800 p-4">
+    <div className="surface p-4">
       <div className="flex gap-3.5">
         <Skeleton className="h-16 w-16 flex-shrink-0 rounded-lg" />
         <div className="flex-1 space-y-2">
@@ -62,7 +62,7 @@ export function WatchdogFeed({ items, total, isLoading, isEmpty }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-[0.8125rem] text-slate-500">
+      <p className="t-body-sm text-slate-500">
         총 <span className="tnum font-medium text-slate-200">{total}</span>건의 관련 뉴스
       </p>
       {items.map(item => (

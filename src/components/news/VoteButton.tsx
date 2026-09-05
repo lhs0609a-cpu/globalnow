@@ -46,8 +46,8 @@ export function VoteButton({
       disabled={hasVoted || disabled}
       className={`relative w-full overflow-hidden rounded-lg border px-3.5 py-2.5 text-left transition-colors ${
         hasVoted
-          ? 'border-white/[0.1] bg-white/[0.03]'
-          : 'border-white/[0.06] bg-white/[0.03] hover:border-white/[0.14] hover:bg-white/[0.06]'
+          ? 'border-line-strong bg-fill-subtle'
+          : 'border-line bg-fill-subtle hover:border-line-strong hover:bg-fill'
       }`}
     >
       {/* 투표 후 채워지는 막대 — 배경으로 깔아야 글자를 가리지 않는다 */}
@@ -60,9 +60,9 @@ export function VoteButton({
         />
       )}
       <div className="relative flex items-center justify-between gap-3">
-        <span className="text-[0.8125rem] text-slate-100">{label}</span>
+        <span className="t-body-sm text-slate-100">{label}</span>
         {hasVoted && (
-          <span className="tnum text-[0.8125rem] font-semibold text-slate-200">
+          <span className="tnum t-body-sm font-semibold text-slate-200">
             {percentage}%
           </span>
         )}

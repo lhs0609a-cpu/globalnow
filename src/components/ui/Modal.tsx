@@ -45,23 +45,23 @@ export function Modal({
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm" />
+      <div className="fixed inset-0 bg-black/55 backdrop-blur-sm" />
       <div
         role="dialog"
         aria-modal="true"
         className={clsx(
-          'relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-white/[0.08] bg-slate-800 shadow-2xl shadow-black/50',
+          'surface relative max-h-[90vh] w-full max-w-lg overflow-y-auto shadow-[var(--shadow-pop)]',
           className
         )}
       >
         {title && (
-          <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4">
-            <h2 className="text-[0.9375rem] font-semibold text-slate-100">{title}</h2>
+          <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
+            <h2 className="t-title text-slate-100">{title}</h2>
             <button
               type="button"
               onClick={onClose}
               aria-label="닫기"
-              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
             >
               <Icon name="close" className="h-4 w-4" />
             </button>

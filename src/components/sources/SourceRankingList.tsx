@@ -81,10 +81,10 @@ export function SourceRankingList() {
           type="button"
           onClick={() => setActiveCountry('all')}
           aria-pressed={activeCountry === 'all'}
-          className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
+          className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 t-meta-sm font-medium transition-colors ${
             activeCountry === 'all'
-              ? 'bg-white/[0.09] text-slate-100'
-              : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+              ? 'bg-fill text-slate-100'
+              : 'text-slate-500 hover:bg-fill-weak hover:text-slate-300'
           }`}
         >
           전체
@@ -95,10 +95,10 @@ export function SourceRankingList() {
             type="button"
             onClick={() => setActiveCountry(c.code)}
             aria-pressed={activeCountry === c.code}
-            className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 text-[0.6875rem] font-medium transition-colors ${
+            className={`flex-shrink-0 whitespace-nowrap rounded-md px-2.5 py-1 t-meta-sm font-medium transition-colors ${
               activeCountry === c.code
-                ? 'bg-white/[0.09] text-slate-100'
-                : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
+                ? 'bg-fill text-slate-100'
+                : 'text-slate-500 hover:bg-fill-weak hover:text-slate-300'
             }`}
           >
             {c.flag} {c.code}
@@ -112,14 +112,14 @@ export function SourceRankingList() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-xl border border-white/[0.06] bg-slate-800 p-4"
+              className="surface p-4"
             >
               <div className="flex items-start gap-3.5">
-                <div className="shimmer h-6 w-7 rounded bg-white/[0.05]" />
+                <div className="shimmer h-6 w-7 rounded bg-fill-weak" />
                 <div className="flex-1 space-y-2">
-                  <div className="shimmer h-3.5 w-1/3 rounded bg-white/[0.05]" />
-                  <div className="shimmer h-3 w-2/3 rounded bg-white/[0.05]" />
-                  <div className="shimmer h-3 w-1/2 rounded bg-white/[0.05]" />
+                  <div className="shimmer h-3.5 w-1/3 rounded bg-fill-weak" />
+                  <div className="shimmer h-3 w-2/3 rounded bg-fill-weak" />
+                  <div className="shimmer h-3 w-1/2 rounded bg-fill-weak" />
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@ export function SourceRankingList() {
 
       {/* Stats */}
       {!isLoading && sources.length > 0 && (
-        <p className="text-center text-[0.6875rem] text-slate-600">
+        <p className="text-center t-meta-sm text-slate-600">
           총 {sources.length}개 매체 표시 중
         </p>
       )}

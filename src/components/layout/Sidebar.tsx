@@ -13,16 +13,16 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
       href={item.href}
       aria-current={active ? 'page' : undefined}
       className={clsx(
-        'group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.8125rem] font-medium transition-colors',
+        'group relative flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.875rem] font-medium transition-colors',
         active
-          ? 'bg-white/[0.06] text-slate-100'
-          : 'text-slate-400 hover:bg-white/[0.035] hover:text-slate-100'
+          ? 'bg-fill text-slate-100'
+          : 'text-slate-400 hover:bg-fill-weak hover:text-slate-100'
       )}
     >
       {/* 활성 표시는 배경만으로는 약해서 왼쪽에 짧은 축을 세운다 */}
       <span
         className={clsx(
-          'absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-blue-500 transition-opacity',
+          'absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r-full bg-accent transition-opacity',
           active ? 'opacity-100' : 'opacity-0'
         )}
       />
@@ -30,7 +30,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
         name={item.icon}
         className={clsx(
           'h-[1.125rem] w-[1.125rem] flex-shrink-0 transition-colors',
-          active ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300'
+          active ? 'text-accent-text' : 'text-slate-500 group-hover:text-slate-300'
         )}
       />
       <span className="truncate">{item.label}</span>
@@ -56,7 +56,7 @@ export function Sidebar() {
   }, []);
 
   return (
-    <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-60 flex-col border-r border-white/[0.06] bg-slate-900 lg:flex">
+    <aside className="sticky top-14 hidden h-[calc(100vh-var(--header-h))] w-60 flex-col border-r border-line bg-canvas lg:flex">
       <nav aria-label="주요 메뉴" className="flex-1 overflow-y-auto px-3 py-4">
         {NAV_GROUPS.map((group, index) => {
           const items = NAV_ITEMS.filter(item => item.group === group.id);
@@ -64,9 +64,7 @@ export function Sidebar() {
 
           return (
             <div key={group.id} className={index > 0 ? 'mt-6' : undefined}>
-              <p className="px-2.5 pb-1.5 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
-                {group.label}
-              </p>
+              <p className="t-kicker px-2.5 pb-2 text-slate-500">{group.label}</p>
               <div className="space-y-0.5">
                 {items.map(item => (
                   <NavLink key={item.href} item={item} active={pathname === item.href} />
@@ -77,21 +75,19 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="space-y-0.5 border-t border-white/[0.06] px-3 py-3">
+      <div className="space-y-0.5 border-t border-line px-3 py-3">
         {ACCOUNT_ITEMS.map(item => (
           <NavLink key={item.href} item={item} active={pathname === item.href} />
         ))}
       </div>
 
       {/* 스트릭: 카드로 띄우면 시선을 뺏어서, 상태 표시줄처럼 조용히 둔다 */}
-      <div className="border-t border-white/[0.06] px-5 py-3.5">
+      <div className="border-t border-line px-5 py-3.5">
         <div className="flex items-center gap-2">
           <Icon name="flame" className="h-4 w-4 text-amber-400" />
-          <span className="tnum text-[0.8125rem] font-semibold text-slate-200">
-            {streak}일 연속
-          </span>
+          <span className="tnum t-meta font-semibold text-slate-200">{streak}일 연속</span>
         </div>
-        <p className="mt-1 text-[0.6875rem] leading-relaxed text-slate-500">
+        <p className="t-meta-sm mt-1 font-normal text-slate-500">
           매일 읽고 스트릭을 이어가세요
         </p>
       </div>

@@ -56,25 +56,25 @@ export function EventCalendar({
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-slate-800 p-4">
+    <div className="surface p-4">
       {/* Header */}
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
           onClick={() => onMonthChange(subMonths(currentMonth, 1))}
           aria-label="이전 달"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
         >
           <Icon name="chevronRight" className="h-4 w-4 rotate-180" />
         </button>
-        <h3 className="tnum text-[0.875rem] font-semibold text-slate-100">
+        <h3 className="tnum t-title font-semibold text-slate-100">
           {format(currentMonth, 'yyyy년 M월', { locale: ko })}
         </h3>
         <button
           type="button"
           onClick={() => onMonthChange(addMonths(currentMonth, 1))}
           aria-label="다음 달"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/[0.05] hover:text-slate-100"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100"
         >
           <Icon name="chevronRight" className="h-4 w-4" />
         </button>
@@ -83,7 +83,7 @@ export function EventCalendar({
       {/* Weekday headers */}
       <div className="mb-1 grid grid-cols-7">
         {weekDays.map(d => (
-          <div key={d} className="py-1 text-center text-[0.625rem] font-medium text-slate-600">
+          <div key={d} className="py-1 text-center t-meta-sm font-medium text-slate-600">
             {d}
           </div>
         ))}
@@ -104,14 +104,14 @@ export function EventCalendar({
               type="button"
               onClick={() => onDayClick(day)}
               aria-pressed={isSelected}
-              className={`tnum relative h-8 rounded-md text-[0.6875rem] font-medium transition-colors ${
+              className={`tnum relative h-8 rounded-md t-meta-sm font-medium transition-colors ${
                 !isCurrentMonth
-                  ? 'text-slate-700'
+                  ? 'text-slate-600'
                   : isSelected
                   ? 'bg-blue-500 text-white'
                   : isToday
-                  ? 'bg-white/[0.08] text-slate-100'
-                  : 'text-slate-300 hover:bg-white/[0.05]'
+                  ? 'bg-fill text-slate-100'
+                  : 'text-slate-300 hover:bg-fill-weak'
               }`}
             >
               {format(day, 'd')}

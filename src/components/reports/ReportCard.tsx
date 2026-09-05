@@ -24,7 +24,7 @@ const impactLabel = {
 /** 리포트 안의 소제목. 본문과 같은 크기로는 구간이 나뉘지 않는다. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wider text-slate-500">
+    <h3 className="mb-2 t-meta-sm font-semibold uppercase tracking-wider text-slate-500">
       {children}
     </h3>
   );
@@ -37,10 +37,10 @@ export function ReportCard({ report }: Props) {
     <Card>
       {/* Header */}
       <div className="px-6 py-5">
-        <p className="tnum text-[0.6875rem] text-slate-500">
+        <p className="tnum t-meta-sm text-slate-500">
           {report.weekStart} — {report.weekEnd}
         </p>
-        <h2 className="mt-1.5 text-lg font-semibold leading-snug tracking-tight text-slate-100">
+        <h2 className="mt-1.5 t-headline-lg font-semibold leading-snug tracking-tight text-slate-100">
           {content.headline}
         </h2>
       </div>
@@ -54,10 +54,10 @@ export function ReportCard({ report }: Props) {
             {content.topIssues.map((issue, i) => (
               <div
                 key={i}
-                className="rounded-lg border border-white/[0.05] bg-white/[0.02] p-3.5"
+                className="rounded-lg border border-line bg-fill-subtle p-3.5"
               >
                 <div className="mb-1.5 flex items-start justify-between gap-3">
-                  <span className="text-[0.8125rem] font-medium leading-snug text-slate-100">
+                  <span className="t-body-sm font-medium leading-snug text-slate-100">
                     <span className="tnum mr-1.5 text-slate-600">{i + 1}</span>
                     {issue.title}
                   </span>
@@ -65,7 +65,7 @@ export function ReportCard({ report }: Props) {
                     {impactLabel[issue.impact]}
                   </Badge>
                 </div>
-                <p className="text-xs leading-relaxed text-slate-500">{issue.summary}</p>
+                <p className="t-body-sm text-slate-500">{issue.summary}</p>
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ export function ReportCard({ report }: Props) {
         {/* Market Impact */}
         <div>
           <SectionLabel>시장 영향</SectionLabel>
-          <p className="text-[0.8125rem] leading-relaxed text-slate-400">
+          <p className="t-body-sm text-slate-400">
             {content.marketImpact}
           </p>
         </div>
@@ -82,7 +82,7 @@ export function ReportCard({ report }: Props) {
         {/* Outlook */}
         <div>
           <SectionLabel>전망</SectionLabel>
-          <p className="text-[0.8125rem] leading-relaxed text-slate-400">
+          <p className="t-body-sm text-slate-400">
             {content.outlook}
           </p>
         </div>
@@ -95,7 +95,7 @@ export function ReportCard({ report }: Props) {
               {content.upcomingEvents.map((event, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2.5 text-[0.8125rem] leading-relaxed text-slate-400"
+                  className="flex items-start gap-2.5 t-body-sm text-slate-400"
                 >
                   <span className="mt-[0.4375rem] h-1 w-1 flex-shrink-0 rounded-full bg-blue-500" />
                   {event}
@@ -107,7 +107,7 @@ export function ReportCard({ report }: Props) {
       </div>
 
       <CardDivider />
-      <p className="px-6 py-3 text-[0.6875rem] text-slate-600">
+      <p className="px-6 py-3 t-meta-sm text-slate-600">
         AI 생성 · {new Date(report.generatedAt).toLocaleString('ko-KR')}
       </p>
     </Card>
@@ -128,7 +128,7 @@ export function ReportSkeleton() {
           {[0, 1, 2].map(i => (
             <div
               key={i}
-              className="space-y-2 rounded-lg border border-white/[0.05] bg-white/[0.02] p-3.5"
+              className="space-y-2 rounded-lg border border-line bg-fill-subtle p-3.5"
             >
               <Skeleton className="h-3.5 w-3/4" />
               <Skeleton className="h-3 w-full" />

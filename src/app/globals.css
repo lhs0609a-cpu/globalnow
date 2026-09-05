@@ -1,102 +1,391 @@
 @import "tailwindcss";
 
-/**
- * 디자인 토큰.
- *
- * 화면마다 slate/blue 유틸리티를 직접 쓰고 있어, 팔레트 자체를 다시 정의하면
- * 28개 파일을 일일이 고치지 않고도 전 화면의 색이 한 번에 정돈된다.
- * 기본 slate는 푸른기가 옅고 명도 간격이 넓어 어두운 UI에서 층이 흐려지는데,
- * 아래 램프는 배경-표면-경계선의 간격을 좁게 잡아 대비를 유지한다.
- */
-@theme {
-  /* 중성색: 차가운 근사 검정 */
-  --color-slate-50: #f7f9fb;
-  --color-slate-100: #edf0f4;
-  --color-slate-200: #dce1e8;
-  --color-slate-300: #bfc6d1;
-  --color-slate-400: #949caa;
-  --color-slate-500: #6b7482;
-  --color-slate-600: #272e3c;
-  --color-slate-700: #1a1f2a;
-  --color-slate-800: #10131a;
-  --color-slate-900: #0a0c11;
-  --color-slate-950: #06070a;
+/* ══════════════════════════════════════════════════════════════════════
+   GLOBALNOW 디자인 시스템 v2
+   ──────────────────────────────────────────────────────────────────────
+   참고한 편집 레퍼런스
+   · NYT      머리기사(Cheltenham 31px)와 부속정보(Franklin)의 서체 분리
+   · Guardian 4의 배수 행간 사다리(14/18 · 20/24 · 28/32 · 40/44)
+   · FT/Bloomberg  수치는 tabular, 등락은 색이 아니라 부호까지 함께
+   · Techmeme 한 화면에 15~20건 — 이미지 카드가 아니라 밀도 있는 목록
+   · KRDS     한글 본문 최소 15~17px, 행간 150% 이상
+   레퍼런스에서 가져온 결론은 딱 셋이다.
+   ① 기사 크기를 셋(리드/보조/목록)으로 갈라야 "중요도"가 보인다
+   ② 한글은 행간·어절 줄바꿈이 글꼴보다 가독성에 크게 작용한다
+   ③ 색은 최소로. 카테고리 9색 무지개 대신 활자 굵기로 층을 만든다
+   ══════════════════════════════════════════════════════════════════════ */
 
-  /* 강조색 */
-  --color-blue-300: #9cbeff;
-  --color-blue-400: #6fa0ff;
-  --color-blue-500: #3b7bff;
-  --color-blue-600: #2563f0;
+/* ─── 1. 원색 정의 ───────────────────────────────────────────────────
+   중성 램프는 테마별로 값이 통째로 뒤집힌다.
+   화면 코드는 "낮은 번호 = 글자, 높은 번호 = 바닥"이라는 규칙을 이미
+   지키고 있어서, 램프만 뒤집으면 64개 파일을 고치지 않고도 라이트 모드가
+   성립한다.                                                            */
 
-  /* 의미색 */
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
-  --color-red-400: #fb7185;
-  --color-red-500: #f43f5e;
-  --color-amber-400: #fbbf24;
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
 
+  --n-50: #ffffff;
+  --n-100: #e9edf4;
+  --n-200: #ccd3e0;
+  --n-300: #a7b0c2;
+  --n-400: #8a94a8;
+  --n-500: #7c8698; /* 부속정보 최저선 — 카드 위 4.9:1 */
+  --n-600: #6a7384; /* 원문 제목처럼 한 단계 더 내려앉는 글자 */
+  --n-700: #1c2230; /* 이미지 자리·구분면 */
+  --n-800: #12151d; /* 카드 */
+  --n-900: #0b0d13; /* 화면 바닥 */
+  --n-950: #06070b;
+
+  /* 표면 위에 얹는 반투명 층. 라이트에서는 검정 알파로 뒤집힌다 */
+  --line: rgb(255 255 255 / 0.07);
+  --line-strong: rgb(255 255 255 / 0.13);
+  --fill-subtle: rgb(255 255 255 / 0.03);
+  --fill-weak: rgb(255 255 255 / 0.05);
+  --fill: rgb(255 255 255 / 0.08);
+  --fill-strong: rgb(255 255 255 / 0.13);
+
+  --accent: #4d86ff;
+  --accent-hover: #3b74f0;
+  --accent-soft: rgb(77 134 255 / 0.14);
+  --accent-text: #93b6ff;
+
+  --shadow-card: none;
+  --shadow-pop: 0 16px 48px -12px rgb(0 0 0 / 0.7);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --n-50: #05070c;
+  --n-100: #101725;
+  --n-200: #242d3d;
+  --n-300: #3c4757;
+  --n-400: #556072;
+  --n-500: #6b7482;
+  --n-600: #858ea0;
+  --n-700: #e7eaf0;
+  --n-800: #ffffff;
+  --n-900: #f4f6fa;
+  --n-950: #eaedf3;
+
+  --line: rgb(11 13 19 / 0.10);
+  --line-strong: rgb(11 13 19 / 0.20);
+  --fill-subtle: rgb(11 13 19 / 0.025);
+  --fill-weak: rgb(11 13 19 / 0.045);
+  --fill: rgb(11 13 19 / 0.07);
+  --fill-strong: rgb(11 13 19 / 0.12);
+
+  --accent: #1d5fe0;
+  --accent-hover: #164cbb;
+  --accent-soft: rgb(29 95 224 / 0.10);
+  --accent-text: #164cbb;
+
+  --shadow-card: 0 1px 2px rgb(16 23 37 / 0.05), 0 1px 3px rgb(16 23 37 / 0.04);
+  --shadow-pop: 0 20px 48px -16px rgb(16 23 37 / 0.22);
+}
+
+/* ─── 2. Tailwind 토큰 등록 ────────────────────────────────────────── */
+
+@theme inline {
+  /* 중성 램프 — 기존 slate-* 유틸리티가 그대로 테마를 따라간다 */
+  --color-slate-50: var(--n-50);
+  --color-slate-100: var(--n-100);
+  --color-slate-200: var(--n-200);
+  --color-slate-300: var(--n-300);
+  --color-slate-400: var(--n-400);
+  --color-slate-500: var(--n-500);
+  --color-slate-600: var(--n-600);
+  --color-slate-700: var(--n-700);
+  --color-slate-800: var(--n-800);
+  --color-slate-900: var(--n-900);
+  --color-slate-950: var(--n-950);
+
+  /* 의미 이름 — 새로 쓰는 코드는 이쪽을 쓴다 */
+  --color-canvas: var(--n-900);
+  --color-surface: var(--n-800);
+  --color-surface-2: var(--n-700);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fill-subtle: var(--fill-subtle);
+  --color-fill-weak: var(--fill-weak);
+  --color-fill: var(--fill);
+  --color-fill-strong: var(--fill-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+
+  /* 강조색 계열도 테마를 따라야 라이트에서 형광펜처럼 뜨지 않는다 */
+  --color-blue-300: var(--accent-text);
+  --color-blue-400: var(--accent-text);
+  --color-blue-500: var(--accent);
+  --color-blue-600: var(--accent-hover);
+
+  --color-emerald-400: var(--pos);
+  --color-emerald-500: var(--pos);
+  --color-red-400: var(--neg);
+  --color-red-500: var(--neg);
+  --color-amber-400: var(--warn);
+
+  /* 시세 등락 — 한국 관행(상승 적색·하락 청색)은 --up/--down 으로 뺀다 */
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-live: var(--live);
+
+  --font-sans: var(--font-ui);
+  --font-display: var(--font-editorial);
+  --font-mono: var(--font-numeric);
+
+  --radius-md: 0.5rem;
   --radius-lg: 0.625rem;
   --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
 }
 
 :root {
-  --background: var(--color-slate-900);
-  --foreground: var(--color-slate-100);
+  /* 의미색 — 테마와 무관하게 같은 뜻을 유지하되 명도만 조정한다 */
+  --pos: #2fbf82;
+  --neg: #f4677f;
+  --warn: #f5b544;
+  --live: #ef4a52;
 
-  /* 카드 위에 얹는 머리카락 굵기 경계선 */
-  --hairline: rgb(255 255 255 / 0.06);
+  /* 국내 사용자는 붉은색을 상승으로 읽는다. 지수·환율·코인 위젯 전용 */
+  --up: #f4515f;
+  --down: #3b82f6;
+
+  --font-ui: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-editorial: 'Newsreader', 'Pretendard Variable', Pretendard, Georgia, serif;
+  --font-numeric: ui-monospace, SFMono-Regular, 'SF Mono', 'Cascadia Mono',
+    'Roboto Mono', 'Pretendard Variable', monospace;
+
+  /* 여백 리듬 — 8pt 기준. 카드 사이 24, 섹션 사이 40 */
+  --gap-card: 1.5rem;
+  --gap-section: 2.5rem;
+  --container: 1440px;
+  --header-h: 3.5rem;
+}
+
+:root[data-theme='light'] {
+  --pos: #087f56;
+  --neg: #cf2f4d;
+  --warn: #a96a06;
+  --live: #d32b34;
+  --up: #d92b3c;
+  --down: #1d5fe0;
+}
+
+/* ─── 3. 바탕 ──────────────────────────────────────────────────────── */
+
+html {
+  background: var(--n-900);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--n-900);
+  color: var(--n-100);
+  font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: 'ss01', 'cv01';
 }
 
-/* 제목은 자간을 좁혀야 본문과 위계가 갈린다 */
-h1, h2, h3, h4 {
-  letter-spacing: -0.014em;
+/* 한글은 어절 중간에서 끊기면 읽는 속도가 눈에 띄게 떨어진다.
+   제목·본문 전반에 어절 단위 줄바꿈을 기본값으로 둔다. */
+h1, h2, h3, h4, h5, h6, p, li, dd, dt, figcaption, blockquote, a, button, label {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--n-100);
+}
+
+/* ─── 4. 활자 사다리 ────────────────────────────────────────────────
+   Guardian 방식대로 크기마다 행간을 고정값으로 못박는다. 한글은 라틴보다
+   글자속이 꽉 차서 같은 크기라도 행간이 더 필요하다 — 본문 1.7, 제목 1.35.
+   제목은 커질수록 자간을 좁혀야 덩어리로 읽힌다.                        */
+
+/* Tailwind 유틸리티가 이 사다리를 덮어쓸 수 있어야 한다. 레이어 없이 두면
+   .t-body 의 font-weight 가 뒤에 붙인 font-medium 을 이겨서, 조합할 때마다
+   왜 굵기가 안 먹는지 찾아 헤매게 된다. components 층에 넣어 두면
+   utilities 층이 항상 뒤에 온다. */
+@layer components {
+.t-display {          /* 리드 기사 · 데스크톱 40px */
+  font-size: 2rem;
+  line-height: 1.24;
+  font-weight: 700;
+  letter-spacing: -0.028em;
+}
+@media (min-width: 1024px) {
+  .t-display { font-size: 2.5rem; letter-spacing: -0.032em; }
+}
+
+.t-headline-xl {      /* 페이지 제목 · 리드 기사 모바일 */
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.024em;
+}
+
+.t-headline-lg {      /* 섹션 머리 · 보조 기사 */
+  font-size: 1.25rem;
+  line-height: 1.36;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.t-headline {         /* 카드 제목 (기존 14px → 17px) */
+  font-size: 1.0625rem;
+  line-height: 1.42;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+.t-headline-sm {      /* 목록 행 제목 */
+  font-size: 0.9375rem;
+  line-height: 1.46;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+.t-title {            /* 카드 머리글 · 위젯 제목 */
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.t-body-lg {          /* 읽기용 본문 — 브리프 요약 */
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  font-weight: 400;
+}
+
+.t-body {             /* 기본 본문 · 요약문 (기존 12px → 15px) */
+  font-size: 0.9375rem;
+  line-height: 1.68;
+  font-weight: 400;
+}
+
+.t-body-sm {          /* 좁은 칼럼의 본문 */
+  font-size: 0.875rem;
+  line-height: 1.62;
+  font-weight: 400;
+}
+
+.t-meta {             /* 출처 · 시각 · 조회수 */
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.t-meta-sm {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.t-label {            /* 버튼 · 탭 */
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+}
+
+.t-kicker {           /* 섹션 라벨 — 대문자 + 넓은 자간 */
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* 라틴 전용 편집 서체. 한글에 걸면 폴백이 Pretendard로 떨어져 섞이므로
+   원문 제목·워드마크·인용처럼 라틴이 확실한 곳에만 쓴다. */
+.t-editorial {
+  font-family: var(--font-editorial);
+  font-optical-sizing: auto;
 }
 
 /* 숫자가 바뀔 때 자릿수가 흔들리지 않게 (시세·카운터) */
 .tnum {
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+  font-feature-settings: 'tnum';
 }
 
-/* 키보드 사용자에게만 보이는 포커스 링 */
+/* ─── 5. 표면·상호작용 공통 ────────────────────────────────────────── */
+
+.surface {
+  background: var(--n-800);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+/* 기사 전체를 링크로 덮되 안쪽 버튼은 살려두는 방식.
+   제목에만 링크를 걸면 클릭 표적이 좁아 모바일에서 특히 답답하다. */
+.tap-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-blue-500);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-::selection {
-  background: rgb(59 123 255 / 0.3);
-  color: #fff;
+/* 테마에 따라 하나만 남기는 짝. 자바스크립트로 고르면 하이드레이션 전에
+   반대쪽이 한 번 번쩍인다. */
+.only-dark,
+.only-light {
+  display: none;
+}
+:root:not([data-theme='light']) .only-dark,
+:root[data-theme='light'] .only-light {
+  display: inline-flex;
 }
 
-/* Scrollbar */
+/* 키보드로 들어왔을 때만 나타나는 본문 바로가기 */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  transition: transform 120ms ease-out;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ─── 6. 스크롤·자리표시자 ─────────────────────────────────────────── */
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(255 255 255 / 0.08);
+  background: var(--fill);
   border-radius: 999px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(255 255 255 / 0.16);
+  background: var(--fill-strong);
   background-clip: padding-box;
 }
 
-/* Hide scrollbar for tabs */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -105,58 +394,68 @@ h1, h2, h3, h4 {
   scrollbar-width: none;
 }
 
-/* 로딩 자리표시자: 맥박보다 훑고 지나가는 빛이 덜 산만하다 */
+/* 가로 스크롤 목록의 끝을 흐려 더 있음을 알린다 */
+.fade-edge-r {
+  -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 88%, transparent 100%);
+}
+
 @keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
+  100% { transform: translateX(100%); }
 }
 .shimmer {
   position: relative;
   overflow: hidden;
 }
 .shimmer::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgb(255 255 255 / 0.04),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, var(--fill-weak), transparent);
   animation: shimmer 1.6s infinite;
 }
 
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.live-dot {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.rise-in {
+  animation: rise-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .shimmer::after {
+  .shimmer::after,
+  .live-dot,
+  .rise-in {
     animation: none;
   }
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Line clamp */
-.line-clamp-1 {
+/* ─── 7. 줄 수 제한 ────────────────────────────────────────────────── */
+
+.line-clamp-1,
+.line-clamp-2,
+.line-clamp-3,
+.line-clamp-4 {
   display: -webkit-box;
-  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.line-clamp-1 { -webkit-line-clamp: 1; }
+.line-clamp-2 { -webkit-line-clamp: 2; }
+.line-clamp-3 { -webkit-line-clamp: 3; }
+.line-clamp-4 { -webkit-line-clamp: 4; }

@@ -49,15 +49,15 @@ export function CountryCompare() {
       <CardDivider />
 
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-px bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-px bg-fill-weak sm:grid-cols-2 lg:grid-cols-5">
           {countries.map(country => (
-            <div key={country.code} className="bg-slate-800 px-5 py-4">
-              <div className="shimmer mb-3 h-3.5 w-16 rounded bg-white/[0.05]" />
+            <div key={country.code} className="bg-surface px-5 py-4">
+              <div className="shimmer mb-3 h-3.5 w-16 rounded bg-fill-weak" />
               <div className="space-y-3">
                 {[0, 1, 2].map(i => (
                   <div key={i} className="shimmer space-y-1.5">
-                    <div className="h-3 w-full rounded bg-white/[0.05]" />
-                    <div className="h-2.5 w-1/2 rounded bg-white/[0.05]" />
+                    <div className="h-3 w-full rounded bg-fill-weak" />
+                    <div className="h-2.5 w-1/2 rounded bg-fill-weak" />
                   </div>
                 ))}
               </div>
@@ -66,20 +66,18 @@ export function CountryCompare() {
         </div>
       ) : (
         // 얇은 간격을 배경색으로 만들어 칼럼 사이에 경계선을 세운다
-        <div className="grid grid-cols-1 gap-px bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-px bg-fill-weak sm:grid-cols-2 lg:grid-cols-5">
           {countries.map(country => {
             const items = newsByCountry[country.code] || [];
             return (
-              <div key={country.code} className="bg-slate-800 px-5 py-4">
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="text-[0.8125rem] leading-none">{country.flag}</span>
-                  <span className="text-[0.8125rem] font-semibold text-slate-200">
-                    {country.name}
-                  </span>
+              <div key={country.code} className="bg-surface px-5 py-4">
+                <div className="mb-2.5 flex items-center gap-2 border-b border-line pb-2">
+                  <span className="t-body leading-none">{country.flag}</span>
+                  <span className="t-kicker text-slate-300">{country.name}</span>
                 </div>
 
                 {items.length === 0 ? (
-                  <p className="py-2 text-xs text-slate-500">뉴스가 없습니다</p>
+                  <p className="t-body-sm py-2 text-slate-500">뉴스가 없습니다</p>
                 ) : (
                   <div className="-mx-2">
                     {items.map(news => (
@@ -88,12 +86,12 @@ export function CountryCompare() {
                         href={news.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group block rounded-md px-2 py-2 transition-colors hover:bg-white/[0.03]"
+                        className="group block rounded-md px-2 py-2 transition-colors hover:bg-fill-subtle"
                       >
-                        <p className="line-clamp-3 text-xs leading-relaxed text-slate-300 transition-colors group-hover:text-blue-400">
+                        <p className="t-body-sm line-clamp-3 text-slate-300 transition-colors group-hover:text-accent-text">
                           {news.titleKo || news.title}
                         </p>
-                        <p className="mt-1 text-[0.625rem] text-slate-500">
+                        <p className="t-meta-sm tnum mt-1 font-normal text-slate-500">
                           {formatRelativeTime(news.publishedAt)}
                         </p>
                       </a>
