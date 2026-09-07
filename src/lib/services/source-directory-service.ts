@@ -37,7 +37,7 @@ export function isDirectoryGroupId(value: string): value is DirectoryGroupId {
 }
 
 export function isDirectoryScope(value: string): value is DirectoryScope {
-  return value === 'kr' || value === 'global';
+  return value === 'kr' || value === 'global' || value === 'tools';
 }
 
 export function isMediaLean(value: string): value is MediaLean {
@@ -132,5 +132,11 @@ export function getDirectoryStats(scope?: DirectoryScope) {
 /** 전체 규모 — 국내/해외 나눠서 */
 export function getScopeCounts() {
   const kr = DIRECTORY_SITES.filter(s => scopeOf(s) === 'kr').length;
-  return { kr, global: DIRECTORY_SITES.length - kr, all: DIRECTORY_SITES.length };
+  const tools = DIRECTORY_SITES.filter(s => scopeOf(s) === 'tools').length;
+  return {
+    kr,
+    tools,
+    global: DIRECTORY_SITES.length - kr - tools,
+    all: DIRECTORY_SITES.length,
+  };
 }

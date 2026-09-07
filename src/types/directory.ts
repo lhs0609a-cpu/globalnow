@@ -1,11 +1,36 @@
 /** 사이트 디렉토리 공통 타입 */
 
-export type DirectoryScope = 'kr' | 'global';
+export type DirectoryScope = 'kr' | 'global' | 'tools';
 
 /** 보도 성향 — 「관점 대결」에서 좌우 매체를 짝지을 때 쓴다 */
 export type MediaLean = 'progressive' | 'center' | 'conservative';
 
 export type DirectoryGroupId =
+  // ── 도구·유용한 사이트 (뉴스가 아니라 「쓰는」 사이트) ──
+  | 't-ai'
+  | 't-search'
+  | 't-learn'
+  | 't-lang'
+  | 't-dev'
+  | 't-design'
+  | 't-asset'
+  | 't-work'
+  | 't-util'
+  | 't-stat'
+  | 't-money'
+  | 't-travel'
+  | 't-map'
+  | 't-shop'
+  | 't-health'
+  | 't-career'
+  | 't-gov'
+  | 't-security'
+  | 't-read'
+  | 't-video'
+  | 't-game'
+  | 't-forum'
+  | 't-market'
+  | 't-startup'
   // ── 해외 ──
   | 'agency'
   | 'us-daily'

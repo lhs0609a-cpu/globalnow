@@ -15,6 +15,10 @@ import { KR_DIRECTORY_SITES } from '@/lib/constants/source-directory-kr';
 import { WORLD_DIRECTORY_SITES } from '@/lib/constants/source-directory-world';
 import { WORLD_EXTRA_SITES } from '@/lib/constants/source-directory-world-extra';
 import { HUMOR_DIRECTORY_SITES } from '@/lib/constants/source-directory-humor';
+import { TOOLS_DIRECTORY_SITES } from '@/lib/constants/source-directory-tools';
+import { TOOLS_DIRECTORY_SITES_2 } from '@/lib/constants/source-directory-tools2';
+import { TOOLS_REGIONAL_SITES } from '@/lib/constants/source-directory-tools-regional';
+import { TOOLS_REGIONAL_SITES_2 } from '@/lib/constants/source-directory-tools-regional2';
 
 export type { DirectoryGroup, DirectoryGroupId, DirectoryScope, DirectorySite, MediaLean };
 
@@ -135,6 +139,32 @@ export const DIRECTORY_COUNTRIES: Record<string, { flag: string; nameKo: string 
 };
 
 export const DIRECTORY_GROUPS: DirectoryGroup[] = [
+  // ─────────── 도구·유용한 사이트 (매일 여는 순) ───────────
+  { id: 't-ai', label: 'AI 도구', labelEn: 'AI Tools', icon: '🤖', description: '대화·이미지·영상·코드를 만드는 AI', scope: 'tools' },
+  { id: 't-search', label: '검색·백과', labelEn: 'Search & Reference', icon: '🔍', description: '무엇이든 찾고 확인하는 출발점', scope: 'tools' },
+  { id: 't-learn', label: '온라인 강의', labelEn: 'Learning', icon: '🎓', description: '대학 강의부터 실무 기술까지', scope: 'tools' },
+  { id: 't-lang', label: '어학·번역', labelEn: 'Language', icon: '🗣', description: '번역기·사전·언어 학습', scope: 'tools' },
+  { id: 't-dev', label: '개발·코딩', labelEn: 'Developer', icon: '⌨️', description: '코드를 쓰고 배포하고 물어보는 곳', scope: 'tools' },
+  { id: 't-design', label: '디자인·이미지', labelEn: 'Design', icon: '🎨', description: '만들고 다듬는 도구와 레퍼런스', scope: 'tools' },
+  { id: 't-asset', label: '무료 소재', labelEn: 'Free Assets', icon: '🖼', description: '사진·폰트·아이콘·음원을 공짜로', scope: 'tools' },
+  { id: 't-work', label: '생산성·협업', labelEn: 'Productivity', icon: '🗂', description: '문서·일정·업무를 굴리는 도구', scope: 'tools' },
+  { id: 't-util', label: '파일 변환·유틸', labelEn: 'Utilities', icon: '🔧', description: 'PDF·영상·압축, 잡일을 끝내는 도구', scope: 'tools' },
+  { id: 't-money', label: '금융·투자 도구', labelEn: 'Finance Tools', icon: '💰', description: '시세·공시·환율·백테스트', scope: 'tools' },
+  { id: 't-travel', label: '여행·항공·숙박', labelEn: 'Travel', icon: '✈️', description: '항공권·숙소·교통편을 찾는 곳', scope: 'tools' },
+  { id: 't-map', label: '지도·실시간 관측', labelEn: 'Maps & Live', icon: '🛰', description: '지도·기상·항공기·선박·재난', scope: 'tools' },
+  { id: 't-shop', label: '쇼핑·가격비교', labelEn: 'Shopping', icon: '🛒', description: '직구와 가격 이력 확인', scope: 'tools' },
+  { id: 't-health', label: '건강·의료', labelEn: 'Health', icon: '❤️', description: '근거 있는 건강 정보의 1차 출처', scope: 'tools' },
+  { id: 't-career', label: '취업·커리어', labelEn: 'Careers', icon: '💼', description: '채용·연봉·이력서·프리랜서', scope: 'tools' },
+  { id: 't-stat', label: '공공데이터·통계', labelEn: 'Open Data', icon: '📊', description: '숫자를 인용하려면 여기서 가져온다', scope: 'tools' },
+  { id: 't-gov', label: '국제기구·법률', labelEn: 'Institutions & Law', icon: '🏛', description: '조약·법령·특허·공시 원문', scope: 'tools' },
+  { id: 't-security', label: '보안·프라이버시', labelEn: 'Security', icon: '🔐', description: '유출 확인·비밀번호·암호화', scope: 'tools' },
+  { id: 't-read', label: '논문·전자책', labelEn: 'Papers & Books', icon: '📚', description: '합법적으로 읽을 수 있는 지식 창고', scope: 'tools' },
+  { id: 't-video', label: '영상·음악', labelEn: 'Video & Music', icon: '🎵', description: '보고 듣고 찾는 플랫폼', scope: 'tools' },
+  { id: 't-game', label: '게임', labelEn: 'Games', icon: '🕹', description: '스토어·가격비교·공략 데이터', scope: 'tools' },
+  { id: 't-forum', label: '커뮤니티·Q&A', labelEn: 'Communities', icon: '💬', description: '사람에게 직접 묻는 곳', scope: 'tools' },
+  { id: 't-market', label: '마케팅·트렌드', labelEn: 'Marketing & SEO', icon: '📣', description: '검색 트렌드·경쟁 분석·분석 도구', scope: 'tools' },
+  { id: 't-startup', label: '스타트업·투자', labelEn: 'Startups & VC', icon: '🚀', description: '투자 데이터와 창업 자료', scope: 'tools' },
+
   // ─────────── 국내 (이용량 많은 순) ───────────
   { id: 'kr-portal', label: '포털·통신사', labelEn: 'Portals & Agencies', icon: '🔎', description: '네이버·다음과 국내 뉴스통신사', scope: 'kr' },
   { id: 'kr-daily', label: '종합일간지', labelEn: 'Korean Dailies', icon: '📰', description: '조·중·동·한겨레·경향 등 전국 종합지', scope: 'kr' },
@@ -495,6 +525,10 @@ export const DIRECTORY_SITES: DirectorySite[] = [
   ...WORLD_DIRECTORY_SITES,
   ...WORLD_EXTRA_SITES,
   ...HUMOR_DIRECTORY_SITES,
+  ...TOOLS_DIRECTORY_SITES,
+  ...TOOLS_DIRECTORY_SITES_2,
+  ...TOOLS_REGIONAL_SITES,
+  ...TOOLS_REGIONAL_SITES_2,
 ];
 
 /**

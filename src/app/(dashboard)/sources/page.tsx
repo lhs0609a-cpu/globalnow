@@ -10,7 +10,7 @@ type View = 'ranking' | 'directory';
 
 const views: { id: View; label: string; description: string }[] = [
   { id: 'ranking', label: '파워 랭킹', description: '전세계 주요 뉴스 매체의 영향력·신뢰도 순위' },
-  { id: 'directory', label: '사이트 디렉토리', description: '분야별·국가별 뉴스와 리서치 사이트 모음' },
+  { id: 'directory', label: '사이트 디렉토리', description: '전세계에서 실제로 쓰는 도구와 매체를 분야별·중요도순으로' },
 ];
 
 export default function SourcesPage() {

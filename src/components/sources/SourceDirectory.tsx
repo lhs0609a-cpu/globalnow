@@ -26,9 +26,9 @@ type Section = {
 type GroupOption = { id: string; label: string; icon: string; count: number };
 type CountryOption = { code: string; flag: string; nameKo: string; count: number };
 type Stats = { totalSites: number; totalGroups: number; totalCountries: number; freeSites: number; rssSites: number };
-type ScopeCounts = { kr: number; global: number; all: number };
+type ScopeCounts = { kr: number; global: number; tools: number; all: number };
 
-type Scope = 'all' | 'kr' | 'global';
+type Scope = 'all' | 'kr' | 'global' | 'tools';
 
 const leanFilters: { id: MediaLean; label: string; className: string }[] = [
   { id: 'progressive', label: '진보', className: 'bg-blue-400/15 text-blue-400' },
@@ -129,8 +129,9 @@ export function SourceDirectory() {
   const shownCount = sections.reduce((sum, section) => sum + section.sites.length, 0);
   const scopeTabs: { id: Scope; label: string; count?: number }[] = [
     { id: 'all', label: '전체', count: scopeCounts?.all },
-    { id: 'kr', label: '국내', count: scopeCounts?.kr },
-    { id: 'global', label: '해외', count: scopeCounts?.global },
+    { id: 'tools', label: '유용한 도구', count: scopeCounts?.tools },
+    { id: 'global', label: '해외 뉴스', count: scopeCounts?.global },
+    { id: 'kr', label: '국내 뉴스', count: scopeCounts?.kr },
   ];
 
   return (
@@ -188,7 +189,7 @@ export function SourceDirectory() {
           type="search"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
-          placeholder="사이트 이름으로 검색 (예: 한겨레, 로이터, 네이처)"
+          placeholder="사이트 이름으로 검색 (예: 피그마, 로이터, 아카이브)"
           className="h-9 min-w-[12.5rem] flex-1 rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
         />
         <button
@@ -205,8 +206,8 @@ export function SourceDirectory() {
         </button>
       </div>
 
-      {/* 성향 필터 */}
-      <div className="flex flex-wrap items-center gap-1">
+      {/* 성향 필터 — 도구에는 논조가 없다 */}
+      <div className={`flex-wrap items-center gap-1 ${scope === 'tools' ? 'hidden' : 'flex'}`}>
         <span className="mr-1 t-meta-sm text-slate-500">보도 성향</span>
         {leanFilters.map(f => (
           <Pill
