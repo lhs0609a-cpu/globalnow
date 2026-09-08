@@ -1,83 +1,99 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { NewsItem, NewsFeedParams, TrendingItem } from '@/types/news';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { NewsItem, NewsFeedParams, TrendingItem } from '@/types/news';
+import { track } from '@/lib/analytics/events';
 
-export function useNews(initialParams?: NewsFeedParams) {
+/** One request per page; abort superseded queries and only commit successful pages. */
+export function useNews(params: NewsFeedParams = {}) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '' && key !== 'page') query.set(key, String(value));
+  }
+  const queryKey = query.toString();
   const [items, setItems] = useState<NewsItem[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [params, setParams] = useState<NewsFeedParams>(initialParams || {});
+  const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<string>('');
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+  const page = useRef(0);
+  const exhausted = useRef(false);
+  const pending = useRef<AbortController | null>(null);
+  const generation = useRef(0);
 
-  const fetchNews = useCallback(async (p: NewsFeedParams, append = false) => {
+  const fetchPage = useCallback(async (nextPage: number) => {
+    if (pending.current) return;
+    const controller = new AbortController();
+    pending.current = controller;
+    const currentGeneration = generation.current;
+    const timeout = setTimeout(() => controller.abort(), 20000);
     setIsLoading(true);
+    setError(null);
     try {
-      const searchParams = new URLSearchParams();
-      if (p.category) searchParams.set('category', p.category);
-      if (p.country) searchParams.set('country', p.country);
-      if (p.source) searchParams.set('source', p.source);
-      if (p.page) searchParams.set('page', String(p.page));
-      if (p.limit) searchParams.set('limit', String(p.limit));
-      if (p.sortBy) searchParams.set('sortBy', p.sortBy);
-      if (p.search) searchParams.set('search', p.search);
-
-      const res = await fetch(`/api/news?${searchParams.toString()}`);
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const res = await fetch(`/api/news?${queryKey}&page=${nextPage}`, { signal: controller.signal });
+      if (!res.ok) throw new Error('request failed');
       const data = await res.json();
-      const newItems = Array.isArray(data.items) ? data.items : [];
-
-      if (append) {
-        setItems(prev => [...prev, ...newItems]);
-      } else {
-        setItems(newItems);
-      }
-      setTotal(data.total || 0);
-    } catch (error) {
-      console.error('Failed to fetch news:', error);
+      if (!Array.isArray(data.items) || !Number.isFinite(data.total)) throw new Error('invalid response');
+      if (currentGeneration !== generation.current) return;
+      setItems(previous => {
+        const combined: NewsItem[] = nextPage === 1 ? data.items : [...previous, ...data.items];
+        return [...new Map(combined.map(item => [item.id, item])).values()];
+      });
+      exhausted.current = data.items.length === 0;
+      page.current = nextPage;
+      setTotal(data.total);
+      setMode(data.mode || '');
+      setUpdatedAt(new Date().toISOString());
+      track('feed_loaded', { count: data.items.length, page: nextPage });
+      if (nextPage === 1 && data.total === 0) track('search_empty', { hasSearch: queryKey.includes('search=') });
+    } catch {
+      if (currentGeneration !== generation.current) return;
+      setError(controller.signal.aborted ? '응답이 늦어지고 있습니다. 다시 시도해 주세요.' : '뉴스를 불러오지 못했습니다. 연결을 확인하고 다시 시도해 주세요.');
+      track('feed_error', { page: nextPage });
     } finally {
-      setIsLoading(false);
+      clearTimeout(timeout);
+      if (currentGeneration === generation.current) {
+        pending.current = null;
+        setIsLoading(false);
+      }
     }
-  }, []);
+  }, [queryKey]);
 
   useEffect(() => {
-    fetchNews(params);
-  }, [params, fetchNews]);
+    page.current = 0;
+    exhausted.current = false;
+    setItems([]);
+    setTotal(0);
+    void fetchPage(1);
+    return () => {
+      generation.current += 1;
+      pending.current?.abort();
+      pending.current = null;
+    };
+  }, [fetchPage]);
 
   const loadMore = useCallback(() => {
-    const nextPage = (params.page || 1) + 1;
-    const newParams = { ...params, page: nextPage };
-    setParams(newParams);
-    fetchNews(newParams, true);
-  }, [params, fetchNews]);
-
-  const setCategory = useCallback((category: string) => {
-    setParams(prev => ({ ...prev, category: category === 'all' ? undefined : category, page: 1 }));
-  }, []);
-
-  const hasMore = items.length < total;
-
-  return { items, total, isLoading, hasMore, loadMore, setCategory, setParams };
+    if (!exhausted.current) void fetchPage(page.current + 1);
+  }, [fetchPage]);
+  const retry = useCallback(() => {
+    track('retry', { area: 'news' });
+    void fetchPage(page.current + 1);
+  }, [fetchPage]);
+  return { items, total, isLoading, error, mode, updatedAt, hasMore: !exhausted.current && items.length < total, loadMore, retry };
 }
 
 export function useTrending() {
   const [items, setItems] = useState<TrendingItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
-    async function fetchTrending() {
-      try {
-        const res = await fetch('/api/trends');
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
-        const data = await res.json();
-        setItems(Array.isArray(data) ? data : (data.items || []));
-      } catch (error) {
-        console.error('Failed to fetch trending:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchTrending();
+    const controller = new AbortController();
+    fetch('/api/trends', { signal: controller.signal })
+      .then(res => { if (!res.ok) throw new Error('request failed'); return res.json(); })
+      .then(data => setItems(Array.isArray(data) ? data : (data.items || [])))
+      .catch(() => {})
+      .finally(() => { if (!controller.signal.aborted) setIsLoading(false); });
+    return () => controller.abort();
   }, []);
-
   return { items, isLoading };
 }

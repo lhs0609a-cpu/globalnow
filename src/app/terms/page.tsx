@@ -6,7 +6,7 @@ export default function TermsPage() {
         <div className="space-y-6 surface p-6 t-body text-slate-300 [&_h2]:mb-2.5 [&_h2]:t-headline-lg [&_h2]:text-slate-100 [&_li]:mt-1 [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-5">
           <section>
             <h2>제1조 (목적)</h2>
-            <p>이 약관은 GLOBALNOW(이하 "서비스")가 제공하는 뉴스 큐레이션 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+            <p>이 약관은 GLOBALNOW(이하 &quot;서비스&quot;)가 제공하는 뉴스 큐레이션 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
           </section>
           <section>
             <h2>제2조 (서비스의 내용)</h2>
@@ -22,7 +22,7 @@ export default function TermsPage() {
           </section>
           <section>
             <h2>제5조 (면책)</h2>
-            <p>서비스는 뉴스 정보를 "있는 그대로" 제공하며, 투자 조언이나 전문적 판단을 대체하지 않습니다. AI 분석 결과의 정확성을 보증하지 않습니다.</p>
+            <p>서비스는 뉴스 정보를 &quot;있는 그대로&quot; 제공하며, 투자 조언이나 전문적 판단을 대체하지 않습니다. AI 분석 결과의 정확성을 보증하지 않습니다.</p>
           </section>
           <section>
             <h2>제6조 (서비스 중단)</h2>

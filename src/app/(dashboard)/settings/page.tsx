@@ -1,199 +1,46 @@
 'use client';
-
 import { useState } from 'react';
+import Link from 'next/link';
 import { PageHeader } from '@/components/layout/AppShell';
-import { Card, CardDivider, CardHeader } from '@/components/ui/Card';
 import { useTheme } from '@/components/ui/ThemeToggle';
+import { useBookmarks } from '@/components/news/BookmarkProvider';
 
-/** 설정 화면 전용 토글. 세 곳에서 같은 마크업을 복사하고 있었다. */
-function Toggle({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: () => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      onClick={onChange}
-      className={`relative h-5 w-9 flex-shrink-0 rounded-full transition-colors ${
-        checked ? 'bg-accent' : 'bg-fill-strong'
-      }`}
-    >
-      <span
-        className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${
-          checked ? 'translate-x-[1.125rem]' : 'translate-x-0.5'
-        }`}
-      />
-    </button>
-  );
+function csvCell(value: string) {
+  const safe = /^[\s]*[=+@-]/.test(value) ? `'${value}` : value;
+  return `"${safe.replace(/"/g, '""')}"`;
 }
-
-function SettingRow({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 px-5 py-3.5">
-      <div className="min-w-0">
-        <p className="t-body-sm text-slate-200">{title}</p>
-        <p className="mt-0.5 t-meta-sm text-slate-500">{description}</p>
-      </div>
-      {children}
-    </div>
-  );
-}
-
 export default function SettingsPage() {
-  const [emailNotif, setEmailNotif] = useState(true);
-  // 예전에는 useState 만 붙어 있어 스위치가 켜져도 화면은 그대로였다
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState('ko');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [exportLoading, setExportLoading] = useState(false);
-
-  const handleExportBookmarks = async () => {
-    setExportLoading(true);
+  const { items, ready, guest } = useBookmarks();
+  const [status, setStatus] = useState('');
+  const exportBookmarks = () => {
     try {
-      const res = await fetch('/api/user/bookmarks');
-      const bookmarks = await res.json();
-      const csv = ['제목,URL,저장일'].concat(
-        (bookmarks || []).map((b: { title?: string; url?: string; createdAt?: string }) =>
-          `"${b.title || ''}","${b.url || ''}","${b.createdAt || ''}"`
-        )
-      ).join('\n');
-      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `globalnow-bookmarks-${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      alert('북마크 내보내기에 실패했습니다');
-    }
-    setExportLoading(false);
+      const csv = ['제목,URL,기사 게시일', ...items.map(item => [item.titleKo || item.title, item.url, item.publishedAt].map(csvCell).join(','))].join('\r\n');
+      const url = URL.createObjectURL(new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' }));
+      const anchor = document.createElement('a');
+      anchor.href = url; anchor.download = `globalnow-saved-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.append(anchor); anchor.click(); anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setStatus(`${items.length}건의 저장한 뉴스를 내보냈습니다.`);
+    } catch { setStatus('내보내지 못했습니다. 다시 시도해 주세요.'); }
   };
-
-  const handleDeleteAccount = async () => {
-    if (!showDeleteConfirm) {
-      setShowDeleteConfirm(true);
-      return;
-    }
-    alert('데모 모드에서는 계정을 삭제할 수 없습니다');
-    setShowDeleteConfirm(false);
-  };
-
-  return (
-    <div className="max-w-2xl">
-      <PageHeader title="설정" description="계정과 앱 동작을 관리합니다" />
-
-      <div className="space-y-5">
-        {/* Appearance */}
-        <Card>
-          <CardHeader title="외관" />
-          <CardDivider />
-          <div className="divide-y divide-line">
-            <SettingRow title="다크 모드" description="어두운 테마 사용">
-              <Toggle
-                checked={theme === 'dark'}
-                onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                label="다크 모드 전환"
-              />
-            </SettingRow>
-            <SettingRow title="언어" description="인터페이스 언어">
-              <select
-                value={language}
-                onChange={e => setLanguage(e.target.value)}
-                className="h-8 rounded-lg border border-line-strong bg-fill-subtle px-2.5 text-[0.875rem] text-slate-100 transition-colors hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
-                aria-label="언어 선택"
-              >
-                <option value="ko">한국어</option>
-                <option value="en">English</option>
-              </select>
-            </SettingRow>
-          </div>
-        </Card>
-
-        {/* Notifications */}
-        <Card>
-          <CardHeader title="알림" />
-          <CardDivider />
-          <SettingRow title="이메일 알림" description="모닝 브리프 및 키워드 알림">
-            <Toggle
-              checked={emailNotif}
-              onChange={() => setEmailNotif(!emailNotif)}
-              label="이메일 알림 전환"
-            />
-          </SettingRow>
-        </Card>
-
-        {/* Data */}
-        <Card>
-          <CardHeader title="데이터" />
-          <CardDivider />
-          <div className="divide-y divide-line">
-            <button
-              type="button"
-              onClick={handleExportBookmarks}
-              disabled={exportLoading}
-              className="w-full px-5 py-3.5 text-left transition-colors hover:bg-fill-subtle disabled:opacity-50"
-            >
-              <p className="t-body-sm text-slate-200">
-                {exportLoading ? '내보내는 중…' : '북마크 내보내기'}
-              </p>
-              <p className="mt-0.5 t-meta-sm text-slate-500">
-                저장한 뉴스를 CSV로 다운로드
-              </p>
-            </button>
-            <button
-              type="button"
-              onClick={handleDeleteAccount}
-              className="w-full px-5 py-3.5 text-left transition-colors hover:bg-red-400/[0.06]"
-            >
-              <p className="t-body-sm text-red-400">
-                {showDeleteConfirm ? '정말 삭제하시겠습니까? 다시 누르면 삭제됩니다' : '계정 삭제'}
-              </p>
-              <p className="mt-0.5 t-meta-sm text-red-400/60">
-                모든 데이터가 영구적으로 삭제됩니다
-              </p>
-            </button>
-          </div>
-        </Card>
-
-        {/* Legal */}
-        <Card>
-          <CardHeader title="법적 고지" />
-          <CardDivider />
-          <div className="divide-y divide-line">
-            <a
-              href="/terms"
-              className="block px-5 py-3 t-body-sm text-slate-300 transition-colors hover:bg-fill-subtle hover:text-slate-100"
-            >
-              이용약관
-            </a>
-            <a
-              href="/privacy"
-              className="block px-5 py-3 t-body-sm text-slate-300 transition-colors hover:bg-fill-subtle hover:text-slate-100"
-            >
-              개인정보처리방침
-            </a>
-          </div>
-        </Card>
-
-        <p className="text-center t-meta-sm text-slate-600">GLOBALNOW v1.0.0</p>
-      </div>
+  return <div className="mx-auto max-w-3xl">
+    <PageHeader title="설정" description="읽기 편한 화면과 저장한 뉴스를 관리하세요." />
+    <div className="space-y-5">
+      <section className="surface p-5 sm:p-6" aria-labelledby="appearance-heading">
+        <h2 id="appearance-heading" className="t-headline mb-2">화면 테마</h2><p className="t-body-sm text-slate-500">선택한 테마는 이 브라우저에 기억됩니다.</p>
+        <div role="group" aria-label="화면 테마" className="mt-4 grid grid-cols-2 gap-3">{(['light', 'dark'] as const).map(value => <button key={value} type="button" aria-pressed={theme === value} onClick={() => setTheme(value)} className={`rounded-xl border p-4 text-left ${theme === value ? 'border-accent bg-accent-soft' : 'border-line-strong hover:bg-fill'}`}>
+          <span aria-hidden="true" className={`mb-3 block h-14 rounded-lg border ${value === 'light' ? 'border-gray-300 bg-gray-100' : 'border-gray-600 bg-gray-900'}`} />
+          <span className="t-label">{value === 'light' ? '라이트' : '다크'}{theme === value ? ' · 선택됨' : ''}</span>
+        </button>)}</div>
+      </section>
+      <section className="surface p-5 sm:p-6" aria-labelledby="saved-heading">
+        <h2 id="saved-heading" className="t-headline">저장한 뉴스</h2><p className="mt-2 t-body-sm text-slate-500">{guest ? '이 브라우저에 저장됩니다. 다른 기기로 옮기기 전에 CSV로 보관하세요.' : '계정에 저장한 기사를 CSV 파일로 보관할 수 있습니다.'}</p>
+        <div className="mt-4 flex flex-wrap gap-2"><Link href="/saved" className="action-secondary">저장 목록 보기</Link><button type="button" disabled={!ready || items.length === 0} onClick={exportBookmarks} className="action-primary">CSV 내보내기{ready ? ` (${items.length}건)` : ''}</button></div>
+        <p role="status" className="mt-3 t-meta text-slate-400">{status}</p>
+      </section>
+      <section className="surface p-5 sm:p-6" aria-labelledby="availability-heading"><h2 id="availability-heading" className="t-headline">제공 기능</h2><dl className="mt-4 space-y-4 t-body-sm"><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">인터페이스 언어</dt><dd>한국어</dd></div><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">이메일 알림</dt><dd>준비 중</dd></div><div className="flex flex-wrap justify-between gap-2"><dt className="text-slate-400">계정 삭제</dt><dd>앱 내 삭제 기능 준비 중</dd></div></dl></section>
+      <div className="flex flex-wrap gap-3"><Link href="/terms" className="action-text">이용약관</Link><Link href="/privacy" className="action-text">개인정보처리방침</Link></div>
     </div>
-  );
+  </div>;
 }

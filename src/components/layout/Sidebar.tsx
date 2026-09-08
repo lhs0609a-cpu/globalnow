@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -40,23 +39,9 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [streak, setStreak] = useState(0);
-
-  useEffect(() => {
-    async function fetchStreak() {
-      try {
-        const res = await fetch('/api/user/streak');
-        const data = await res.json();
-        setStreak(data.streak || 0);
-      } catch (error) {
-        console.error('Failed to fetch streak:', error);
-      }
-    }
-    fetchStreak();
-  }, []);
 
   return (
-    <aside className="sticky top-14 hidden h-[calc(100vh-var(--header-h))] w-60 flex-col border-r border-line bg-canvas lg:flex">
+    <aside className="sticky top-16 hidden h-[calc(100dvh-var(--header-h))] w-52 shrink-0 flex-col border-r border-line bg-canvas lg:flex">
       <nav aria-label="주요 메뉴" className="flex-1 overflow-y-auto px-3 py-4">
         {NAV_GROUPS.map((group, index) => {
           const items = NAV_ITEMS.filter(item => item.group === group.id);
@@ -84,11 +69,11 @@ export function Sidebar() {
       {/* 스트릭: 카드로 띄우면 시선을 뺏어서, 상태 표시줄처럼 조용히 둔다 */}
       <div className="border-t border-line px-5 py-3.5">
         <div className="flex items-center gap-2">
-          <Icon name="flame" className="h-4 w-4 text-amber-400" />
-          <span className="tnum t-meta font-semibold text-slate-200">{streak}일 연속</span>
+          <Icon name="globe" className="h-4 w-4 text-accent-text" />
+          <span className="t-meta font-semibold text-slate-200">나만의 글로벌 시야</span>
         </div>
         <p className="t-meta-sm mt-1 font-normal text-slate-500">
-          매일 읽고 스트릭을 이어가세요
+          읽고, 저장하고, 다시 연결하세요.
         </p>
       </div>
     </aside>

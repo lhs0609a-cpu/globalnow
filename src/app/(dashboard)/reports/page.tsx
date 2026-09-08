@@ -13,7 +13,7 @@ const industryTabs = INDUSTRIES.map(i => ({
 }));
 
 export default function ReportsPage() {
-  const { industry, report, isLoading, setIndustry } = useReports();
+  const { industry, report, isLoading, error, refresh, setIndustry } = useReports();
 
   return (
     <div>
@@ -31,7 +31,7 @@ export default function ReportsPage() {
       />
 
       {/* Report content */}
-      {isLoading ? (
+      {error ? <div className="surface space-y-3 p-6"><p role="alert">{error}</p><button type="button" className="action-primary" onClick={refresh}>다시 시도</button></div> : isLoading ? (
         <ReportSkeleton />
       ) : report ? (
         <ReportCard report={report} />

@@ -1,6 +1,7 @@
 import { isDemoMode } from '@/lib/demo/is-demo-mode';
 import { UserStreak, NewsDNA, Bookmark, KeywordAlert } from '@/types/user';
 import { STREAK_BADGES } from '@/lib/constants/badges';
+import { normalizeNews } from '@/lib/utils/normalize-news';
 
 const MOCK_STREAK: UserStreak = {
   currentStreak: 7,
@@ -199,8 +200,8 @@ export async function getBookmarks(userId?: string): Promise<Bookmark[]> {
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
-  if (error) return [];
-  return (data || []) as unknown as Bookmark[];
+  if (error) throw error;
+  return (data || []).map(row => ({ id: row.id, userId: row.user_id, newsId: row.news_id, createdAt: row.created_at, news: row.news ? normalizeNews(row.news as Record<string, unknown>) : undefined }));
 }
 
 export async function toggleBookmark(userId: string, newsId: string): Promise<boolean> {
@@ -218,10 +219,12 @@ export async function toggleBookmark(userId: string, newsId: string): Promise<bo
     .single();
 
   if (existing) {
-    await supabase.from('bookmarks').delete().eq('id', existing.id);
+    const { error } = await supabase.from('bookmarks').delete().eq('id', existing.id);
+    if (error) throw error;
     return false;
   } else {
-    await supabase.from('bookmarks').insert({ user_id: userId, news_id: newsId });
+    const { error } = await supabase.from('bookmarks').insert({ user_id: userId, news_id: newsId });
+    if (error) throw error;
     return true;
   }
 }

@@ -21,9 +21,10 @@ export type NavItem = {
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: '대시보드', shortLabel: '홈', icon: 'dashboard', primary: true, group: 'daily' },
-  { href: '/brief', label: '모닝 브리프', shortLabel: '브리프', icon: 'brief', group: 'daily' },
-  { href: '/watchdog', label: '포트폴리오 워치독', shortLabel: '워치독', icon: 'watchdog', primary: true, group: 'daily' },
+  { href: '/', label: '오늘의 뉴스', shortLabel: '뉴스', icon: 'dashboard', primary: true, group: 'daily' },
+  { href: '/brief', label: '오늘의 브리프', shortLabel: '브리프', icon: 'brief', primary: true, group: 'daily' },
+  { href: '/saved', label: '저장한 뉴스', shortLabel: '저장', icon: 'bookmark', primary: true, group: 'daily' },
+  { href: '/watchdog', label: '관심 종목 뉴스', shortLabel: '관심 종목', icon: 'watchdog', group: 'daily' },
   { href: '/signals', label: '인사이더 시그널', shortLabel: '시그널', icon: 'signals', group: 'daily' },
 
   { href: '/reports', label: '산업 리포트', shortLabel: '리포트', icon: 'reports', primary: true, group: 'research' },
@@ -32,7 +33,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/compare', label: '관점 대결', shortLabel: '관점', icon: 'compare', group: 'research' },
   { href: '/events', label: '전시회/컨퍼런스', shortLabel: '행사', icon: 'events', group: 'research' },
 
-  { href: '/predict', label: '뉴스 배틀', shortLabel: '배틀', icon: 'predict', primary: true, group: 'play' },
+  { href: '/predict', label: '뉴스 배틀', shortLabel: '배틀', icon: 'predict', group: 'play' },
   { href: '/fun', label: '유머', icon: 'fun', group: 'play' },
 ];
 

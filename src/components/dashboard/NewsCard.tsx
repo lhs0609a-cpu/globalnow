@@ -9,6 +9,7 @@ import { Kicker, LiveDot } from '@/components/ui/Badge';
 import { formatRelativeTime } from '@/lib/utils/date';
 import { formatNumber } from '@/lib/utils/format';
 import { CATEGORIES } from '@/lib/constants/categories';
+import { track } from '@/lib/analytics/events';
 
 /**
  * 기사 한 건.
@@ -36,7 +37,7 @@ function categoryLabel(id: string) {
 function isFresh(publishedAt: string | Date | undefined) {
   if (!publishedAt) return false;
   const t = new Date(publishedAt).getTime();
-  return Number.isFinite(t) && Date.now() - t < LIVE_WINDOW_MS;
+  return Number.isFinite(t) && Date.now() >= t && Date.now() - t < LIVE_WINDOW_MS;
 }
 
 function SourceLine({
@@ -61,8 +62,8 @@ function SourceLine({
       <span aria-hidden className="text-slate-600">
         ·
       </span>
-      <time className="tnum" dateTime={new Date(news.publishedAt).toISOString()}>
-        {formatRelativeTime(news.publishedAt)}
+      <time className="tnum" dateTime={Number.isFinite(Date.parse(news.publishedAt)) ? new Date(news.publishedAt).toISOString() : undefined}>
+        {Number.isFinite(Date.parse(news.publishedAt)) ? formatRelativeTime(news.publishedAt) : '게시 시각 미확인'}
       </time>
       {news.viewCount ? (
         <>
@@ -83,11 +84,11 @@ function SourceLine({
 }
 
 /** 안쪽 버튼은 카드 전체 링크 위로 올려야 눌린다 */
-function Actions({ newsId, className }: { newsId: string; className?: string }) {
+function Actions({ news, className }: { news: NewsItem; className?: string }) {
   return (
     <div className={clsx('relative z-10 flex items-center gap-0.5', className)}>
-      <SoWhatButton newsId={newsId} />
-      <BookmarkButton newsId={newsId} />
+      <SoWhatButton newsId={news.id} />
+      <BookmarkButton news={news} />
     </div>
   );
 }
@@ -131,7 +132,7 @@ export function NewsCard({
   /* ── 머리기사 ─────────────────────────────────────────────── */
   if (variant === 'lead') {
     return (
-      <article className="group relative grid gap-5 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
+      <article onClick={event => { if ((event.target as HTMLElement).closest('a[target="_blank"]')) track('outbound_open', { category: news.category }); }} className={clsx('group relative grid gap-5', hasImage && '2xl:grid-cols-[1fr_1.15fr] 2xl:gap-6')}>
         {hasImage && (
           <Thumb
             news={news}
@@ -168,7 +169,7 @@ export function NewsCard({
 
           <div className="mt-4 flex items-center justify-between gap-3">
             <SourceLine news={news} />
-            <Actions newsId={news.id} />
+            <Actions news={news} />
           </div>
         </div>
       </article>
@@ -178,7 +179,7 @@ export function NewsCard({
   /* ── 단신 목록 ────────────────────────────────────────────── */
   if (variant === 'row') {
     return (
-      <article className="group relative flex gap-4 py-4 transition-colors">
+      <article onClick={event => { if ((event.target as HTMLElement).closest('a[target="_blank"]')) track('outbound_open', { category: news.category }); }} className="group relative flex gap-4 py-4 transition-colors">
         <div className="min-w-0 flex-1">
           <div className="mb-1.5 flex items-center gap-2">
             <Kicker>{categoryLabel(news.category)}</Kicker>
@@ -193,12 +194,12 @@ export function NewsCard({
               {title}
             </a>
           </h3>
-          <div className="mt-2 flex items-center justify-between gap-3">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
             <SourceLine news={news} />
             {/* 손가락에는 hover 가 없다. 숨기는 건 포인터가 있는 화면에서만 */}
             <Actions
-              newsId={news.id}
-              className="-mr-1 transition-opacity lg:opacity-0 lg:focus-within:opacity-100 lg:group-hover:opacity-100"
+              news={news}
+              className="-mr-1"
             />
           </div>
         </div>
@@ -217,7 +218,7 @@ export function NewsCard({
 
   /* ── 중간기사 카드 ────────────────────────────────────────── */
   return (
-    <article className="group surface relative flex flex-col overflow-hidden transition-colors hover:border-line-strong">
+    <article onClick={event => { if ((event.target as HTMLElement).closest('a[target="_blank"]')) track('outbound_open', { category: news.category }); }} className="group surface relative flex flex-col overflow-hidden transition-colors hover:border-line-strong">
       {hasImage && (
         <Thumb news={news} ratio="aspect-[16/9]" onError={() => setImageError(true)} />
       )}
@@ -244,7 +245,7 @@ export function NewsCard({
 
         <div className="mt-auto flex items-end justify-between gap-2 pt-3.5">
           <SourceLine news={news} />
-          <Actions newsId={news.id} className="-mr-1 -mb-1" />
+          <Actions news={news} className="-mr-1 -mb-1" />
         </div>
       </div>
     </article>

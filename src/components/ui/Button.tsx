@@ -85,7 +85,7 @@ export function IconButton({
       aria-label={label}
       title={label}
       className={clsx(
-        'inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg',
+        'inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg',
         'text-slate-400 transition-colors hover:bg-fill-weak hover:text-slate-100',
         className
       )}

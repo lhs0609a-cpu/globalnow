@@ -134,7 +134,6 @@ async function collectLiveSignals(): Promise<Signal[]> {
 export async function getSignals(filters: SignalFilters = {}): Promise<SignalResult> {
   const { type, company, significance, page = 1, limit = 20 } = filters;
 
-  let allSignals: Signal[];
   let isLive = false;
 
   // Always try live API collection (free APIs work without Supabase)
@@ -178,7 +177,7 @@ export async function getSignals(filters: SignalFilters = {}): Promise<SignalRes
     },
     300
   );
-  allSignals = result.signals;
+  const allSignals = result.signals;
   isLive = result.isLive;
 
   // Apply filters

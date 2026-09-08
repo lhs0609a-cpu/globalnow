@@ -213,12 +213,15 @@ export const MOCK_TRENDING: TrendingItem[] = [
   { id: 'gh-1', title: 'microsoft/TypeScript - v6.0 Release', titleKo: 'microsoft/TypeScript - v6.0 릴리스', url: 'https://github.com/microsoft/TypeScript', source: 'github', score: 4500, region: 'GLOBAL', publishedAt: new Date(Date.now() - 1000 * 60 * 150).toISOString() },
   { id: 'gh-2', title: 'vercel/next.js - App Router Performance Improvements', titleKo: 'vercel/next.js - App Router 성능 개선', url: 'https://github.com/vercel/next.js', source: 'github', score: 3200, region: 'GLOBAL', publishedAt: new Date(Date.now() - 1000 * 60 * 200).toISOString() },
 ];
-export function getMockNews(params?: { category?: string; page?: number; limit?: number }): NewsItem[] {
+export function getMockNews(params?: { category?: string; country?: string; source?: string; search?: string; page?: number; limit?: number }): NewsItem[] {
   let filtered = [...MOCK_NEWS];
   if (params?.category && params.category !== 'all') {
     filtered = filtered.filter(n => n.category === params.category);
   }
   const page = params?.page || 1;
+  if (params?.country) filtered = filtered.filter(n => n.country === params.country);
+  if (params?.source) filtered = filtered.filter(n => n.sourceId === params.source);
+  if (params?.search) { const query = params.search.toLowerCase(); filtered = filtered.filter(n => `${n.title} ${n.titleKo || ''}`.toLowerCase().includes(query)); }
   const limit = params?.limit || 10;
   const start = (page - 1) * limit;
   return filtered.slice(start, start + limit);

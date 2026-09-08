@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     const supabase = getSupabase();
     if (!supabase) {
-      alert('데모 모드에서는 로그인할 수 없습니다');
+      setError('현재 둘러보기 모드입니다. 홈에서 로그인 없이 뉴스를 읽을 수 있습니다.');
       setIsLoading(false);
       return;
     }
@@ -54,7 +54,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     const supabase = getSupabase();
     if (!supabase) {
-      alert('데모 모드에서는 로그인할 수 없습니다');
+      setError('현재 둘러보기 모드입니다. 홈에서 로그인 없이 뉴스를 읽을 수 있습니다.');
       return;
     }
 
@@ -71,7 +71,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
+    <main id="main" className="flex min-h-screen items-center justify-center bg-slate-900 p-4">
       <div className="w-full max-w-[22rem]">
         <div className="mb-7 text-center">
           <span className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 t-title font-bold tracking-tight text-white">
@@ -90,7 +90,7 @@ export default function LoginPage() {
           className="space-y-3.5 surface p-5"
         >
           {error && (
-            <div className="rounded-lg bg-red-400/10 px-3.5 py-2.5 t-body-sm text-red-400">
+            <div role="alert" className="rounded-lg bg-red-400/10 px-3.5 py-2.5 t-body-sm text-red-400">
               {error}
             </div>
           )}
@@ -102,6 +102,7 @@ export default function LoginPage() {
             <input
               id="email"
               type="email"
+              autoComplete="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
@@ -116,6 +117,7 @@ export default function LoginPage() {
             <input
               id="password"
               type="password"
+              autoComplete="current-password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle px-3 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-600 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"
@@ -161,7 +163,8 @@ export default function LoginPage() {
             회원가입
           </Link>
         </p>
+        <Link href="/" className="action-text mt-4 flex">로그인 없이 둘러보기</Link>
       </div>
-    </div>
+    </main>
   );
 }

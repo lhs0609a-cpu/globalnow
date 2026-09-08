@@ -28,11 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {
         this.props.fallback || (
           <div className="surface px-6 py-10 text-center">
             <p className="t-title text-slate-200">화면을 그리지 못했습니다</p>
-            {this.state.error?.message && (
-              <p className="t-body-sm mx-auto mt-1.5 max-w-sm break-all text-slate-500">
-                {this.state.error.message}
-              </p>
-            )}
+            <p className="t-body-sm mt-2 text-slate-500">일시적인 문제가 발생했습니다. 이 영역을 다시 불러와 주세요.</p>
             <button
               type="button"
               onClick={() => this.setState({ hasError: false })}

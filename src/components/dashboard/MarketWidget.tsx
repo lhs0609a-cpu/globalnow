@@ -74,9 +74,11 @@ function Section({
 }
 
 export function MarketWidget() {
-  const { data, isLoading } = useMarket();
+  const { data, isLoading, isRefreshing, error, refresh, autoUpdate, setAutoUpdate } = useMarket();
 
-  if (isLoading || !data || !Array.isArray(data.indices)) return <MarketSkeleton />;
+  if (isLoading) return <div role="status" aria-label="시장 정보 불러오는 중"><MarketSkeleton /></div>;
+  if (!data) return <div className="surface space-y-3 p-5"><p role="alert" className="t-body-sm">{error || '시장 정보가 없습니다.'}</p><button type="button" className="action-secondary" onClick={refresh}>시장 정보 다시 시도</button></div>;
+  const title = (label: string, key: string) => `${label}${data.provenance?.[key] === 'demo' ? ' · 샘플' : ''}`;
 
   const fearGreed = data.fearGreed?.value;
   const fearGreedPct =
@@ -84,7 +86,14 @@ export function MarketWidget() {
 
   return (
     <div className="space-y-5">
-      <Section title="주요 지수" icon="chart">
+      <div className="surface p-4">
+        <div className="flex items-center justify-between gap-2"><h2 className="t-title">시장 한눈에</h2><button type="button" className="action-text" disabled={isRefreshing} onClick={refresh}>{isRefreshing ? '갱신 중…' : '새로고침'}</button></div>
+        <p className="t-meta-sm text-slate-500">{Number.isFinite(Date.parse(data.updatedAt)) ? `${new Date(data.updatedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} 조회 · 제공처별 시세 지연 가능` : '제공처별 시세 지연 가능'}</p>
+        {data.provenance && Object.values(data.provenance).includes('demo') && <p className="t-meta mt-2 text-amber-400">일부 항목은 샘플입니다. 각 항목의 표시를 확인하세요.</p>}
+        <label className="mt-2 flex min-h-11 items-center gap-2 t-meta text-slate-400"><input type="checkbox" checked={autoUpdate} onChange={e => setAutoUpdate(e.target.checked)} />2분마다 자동 갱신</label>
+        {error && <p role="alert" className="t-meta text-red-400">{error} 이전 조회 결과를 표시합니다.</p>}
+      </div>
+      <Section title={title('주요 지수', 'indices')} icon="chart">
         {data.indices.map(index => (
           <Row
             key={index.symbol}
@@ -96,7 +105,7 @@ export function MarketWidget() {
         ))}
       </Section>
 
-      <Section title="암호화폐" icon="coin">
+      <Section title={title('암호화폐', 'crypto')} icon="coin">
         {(data.crypto ?? []).map(coin => (
           <Row
             key={coin.id}
@@ -108,7 +117,7 @@ export function MarketWidget() {
         ))}
       </Section>
 
-      <Section title="환율" icon="exchange">
+      <Section title={title('환율', 'forex')} icon="exchange">
         {(data.forex ?? []).map(fx => (
           <Row
             key={fx.pair}
@@ -121,7 +130,7 @@ export function MarketWidget() {
       </Section>
 
       <Card>
-        <CardHeader title="공포 & 탐욕 지수" icon="gauge" />
+        <CardHeader title={title('공포 & 탐욕 지수', 'fearGreed')} icon="gauge" />
         <CardDivider />
         <div className="px-5 py-5">
           <div className="flex items-end justify-between gap-3">

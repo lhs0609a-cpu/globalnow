@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Globalnow
 
-## Getting Started
+한국어로 읽는 글로벌 뉴스와 시장 대시보드. Next.js 16 / React 19 / TypeScript / Tailwind CSS 4.
 
-First, run the development server:
+## 실행
 
-```bash
+```sh
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Windows PowerShell에서 스크립트 정책이 npm.ps1을 차단하면 `npm.cmd`를 사용합니다. 환경 변수는 `.env.local.example`을 참고해 `.env.local`에 설정합니다. 실제 키를 저장소에 커밋하지 않습니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Supabase가 설정되지 않으면 뉴스는 공개 RSS를 우선 조회하고, 실패하면 샘플임을 표시합니다. 게스트 저장 목록은 해당 브라우저에 보관됩니다. Supabase 설정 시 저장 목록은 인증된 계정과 연결됩니다. 실제 계정 저장은 `news`, `bookmarks` 스키마와 서비스 역할 설정이 필요합니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Redis가 없거나 사용 불가능하면 최대 200개 항목의 프로세스 메모리 캐시를 사용합니다. 동일 키의 진행 중 요청은 프로세스 안에서 합칩니다. 여러 서버 인스턴스의 분산 잠금이나 사용자 수용량을 보장하는 구조는 아닙니다.
 
-## Learn More
+## 검증
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+npm run typecheck
+npm run lint
+node scripts/check-cache.mjs
+npx playwright install chromium
+npm run build
+npm run test:ux
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+빌드를 완료한 후 브라우저 테스트를 실행합니다. 빌드 중인 `.next`를 읽는 서버와 테스트를 동시에 실행하면 해시가 바뀐 자산을 읽어 잘못된 실패가 발생합니다. 테스트는 전용 포트 `3107`에서 프로덕션 서버를 실행하며 이미 실행 중인 서버를 재사용하지 않습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+UX 테스트는 고정 API 응답으로 검색·필터·뒤로가기·응답 역전·페이지 추가·오류 복구·게스트 저장·CSV·모바일 메뉴·대화상자·반응형·두 테마의 자동 접근성을 검사합니다. 외부 수집 API, 실제 인증 계정, 운영 부하는 별도 검증이 필요합니다. 검사 결과는 `playwright-report`, 회귀 화면은 `artifacts/ux`에 생성됩니다.
 
-## Deploy on Vercel
+## 사용자 흐름
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 홈 URL의 `search`와 `category`가 실제 뉴스 조회 조건입니다. 뒤로가기와 공유 링크에도 같은 조건을 사용합니다.
+- 뉴스는 명시적인 더 보기로 추가합니다. 실패한 페이지는 이전 목록을 유지한 채 재시도합니다.
+- 저장한 기사는 `/saved`에서 다시 읽고 `/settings`에서 CSV로 내보낼 수 있습니다.
+- 지도와 커뮤니티는 열 때 로드합니다. 시장 자동 갱신은 사용자가 선택하며 숨겨진 탭에서는 주기 요청을 생략합니다.
+- 데이터 출처·샘플 여부·조회 시각은 가능한 범위에서 표시합니다. 일부 기존 분석·감성·랭킹 서비스의 샘플 계약 통일은 후속 과제입니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 리서치와 측정
+
+[UX·UI 개선 연구 보고서](docs/ux-review-2026-09-08.html)에 결함, 구현, 근거, 1만 사용자 가정의 한계와 남은 운영 과제를 기록했습니다. 보고서 변경 후 `node scripts/render-ux-report.mjs`로 HTML을 재생성합니다.
+
+클라이언트는 `globalnow:analytics` CustomEvent를 제공합니다. 상세 구조는 `{ name, properties, path, timestamp }`이며 검색 원문이나 사용자 식별자를 포함하지 않습니다. 외부 전송·영구 수집·세션 식별은 현재 구현하지 않았습니다. 수집기에서 이 이벤트를 구독한 뒤 세션·이벤트 중복·코호트 정의를 정해야 전환율을 계산할 수 있습니다.
+
+현재 이탈률·개선율·동시 접속 1만 명 수용 여부는 실측하지 않았습니다. 자동 검사를 운영 성과로 해석하지 않습니다.

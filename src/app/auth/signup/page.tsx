@@ -40,7 +40,7 @@ export default function SignupPage() {
 
     const supabase = getSupabase();
     if (!supabase) {
-      alert('데모 모드에서는 회원가입할 수 없습니다');
+      setError('현재 둘러보기 모드입니다. 홈에서 로그인 없이 뉴스를 읽을 수 있습니다.');
       setIsLoading(false);
       return;
     }

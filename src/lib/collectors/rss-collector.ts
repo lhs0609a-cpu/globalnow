@@ -1,5 +1,6 @@
 import { NEWS_SOURCES } from '@/lib/constants/sources';
 import { NewsItem, NewsCategory } from '@/types/news';
+import { createHash } from 'node:crypto';
 
 export type CollectedArticle = {
   title: string;
@@ -96,7 +97,7 @@ export async function collectRSSByCountry(country: string, limit = 10): Promise<
 }
 
 /** Convert a CollectedArticle to a NewsItem */
-export function articleToNewsItem(article: CollectedArticle, index: number): NewsItem {
+export function articleToNewsItem(article: CollectedArticle): NewsItem {
   const source = NEWS_SOURCES.find(s => s.id === article.sourceId);
   const fallbackSource = {
     id: article.sourceId,
@@ -110,7 +111,7 @@ export function articleToNewsItem(article: CollectedArticle, index: number): New
   };
 
   return {
-    id: `rss-${article.sourceId}-${index}-${Date.now()}`,
+    id: `rss-${createHash('sha256').update(article.link).digest('hex').slice(0, 24)}`,
     title: article.title,
     summary: article.contentSnippet || undefined,
     url: article.link,
@@ -127,11 +128,11 @@ export function articleToNewsItem(article: CollectedArticle, index: number): New
 /** Collect RSS feeds and return as NewsItem[] */
 export async function collectRSSAsNewsItems(): Promise<NewsItem[]> {
   const articles = await collectRSSFeeds();
-  return articles.map((a, i) => articleToNewsItem(a, i));
+  return articles.map(articleToNewsItem);
 }
 
 /** Collect RSS feeds for a country and return as NewsItem[] */
 export async function collectRSSByCountryAsNewsItems(country: string, limit = 10): Promise<NewsItem[]> {
   const articles = await collectRSSByCountry(country, limit);
-  return articles.map((a, i) => articleToNewsItem(a, i));
+  return articles.map(articleToNewsItem);
 }

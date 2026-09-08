@@ -77,7 +77,7 @@ async function fetchLiveIndices(): Promise<MarketIndex[]> {
   }
 }
 
-export async function getMarketData(): Promise<MarketData & { isLive: boolean }> {
+export async function getMarketData(): Promise<MarketData & { isLive: boolean; provenance: Record<string, 'live' | 'demo'> }> {
   return cacheGetOrSet(
     'market:all',
     async () => {
@@ -112,6 +112,12 @@ export async function getMarketData(): Promise<MarketData & { isLive: boolean }>
         fearGreed,
         updatedAt: new Date().toISOString(),
         isLive: hasAnyLive,
+        provenance: {
+          indices: liveIndices.status === 'fulfilled' && liveIndices.value.length > 0 ? 'live' : 'demo',
+          crypto: liveCrypto.status === 'fulfilled' && liveCrypto.value.length > 0 ? 'live' : 'demo',
+          forex: liveForex.status === 'fulfilled' && liveForex.value.length > 0 ? 'live' : 'demo',
+          fearGreed: liveFearGreed.status === 'fulfilled' && liveFearGreed.value ? 'live' : 'demo',
+        },
       };
     },
     120

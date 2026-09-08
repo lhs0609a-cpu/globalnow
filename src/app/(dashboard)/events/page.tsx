@@ -18,7 +18,7 @@ const categoryTabs = [
 ];
 
 export default function EventsPage() {
-  const { events, isLoading, category, setCategory, search, setSearch, month, setMonth } = useEvents();
+  const { events, isLoading, error, refresh, category, setCategory, search, setSearch, month, setMonth } = useEvents();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
@@ -58,6 +58,7 @@ export default function EventsPage() {
         description="한국 주요 전시회, 컨퍼런스, 데모데이 일정"
       />
 
+      {error && <div className="surface mb-4 p-5"><p role="alert">{error}</p><button type="button" className="action-text" onClick={refresh}>다시 시도</button></div>}
       {/* Search */}
       <div className="relative mb-3">
         <Icon
@@ -67,6 +68,7 @@ export default function EventsPage() {
         <input
           type="text"
           placeholder="이벤트 검색"
+          aria-label="이벤트 검색"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="h-9 w-full rounded-lg border border-line-strong bg-fill-subtle pl-9 pr-9 text-[0.875rem] text-slate-100 transition-colors placeholder:text-slate-500 hover:border-line-strong focus:border-blue-500/50 focus:outline-none"

@@ -9,10 +9,10 @@ export async function GET(request: NextRequest) {
       category: (searchParams.get('category') as NewsCategory) || undefined,
       country: searchParams.get('country') || undefined,
       source: searchParams.get('source') || undefined,
-      page: Math.max(1, Math.min(100, Number(searchParams.get('page')) || 1)),
-      limit: Math.max(1, Math.min(50, Number(searchParams.get('limit')) || 10)),
+      page: Math.floor(Math.max(1, Math.min(100, Number(searchParams.get('page')) || 1))),
+      limit: Math.floor(Math.max(1, Math.min(50, Number(searchParams.get('limit')) || 10))),
       sortBy: (searchParams.get('sortBy') as 'latest' | 'popular' | 'trending') || 'latest',
-      search: searchParams.get('search')?.slice(0, 200)?.replace(/[%_]/g, '') || undefined,
+      search: searchParams.get('search')?.slice(0, 200)?.replace(/[%_,()."\\]/g, '').trim() || undefined,
     };
     const result = await getNewsFeed(params);
     return NextResponse.json(result);

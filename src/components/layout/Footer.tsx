@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="border-t border-line bg-canvas">
+    <footer className="border-t border-line bg-canvas pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0">
       <div className="mx-auto flex max-w-[var(--container)] flex-col gap-4 px-5 py-7 sm:flex-row sm:items-center sm:justify-between lg:px-8">
         <div className="flex items-center gap-2.5">
           <span className="flex h-5 w-5 items-center justify-center rounded-[0.3125rem] bg-accent text-[0.5rem] font-bold text-white">

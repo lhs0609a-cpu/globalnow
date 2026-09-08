@@ -11,6 +11,7 @@ import {
   type NavItem,
 } from '@/lib/constants/navigation';
 import { Icon } from '@/components/ui/Icon';
+import { Modal } from '@/components/ui/Modal';
 
 function label(item: NavItem) {
   return item.shortLabel ?? item.label;
@@ -38,25 +39,13 @@ export function MobileNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
 
-  // 메뉴로 이동하면 시트를 닫는다
-  useEffect(() => {
-    setMoreOpen(false);
-  }, [pathname]);
-
-  // 시트가 열린 동안 뒤 화면이 스크롤되지 않게 막는다
+  // A resized desktop must not retain an invisible mobile dialog.
   useEffect(() => {
     if (!moreOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMoreOpen(false);
-    };
-    document.addEventListener('keydown', handleEscape);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
-    };
+    const media = window.matchMedia('(min-width: 1024px)');
+    const closeOnDesktop = () => { if (media.matches) setMoreOpen(false); };
+    media.addEventListener('change', closeOnDesktop);
+    return () => media.removeEventListener('change', closeOnDesktop);
   }, [moreOpen]);
 
   // 「더보기」 안의 화면을 보고 있으면 더보기 버튼도 활성으로 보여야 한다
@@ -68,22 +57,8 @@ export function MobileNav() {
     <>
       {/* 더보기 시트 */}
       {moreOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end lg:hidden">
-          <button
-            type="button"
-            aria-label="메뉴 닫기"
-            onClick={() => setMoreOpen(false)}
-            className="absolute inset-0 bg-black/55 backdrop-blur-sm"
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="전체 메뉴"
-            className="relative max-h-[75vh] overflow-y-auto rounded-t-2xl border-t border-line-strong bg-canvas px-4 pb-8 pt-3"
-          >
-            <div className="mx-auto mb-4 h-1 w-9 rounded-full bg-fill-strong" />
-
-            <h2 className="t-kicker px-1 pb-2 text-slate-500">전체 메뉴</h2>
+        <Modal isOpen={moreOpen} onClose={() => setMoreOpen(false)} title="전체 메뉴">
+          <div onClick={event => { if ((event.target as HTMLElement).closest('a')) setMoreOpen(false); }}>
             <div className="grid grid-cols-3 gap-2">
               {SECONDARY_NAV_ITEMS.map(item => (
                 <SheetLink key={item.href} item={item} active={pathname === item.href} />
@@ -97,7 +72,7 @@ export function MobileNav() {
               ))}
             </div>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* 하단 탭바 */}
@@ -114,7 +89,7 @@ export function MobileNav() {
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
                 className={clsx(
-                  'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
+                  'flex min-h-12 flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors',
                   active ? 'text-accent-text' : 'text-slate-500'
                 )}
               >
@@ -130,7 +105,7 @@ export function MobileNav() {
             aria-expanded={moreOpen}
             aria-haspopup="dialog"
             className={clsx(
-              'flex flex-1 flex-col items-center gap-1 py-1 transition-colors',
+              'flex min-h-12 flex-1 flex-col items-center justify-center gap-1 py-1 transition-colors',
               moreOpen || moreActive ? 'text-accent-text' : 'text-slate-500'
             )}
           >
