@@ -30,7 +30,7 @@ async function fixtures(page: Page) {
 test.beforeEach(async ({ page }) => { await fixtures(page); });
 
 test('search, category and browser history control the actual feed', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/news');
   await expect(page.locator('article')).toHaveCount(10);
   await page.getByRole('button', { name: '테크', exact: true }).click();
   await expect(page).toHaveURL(/category=tech/);
@@ -51,7 +51,7 @@ test('one request per added page, append preserves earlier articles and failures
     if (pageNumber === '2') { pageTwoRequests++; if (pageTwoRequests === 1) return route.fulfill({ status: 503, json: { error: 'test failure' } }); }
     return route.fallback();
   });
-  await page.goto('/');
+  await page.goto('/news');
   await expect(page.locator('article')).toHaveCount(10);
   await page.getByRole('button', { name: '뉴스 더 보기', exact: true }).click();
   await expect(page.getByRole('main').getByRole('alert')).toContainText('불러오지 못했습니다');
@@ -67,7 +67,7 @@ test('one request per added page, append preserves earlier articles and failures
 });
 
 test('empty results offer a working escape and failures are not presented as empty results', async ({ page }) => {
-  await page.goto('/?search=no-match');
+  await page.goto('/news?search=no-match');
   await expect(page.getByText('검색 결과가 없습니다', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: '전체 뉴스 보기', exact: true }).click();
   await expect(page.locator('article')).toHaveCount(10);
@@ -78,7 +78,7 @@ test('empty results offer a working escape and failures are not presented as emp
 });
 
 test('guest save survives reload, appears on saved page, exports and can be removed', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/news');
   await page.getByRole('button', { name: '기사 저장', exact: true }).first().click();
   await expect(page.getByRole('button', { name: '저장 해제', exact: true })).toHaveCount(1);
   await page.goto('/saved');
@@ -101,7 +101,7 @@ test('analysis is not clipped, supports retry, traps keyboard focus and restores
     attempts++;
     return attempts === 1 ? route.fulfill({ status: 503, json: {} }) : route.fulfill({ json: { keyPoint: '검증된 해설', background: '배경', outlook: '전망', actionItem: '원문 확인' } });
   });
-  await page.goto('/');
+  await page.goto('/news');
   const trigger = page.getByRole('button', { name: 'AI 분석 보기' }).first();
   await trigger.click();
   const dialog = page.getByRole('dialog');
@@ -120,7 +120,7 @@ test('analysis is not clipped, supports retry, traps keyboard focus and restores
 
 test('mobile navigation exposes every secondary route and closes on Escape', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/');
+  await page.goto('/news');
   const more = page.getByRole('button', { name: '더보기', exact: true });
   await more.click();
   const dialog = page.getByRole('dialog', { name: '전체 메뉴' });
@@ -140,13 +140,13 @@ test('responsive layouts and light/dark accessibility', async ({ page }) => {
     await page.emulateMedia({ colorScheme: theme as 'light' | 'dark', reducedMotion: 'reduce' });
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto('/');
+      await page.goto('/news');
       await expect(page.locator('article')).toHaveCount(10);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
       if (width === 390 || width === 1440) {
         const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
         expect(results.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) }))).toEqual([]);
-        await page.screenshot({ path: `artifacts/ux/home-${theme}-${width}.png`, fullPage: true });
+        await page.screenshot({ path: `artifacts/ux/news-${theme}-${width}.png`, fullPage: true });
       }
     }
   }
@@ -157,7 +157,7 @@ test('slow earlier category cannot replace the selected category', async ({ page
     if (new URL(route.request().url()).searchParams.get('category') === 'tech') await new Promise(resolve => setTimeout(resolve, 1000));
     return route.fallback();
   });
-  await page.goto('/');
+  await page.goto('/news');
   await expect(page.locator('article')).toHaveCount(10);
   await page.getByRole('button', { name: '테크', exact: true }).click();
   await page.getByRole('button', { name: '경제', exact: true }).click();

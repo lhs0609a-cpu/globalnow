@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
       type,
       company,
       significance,
-      page: Math.max(1, page),
-      limit: Math.min(50, Math.max(1, limit)),
+      page: Number.isFinite(page) ? Math.min(100, Math.max(1, page)) : 1,
+      limit: Number.isFinite(limit) ? Math.min(50, Math.max(1, limit)) : 20,
     });
 
     return NextResponse.json(result);

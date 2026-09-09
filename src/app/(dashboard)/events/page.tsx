@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { DecisionCalendar } from '@/components/intelligence/DecisionCalendar';
 import { useEvents } from '@/hooks/useEvents';
 import { EVENT_CATEGORIES } from '@/lib/constants/events';
 import { EventCategory } from '@/types/event';
@@ -18,7 +19,7 @@ const categoryTabs = [
 ];
 
 export default function EventsPage() {
-  const { events, isLoading, error, refresh, category, setCategory, search, setSearch, month, setMonth } = useEvents();
+  const { events, isLoading, error, refresh, category, setCategory, search, setSearch, setMonth } = useEvents();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
@@ -54,9 +55,11 @@ export default function EventsPage() {
   return (
     <div>
       <PageHeader
-        title="전시회 · 컨퍼런스"
-        description="한국 주요 전시회, 컨퍼런스, 데모데이 일정"
+        title="의사결정·산업 일정"
+        description="통화정책 확인 일정과 한국 산업 전시회·컨퍼런스. 세부 일정과 참가 조건은 주최 기관에서 확인하세요."
       />
+      <DecisionCalendar />
+      <h2 className="t-headline-lg mb-4">한국 산업 행사</h2>
 
       {error && <div className="surface mb-4 p-5"><p role="alert">{error}</p><button type="button" className="action-text" onClick={refresh}>다시 시도</button></div>}
       {/* Search */}

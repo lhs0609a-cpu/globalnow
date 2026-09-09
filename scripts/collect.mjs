@@ -19,11 +19,10 @@ import { readFileSync } from 'node:fs';
 
 const JOBS = [
   { name: 'rss', path: 'collect-rss', desc: 'RSS 피드 수집', default: true },
-  { name: 'hn', path: 'collect-hn', desc: '해커뉴스 수집', default: true },
-  { name: 'reddit', path: 'collect-reddit', desc: '레딧 수집', default: true },
+  { name: 'hn', path: 'collect-hn', desc: '해커뉴스 수집 (선택적 리서치)', default: false },
+  { name: 'reddit', path: 'collect-reddit', desc: '레딧 수집 (선택적 리서치)', default: false },
   { name: 'market', path: 'collect-market', desc: '시장 데이터 수집', default: true },
-  { name: 'humor', path: 'collect-humor', desc: '유머·밈 수집', default: true },
-  { name: 'brief', path: 'generate-brief', desc: '모닝 브리프 생성', default: true },
+  { name: 'brief', path: 'generate-brief', desc: '이전 형식 브리프 생성 (새 상황판과 별도)', default: false },
   { name: 'weekly', path: 'generate-weekly-report', desc: '주간 산업 리포트 생성', default: false },
   { name: 'newsletter', path: 'send-newsletter', desc: '뉴스레터 발송 (실제로 메일이 나간다)', default: false },
 ];

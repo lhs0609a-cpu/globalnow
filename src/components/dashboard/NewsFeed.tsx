@@ -99,7 +99,7 @@ export function NewsFeed({ category, search }: { category?: string; search?: str
     return (
       <div className="surface pb-7 text-center">
         <div role="status"><EmptyState title={search ? '검색 결과가 없습니다' : '이 주제의 뉴스가 아직 없습니다'} description={search ? '짧은 키워드나 다른 표현으로 검색해 보세요.' : '다른 주제를 선택하거나 전체 뉴스를 확인해 보세요.'} /></div>
-        <Link href="/" className="action-primary">전체 뉴스 보기</Link>
+        <Link href="/news" className="action-primary">전체 뉴스 보기</Link>
       </div>
     );
   }

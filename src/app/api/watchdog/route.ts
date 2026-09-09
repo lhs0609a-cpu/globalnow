@@ -13,18 +13,18 @@ export async function GET(request: NextRequest) {
     const tickers = tickersParam
       .split(',')
       .map(t => t.trim().toUpperCase())  // Normalize to uppercase
-      .filter(t => /^[A-Z]{1,5}$/.test(t))  // Only valid ticker format (1-5 uppercase letters)
-      .slice(0, 20); // max 20 tickers
+      .filter(t => /^(?:[A-Z]{1,5}(?:[.-][A-Z]{1,2})?|[0-9]{6})$/.test(t))
+      .slice(0, 100);
 
     if (tickers.length === 0) {
       return NextResponse.json(
-        { error: '유효한 티커 형식이 아닙니다 (1-5자 영문 대문자)' },
+        { error: '영문 종목 코드 또는 국내 6자리 종목 코드를 입력해 주세요.' },
         { status: 400 }
       );
     }
 
-    const page = Math.max(1, Math.min(100, Number(searchParams.get('page')) || 1));
-    const limit = Math.max(1, Math.min(50, Number(searchParams.get('limit')) || 20));
+    const page = Math.floor(Math.max(1, Math.min(100, Number(searchParams.get('page')) || 1)));
+    const limit = Math.floor(Math.max(1, Math.min(50, Number(searchParams.get('limit')) || 20)));
 
     const result = await getWatchdogNews(tickers, page, limit);
     return NextResponse.json(result);

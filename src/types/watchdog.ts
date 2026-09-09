@@ -20,6 +20,7 @@ export type WatchdogNewsItem = NewsItem & {
 };
 
 export type WatchdogFeedResult = {
+  mode?: 'live' | 'stored' | 'demo';
   items: WatchdogNewsItem[];
   total: number;
   page: number;

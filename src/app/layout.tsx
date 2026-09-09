@@ -3,24 +3,24 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'GLOBALNOW — 글로벌 뉴스 대시보드',
+    default: 'GLOBALNOW — 세계 상황과 의사결정',
     template: '%s · GLOBALNOW',
   },
   description:
-    '전세계 주요 언론의 뉴스, 트렌드, 시장 데이터를 한국어로. 의사결정자를 위한 글로벌 뉴스 대시보드.',
+    '사업자·글로벌 CEO·투자자를 위한 세계 상황판. 지정학, 무역, 산업, 시장의 변화를 모니터하고 원문 근거와 사업 영향을 검토하세요.',
   icons: { icon: '/favicon.ico' },
   openGraph: {
-    title: 'GLOBALNOW — 글로벌 뉴스 대시보드',
+    title: 'GLOBALNOW — 세계 상황과 의사결정',
     description:
-      '전세계 주요 미디어의 뉴스, 트렌드, 시장 데이터를 AI가 분석하여 한국어로 제공합니다.',
+      '세계의 변화, 내 사업과 투자의 관심 지역, 판단에 필요한 근거를 한곳에서.',
     type: 'website',
     locale: 'ko_KR',
     siteName: 'GLOBALNOW',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GLOBALNOW — 글로벌 뉴스 대시보드',
-    description: '전세계 주요 언론의 뉴스를 한눈에. 의사결정자를 위한 글로벌 뉴스 대시보드.',
+    title: 'GLOBALNOW — 세계 상황과 의사결정',
+    description: '사업자·CEO·투자자를 위한 세계 상황 모니터와 의사결정 브리프.',
   },
   robots: { index: true, follow: true },
 };

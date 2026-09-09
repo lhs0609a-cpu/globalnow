@@ -73,7 +73,7 @@ export function Sidebar() {
           <span className="t-meta font-semibold text-slate-200">나만의 글로벌 시야</span>
         </div>
         <p className="t-meta-sm mt-1 font-normal text-slate-500">
-          읽고, 저장하고, 다시 연결하세요.
+          변화 감지 → 근거 확인 → 판단.
         </p>
       </div>
     </aside>

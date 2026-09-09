@@ -8,6 +8,8 @@ declare module 'react-simple-maps' {
   }
 
   interface ComposableMapProps {
+    role?: string;
+    'aria-label'?: string;
     projection?: string;
     projectionConfig?: ProjectionConfig;
     width?: number;
@@ -41,6 +43,8 @@ declare module 'react-simple-maps' {
   }
 
   interface GeographyProps {
+    'data-country'?: string;
+    tabIndex?: number;
     geography: GeographyType;
     style?: {
       default?: GeographyStyleState;

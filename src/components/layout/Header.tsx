@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { Icon } from '@/components/ui/Icon';
 import { track } from '@/lib/analytics/events';
@@ -19,6 +19,7 @@ export function Header({ initialSearch = '' }: { initialSearch?: string }) {
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Ctrl+K / ⌘K
   useEffect(() => {
@@ -43,7 +44,7 @@ export function Header({ initialSearch = '' }: { initialSearch?: string }) {
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
-      router.push(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+      router.push((pathname === '/news' ? '/news' : '/') + '?search=' + encodeURIComponent(searchQuery.trim()));
       track('search_submit', { length: searchQuery.trim().length });
     }
   };
@@ -79,7 +80,7 @@ export function Header({ initialSearch = '' }: { initialSearch?: string }) {
               onKeyDown={handleSearchKeyDown}
               onFocus={() => setSearchOpen(true)}
               onBlur={() => !searchQuery && setSearchOpen(false)}
-              placeholder="뉴스 검색"
+              placeholder={pathname === '/news' ? '뉴스 검색' : '지역·기업·이슈 검색'}
               aria-label="뉴스 검색"
               className={clsx(
                 'h-11 w-full rounded-lg border bg-fill-subtle pl-9 pr-10 text-[0.875rem] text-slate-100 transition-colors',
@@ -104,8 +105,8 @@ export function Header({ initialSearch = '' }: { initialSearch?: string }) {
           <ThemeToggle />
 
           <Link
-            href="/profile"
-            aria-label="마이페이지"
+            href="/settings"
+            aria-label="설정"
             className="flex h-11 w-11 items-center justify-center rounded-lg text-slate-400 transition-colors hover:text-slate-100"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full border border-line-strong bg-fill-weak">
